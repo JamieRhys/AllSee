@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AllSee</string>
+    <string name="aap_initial_greeting">Hmm… You look new around here</string>
+    <string name="aap_get_started">To get started, please paste your access token below.</string>
+
+    <string name = "button_get_started">Get Started</string>
+</resources>
