@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.sycosoft.allsee.ui.screens.AccountAccessPage
 import com.sycosoft.allsee.ui.theme.AllSeeTheme
+import com.sycosoft.allsee.ui.viewmodels.AccountAccessPageViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AllSeeTheme {
-                //AccountAccessPage(viewModel = AccountAccessPageViewModel())
+                AccountAccessPage(viewModel = AccountAccessPageViewModel(filesDir))
             }
         }
     }
