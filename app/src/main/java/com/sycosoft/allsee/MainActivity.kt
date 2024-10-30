@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.Surface
+import com.sycosoft.allsee.data.network.NetworkConnectivityObserver
 import com.sycosoft.allsee.ui.screens.AccountAccessPage
 import com.sycosoft.allsee.ui.theme.AllSeeTheme
 import com.sycosoft.allsee.ui.viewmodels.AccountAccessPageViewModel
@@ -14,7 +16,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AllSeeTheme {
-                AccountAccessPage(viewModel = AccountAccessPageViewModel(filesDir))
+                Surface {
+                    AccountAccessPage(viewModel = AccountAccessPageViewModel(application = application))
+                }
             }
         }
     }
