@@ -1,6 +1,5 @@
 package com.sycosoft.allsee.data.network
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import com.sycosoft.allsee.domain.network.ConnectivityObserver
@@ -14,17 +13,14 @@ import kotlinx.coroutines.launch
  * Implementation of [ConnectivityObserver] that uses [ConnectivityManager] to observer network
  * changes and emits status updates using a [Flow].
  *
- * @param context The application context used to obtain the [ConnectivityManager] system service.
+ * @param connectivityManager [ConnectivityManager] for monitoring network state changes.
  *
  * @see ConnectivityObserver
  *
  * @author Jamie-Rhys Edwards
  * @since v0.0.1
  */
-class NetworkConnectivityObserver(context: Context) : ConnectivityObserver {
-    // Retrieves the system's connectivity manager for managing network connections.
-    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
+class NetworkConnectivityObserver(private val connectivityManager: ConnectivityManager) : ConnectivityObserver {
     /**
      * Observes the network connectivity status by registering a network callback and emitting system
      * updates.
