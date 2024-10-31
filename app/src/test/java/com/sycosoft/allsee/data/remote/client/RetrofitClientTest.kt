@@ -1,8 +1,7 @@
-package com.sycosoft.allsee.data.client
+package com.sycosoft.allsee.data.remote.client
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.sycosoft.allsee.data.remote.client.RetrofitClient
 import com.sycosoft.allsee.data.remote.service.StarlingBankApiService
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
@@ -16,6 +15,12 @@ import org.junit.Test
 import retrofit2.HttpException
 
 class RetrofitClientTest {
+    private val errorResponseInvalidAccessToken = """{ "error": "invalid_token", "error_description": "Could not validate access token" }"""
+
+    private val validResponseAccountHolder = """{ accountHolderUid": "123456789", "accountHolderType": "INDIVIDUAL" }"""
+    private val validResponseAccountHolderName = """{ "accountHolderName": "John Doe" }"""
+
+// region Setup and Teardown
     private lateinit var mockWebServer: MockWebServer
     private lateinit var apiService: StarlingBankApiService
     private lateinit var gson: Gson
@@ -34,6 +39,9 @@ class RetrofitClientTest {
         mockWebServer.shutdown()
     }
 
+// endregion
+// region Tests
+    // region Get Account Holder
     @Test
     fun whenGetAccountHolder_givenCorrectResponse_thenApiAccountHolderObjectReturned() = runBlocking {
         val mockResponse = MockResponse()
@@ -48,9 +56,34 @@ class RetrofitClientTest {
     }
 
     @Test
+    fun whenGetAccountHolderName_givenCorrectResponse_thenApiReturnsError() = runBlocking {
+        val mockResponse = MockResponse()
+            .setBody(errorResponseInvalidAccessToken)
+            .setResponseCode(403)
+        mockWebServer.enqueue(mockResponse)
+
+        val exception = assertThrows(HttpException::class.java) {
+            runBlocking {
+                apiService.getAccountHolder("Bearer invalidAccessToken")
+            }
+        }
+
+        assertEquals(403, exception.response()?.code())
+
+        val errorBody = exception.response()?.errorBody()
+        assertNotNull(errorBody)
+
+        val errorBodyString = errorBody?.string()
+        assertEquals(errorResponseInvalidAccessToken, errorBodyString)
+    }
+
+// endregion
+// region Get Account Holder Name
+
+    @Test
     fun whenGetAccountHolderName_givenCorrectResponse_thenApiAccountHolderNameObjectReturned() = runBlocking {
         val mockResponse = MockResponse()
-            .setBody("""{ "accountHolderName": "John Doe" }""")
+            .setBody(validResponseAccountHolderName)
             .setResponseCode(200)
         mockWebServer.enqueue(mockResponse)
 
@@ -63,7 +96,7 @@ class RetrofitClientTest {
     fun whenGetAccountHolderName_givenInvalidAccessToken_thenApiReturnsError() = runBlocking {
         val mockResponse = MockResponse()
             .setResponseCode(403)
-            .setBody("""{ "error": "invalid_token", "error_description": "Could not validate access token" }""")
+            .setBody(errorResponseInvalidAccessToken)
         mockWebServer.enqueue(mockResponse)
 
         // Call the API service method
@@ -85,4 +118,7 @@ class RetrofitClientTest {
         assertEquals("invalid_token", jsonObject["error"].asString)
         assertEquals("Could not validate access token", jsonObject["error_description"].asString)
     }
+
+    // endregion
+// endregion
 }
