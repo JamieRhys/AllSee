@@ -8,9 +8,6 @@
       <SelectionState runConfigName="NetworkConnectivityObserverTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="NetworkConnectivityObserverTest (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="AccessTokenRequestScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2024-10-29T17:45:55.510758Z">
