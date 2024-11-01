@@ -1,6 +1,6 @@
 package com.sycosoft.allsee.data.remote.model
 
-data class ApiAccountHolder(
+data class AccountHolderDto(
     val accountHolderUid: String,
     val accountHolderType: String,
 )

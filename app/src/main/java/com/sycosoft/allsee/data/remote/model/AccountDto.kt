@@ -9,7 +9,7 @@ package com.sycosoft.allsee.data.remote.model
  * @param createdAt The date and time of when the account was created.
  * @param name The name of the account.
  */
-data class ApiAccount(
+data class AccountDto(
     val accountUid: String,
     val accountType: String,
     val defaultCategory: String,
