@@ -34,6 +34,7 @@ fun AccessTokenRequestScreen(
     topSectionColor: Color = OffWhite,
     bottomSectionColor: Color = MaterialTheme.colorScheme.background,
     accessToken: String,
+    decryptedToken: String,
     onAccessTokenChange: (String) -> Unit,
     onGetStartedButtonClick: () -> Unit,
 ) {
@@ -127,6 +128,7 @@ fun AccessTokenRequestScreen(
             ) {
                 Text(text = stringResource(id = R.string.button_get_started))
             }
+            Text(text = decryptedToken)
         }
     }
 }
@@ -136,7 +138,7 @@ fun AccessTokenRequestScreen(
 private fun LM_AccessTokenRequestScreenPreview() {
     AllSeeTheme {
         Surface {
-            AccessTokenRequestScreen(accessToken = "", onAccessTokenChange = {}) {
+            AccessTokenRequestScreen(decryptedToken = "", accessToken = "", onAccessTokenChange = {}) {
 
             }
         }
@@ -148,7 +150,7 @@ private fun LM_AccessTokenRequestScreenPreview() {
 private fun DM_AccessTokenRequestScreenPreview() {
     AllSeeTheme {
         Surface {
-            AccessTokenRequestScreen(accessToken = "", onAccessTokenChange = {}) {
+            AccessTokenRequestScreen(decryptedToken = "", accessToken = "", onAccessTokenChange = {}) {
 
             }
         }

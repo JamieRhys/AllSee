@@ -24,6 +24,7 @@ fun AccountAccessPage(
     viewModel: AccountAccessPageViewModel,
 ) {
     var accessToken by remember { mutableStateOf("") }
+    val decryptedToken = viewModel.decryptedToken.collectAsState()
 
     val networkStatus by viewModel.networkStatus.collectAsState()
 
@@ -32,8 +33,9 @@ fun AccountAccessPage(
             ConnectivityObserver.Status.Available, ConnectivityObserver.Status.Losing -> {
                 AccessTokenRequestScreen(
                     accessToken = accessToken,
+                    decryptedToken = decryptedToken.value,
                     onAccessTokenChange = { accessToken = it },
-                    onGetStartedButtonClick = { /*TODO*/ },
+                    onGetStartedButtonClick = { viewModel.encryptToken(accessToken) },
                 )
             }
             ConnectivityObserver.Status.Unavailable,ConnectivityObserver.Status.Lost -> {

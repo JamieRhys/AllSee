@@ -4,6 +4,7 @@ agp = "8.5.2"
 composeBom = "2024.10.01"
 converterMoshi = "2.9.0"
 coreKtx = "1.15.0"
+dagger = "2.52"
 espressoCore = "3.6.1"
 gson = "2.10.1"
 lifecycleRuntimeKtx = "2.8.7"
@@ -34,6 +35,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -49,7 +52,6 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
-mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoKotlin" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroidVersion" }

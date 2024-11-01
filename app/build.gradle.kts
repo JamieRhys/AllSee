@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.sycosoft.allsee"
-        minSdk = 35
+        minSdk = 34
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -74,9 +74,9 @@ dependencies {
     implementation(libs.converter.moshi)
     implementation(libs.okhttp.logginginterceptor)
     implementation(libs.gson)
+    implementation(libs.dagger)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.android)
     testImplementation(libs.mockwebserver)
     //testImplementation(libs.robolectric)
     testImplementation(libs.mockk)
@@ -85,11 +85,11 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.mockito.core)
-    androidTestImplementation(libs.mockito.android)
     //androidTestImplementation(libs.robolectric)
     androidTestImplementation(libs.mockk.mockk.android)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.dagger.compiler)
 }

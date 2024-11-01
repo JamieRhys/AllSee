@@ -10,15 +10,18 @@ import androidx.lifecycle.viewModelScope
 import com.sycosoft.allsee.data.local.CryptoManager
 import com.sycosoft.allsee.data.network.NetworkConnectivityObserver
 import com.sycosoft.allsee.domain.network.ConnectivityObserver
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
 class AccountAccessPageViewModel(
-    application: Application
+    application: Application,
+
 ) : AndroidViewModel(application) {
     private val _decryptedToken: MutableStateFlow<String> = MutableStateFlow("No Data")
+    val decryptedToken: StateFlow<String> = _decryptedToken
 
     private val _networkStatus: MutableStateFlow<ConnectivityObserver.Status> = MutableStateFlow(ConnectivityObserver.Status.Unavailable)
     val networkStatus: StateFlow<ConnectivityObserver.Status> = _networkStatus
@@ -35,7 +38,7 @@ class AccountAccessPageViewModel(
         }
     }
 
-    fun encryptToken(token: String) {
+    fun encryptToken(token: String): Boolean {
         val bytes = token.toByteArray()
         val file = File(getApplication<Application>().applicationContext.filesDir, "token.txt")
 
@@ -44,10 +47,14 @@ class AccountAccessPageViewModel(
         }
 
         val fos = file.outputStream()
-        _decryptedToken.value = cryptoManager.encrypt(
+        val encryptedToken = cryptoManager.encrypt(
             bytes = bytes,
             outputStream = fos
         ).decodeToString()
+
+        decryptToken()
+
+        return encryptedToken.isBlank()
     }
 
     fun decryptToken() {
