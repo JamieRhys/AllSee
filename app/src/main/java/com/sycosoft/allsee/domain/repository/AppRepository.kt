@@ -1,7 +1,5 @@
 package com.sycosoft.allsee.domain.repository
 
-import android.app.Application
-import com.sycosoft.allsee.data.remote.model.AccountListDto
 import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.AccountHolderName

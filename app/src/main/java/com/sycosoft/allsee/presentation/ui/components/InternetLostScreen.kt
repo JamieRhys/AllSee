@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.ui.components
+package com.sycosoft.allsee.presentation.ui.components
 
 import android.content.res.Configuration
 import android.view.RoundedCorner
@@ -27,8 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sycosoft.allsee.R
-import com.sycosoft.allsee.ui.theme.AllSeeTheme
-import com.sycosoft.allsee.ui.theme.OffWhite
+import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
+import com.sycosoft.allsee.presentation.ui.theme.OffWhite
 
 @Composable
 fun InternetLostScreen(

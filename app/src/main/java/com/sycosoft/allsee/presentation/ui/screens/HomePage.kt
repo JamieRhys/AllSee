@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.ui.screens
+package com.sycosoft.allsee.presentation.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.sycosoft.allsee.ui.viewmodels.HomePageViewModel
+import com.sycosoft.allsee.presentation.ui.viewmodels.HomePageViewModel
 
 @Composable
 fun HomePage(

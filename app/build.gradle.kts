@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+ksp {
+    arg("dagger.fastInit", "enabled")
+}
+
 android {
     namespace = "com.sycosoft.allsee"
     compileSdk = 35

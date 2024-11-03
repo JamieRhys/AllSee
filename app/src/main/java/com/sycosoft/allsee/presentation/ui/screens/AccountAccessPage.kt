@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.ui.screens
+package com.sycosoft.allsee.presentation.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -13,10 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.sycosoft.allsee.domain.network.ConnectivityObserver
-import com.sycosoft.allsee.ui.components.InternetLostScreen
-import com.sycosoft.allsee.ui.components.accountaccesspage.AccessTokenRequestScreen
-import com.sycosoft.allsee.ui.theme.AllSeeTheme
-import com.sycosoft.allsee.ui.viewmodels.AccountAccessPageViewModel
+import com.sycosoft.allsee.presentation.ui.components.InternetLostScreen
+import com.sycosoft.allsee.presentation.ui.components.accountaccesspage.AccessTokenRequestScreen
+import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
+import com.sycosoft.allsee.presentation.ui.viewmodels.AccountAccessPageViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

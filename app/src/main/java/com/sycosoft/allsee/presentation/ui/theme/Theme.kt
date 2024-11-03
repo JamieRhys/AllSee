@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.ui.theme
+package com.sycosoft.allsee.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

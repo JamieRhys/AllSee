@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.ui.viewmodels
+package com.sycosoft.allsee.presentation.ui.viewmodels
 
 import android.app.Application
 import android.content.Context
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-class AccountAccessPageViewModel(
+class AccountAccessPageViewModel @Inject constructor(
     application: Application,
 
 ) : AndroidViewModel(application) {

@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.ui.components.accountaccesspage
+package com.sycosoft.allsee.presentation.ui.components.accountaccesspage
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -24,10 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sycosoft.allsee.R
-import com.sycosoft.allsee.ui.components.Header1
-import com.sycosoft.allsee.ui.components.Normal
-import com.sycosoft.allsee.ui.theme.AllSeeTheme
-import com.sycosoft.allsee.ui.theme.OffWhite
+import com.sycosoft.allsee.presentation.ui.components.Header1
+import com.sycosoft.allsee.presentation.ui.components.Normal
+import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
+import com.sycosoft.allsee.presentation.ui.theme.OffWhite
 
 @Composable
 fun AccessTokenRequestScreen(

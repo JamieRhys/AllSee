@@ -2,6 +2,8 @@ package com.sycosoft.allsee.data.local
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
@@ -11,7 +13,8 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-class CryptoManager {
+@Singleton
+class CryptoManager @Inject constructor(){
 
     companion object {
         private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES

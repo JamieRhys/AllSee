@@ -5,19 +5,24 @@ import com.sycosoft.allsee.data.local.CryptoManager
 import com.sycosoft.allsee.data.mappers.AccountDtoMapper
 import com.sycosoft.allsee.data.remote.client.RetrofitClient
 import com.sycosoft.allsee.data.remote.model.AccountDto
+import com.sycosoft.allsee.data.remote.service.StarlingBankApiService
 import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.AccountHolderName
 import com.sycosoft.allsee.domain.repository.AppRepository
 import com.sycosoft.allsee.domain.util.AppResult
 import com.sycosoft.allsee.domain.util.ResultCode
+import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class AppRepositoryImpl : AppRepository {
-    private val cryptoManager = CryptoManager()
-    private val apiService = RetrofitClient("https://api-sandbox.starlingbank.com/api/v2/").starlingBankApiService
+class AppRepositoryImpl @Inject constructor(
+    private val cryptoManager: CryptoManager,
+    private val apiService: StarlingBankApiService,
+) : AppRepository {
+    //private val cryptoManager = CryptoManager()
+    //private val apiService = RetrofitClient("https://api-sandbox.starlingbank.com/api/v2/").starlingBankApiService
 
     override fun encryptAccessToken(token: String, filesDir: File): Boolean {
         return false
