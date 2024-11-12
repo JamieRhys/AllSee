@@ -1,8 +1,11 @@
+import com.android.build.api.dsl.Packaging
+import org.jetbrains.kotlin.javac.resolve.MockKotlinField
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -20,7 +23,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf("dagger.hilt.android.internal.disableAndroidSuperclassValidation" to "ENABLED")
+            }
+        }
     }
+
+    useLibrary("android.test.mock")
 
     buildTypes {
         release {
@@ -47,6 +58,10 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "mockito-extensions/org.mockito.plugins.MemberAccessor"
+            merges += "mockito-extensions/org.mockito.plugins.MockMaker"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 
@@ -63,33 +78,47 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.material.icons.extended.android)
-    implementation(libs.core)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.retrofit)
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    implementation(libs.converter.moshi)
-    implementation(libs.okhttp.logginginterceptor)
-    implementation(libs.gson)
-    implementation(libs.dagger)
     testImplementation(libs.junit)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockwebserver)
-    //testImplementation(libs.robolectric)
-    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.mockito.core)
-    //androidTestImplementation(libs.robolectric)
-    androidTestImplementation(libs.mockk.mockk.android)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    annotationProcessor(libs.dagger.compiler)
+
+    // Dagger
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
+    // Data Store
+    implementation(libs.androidx.datastore.preferences)
+
+    // Mockito
+    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockwebserver)
+    testImplementation(libs.mockwebserver)
+
+    // MockK
+    androidTestImplementation(libs.mockk.android)
+    testImplementation(libs.mockk)
+
+
+    // Retrofit and okHttp
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logginginterceptor)
+
+    // Moshi
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
+
+
+    // Gson
+    implementation(libs.gson)
 }

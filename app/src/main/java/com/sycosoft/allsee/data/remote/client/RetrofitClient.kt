@@ -2,18 +2,25 @@ package com.sycosoft.allsee.data.remote.client
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.sycosoft.allsee.data.remote.service.StarlingBankApiService
+import com.sycosoft.allsee.data.remote.interceptors.TokenInterceptor
+import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RetrofitClient(private val baseUrl: String) {
-    //private const val BASE_URL = "https://api-sandbox.starlingbank.com/api/v2/"
+@Singleton
+class RetrofitClient @Inject constructor(
+    private val baseUrl: String,
+    private val tokenInterceptor: TokenInterceptor,
+) {
     private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
+        .addInterceptor(tokenInterceptor)
         .build()
 
     private val moshi = Moshi.Builder()
