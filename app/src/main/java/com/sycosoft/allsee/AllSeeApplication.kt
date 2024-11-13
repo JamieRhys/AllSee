@@ -1,20 +1,13 @@
 package com.sycosoft.allsee
 
-import android.app.Application
-import com.sycosoft.allsee.di.components.ApplicationComponent
 import com.sycosoft.allsee.di.components.DaggerApplicationComponent
-import com.sycosoft.allsee.di.modules.ContextModule
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 
-class AllSeeApplication : Application() {
-    lateinit var appComponent: ApplicationComponent
+class AllSeeApplication : DaggerApplication() {
 
-    override fun onCreate() {
-        super.onCreate()
-
-        appComponent = DaggerApplicationComponent
-            .builder()
-            .contextModule(ContextModule(this))
-            .build()
-    }
-
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
+        DaggerApplicationComponent
+            .factory()
+            .create(application = this)
 }

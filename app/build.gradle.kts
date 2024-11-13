@@ -1,6 +1,3 @@
-import com.android.build.api.dsl.Packaging
-import org.jetbrains.kotlin.javac.resolve.MockKotlinField
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -65,13 +62,13 @@ android {
         }
     }
 
-
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -88,7 +85,9 @@ dependencies {
 
     // Dagger
     implementation(libs.dagger)
+    implementation(libs.dagger.android)
     ksp(libs.dagger.compiler)
+    ksp(libs.dagger.compiler.android)
 
     // Data Store
     implementation(libs.androidx.datastore.preferences)
@@ -107,7 +106,6 @@ dependencies {
     androidTestImplementation(libs.mockk.android)
     testImplementation(libs.mockk)
 
-
     // Retrofit and okHttp
     implementation(libs.retrofit)
     implementation(libs.okhttp)
@@ -117,7 +115,6 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
-
 
     // Gson
     implementation(libs.gson)
