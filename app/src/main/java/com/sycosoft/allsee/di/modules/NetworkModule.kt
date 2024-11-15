@@ -1,6 +1,5 @@
 package com.sycosoft.allsee.di.modules
 
-import com.sycosoft.allsee.data.local.CryptoManager
 import com.sycosoft.allsee.data.local.TokenProvider
 import com.sycosoft.allsee.data.remote.client.RetrofitClient
 import com.sycosoft.allsee.data.remote.interceptors.TokenInterceptor
@@ -14,10 +13,8 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideTokenInterceptor(
-        cryptoManager: CryptoManager,
         tokenProvider: TokenProvider
     ): TokenInterceptor = TokenInterceptor(
-        cryptoManager = cryptoManager,
         tokenProvider = tokenProvider,
     )
 

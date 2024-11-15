@@ -1,11 +1,13 @@
 package com.sycosoft.allsee.di.modules
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.sycosoft.allsee.data.local.CryptoManager
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.sycosoft.allsee.data.local.TokenProvider
 import dagger.Module
 import dagger.Provides
@@ -15,15 +17,25 @@ import javax.inject.Singleton
 class LocalModule {
     @Provides
     @Singleton
-    fun provideCryptoManager(): CryptoManager = CryptoManager()
+    fun provideTokenProvider(
+        sharedPreferences: SharedPreferences
+    ): TokenProvider = TokenProvider(sharedPreferences)
 
     @Provides
     @Singleton
-    fun provideDataStore(context: Context): DataStore<Preferences> = PreferenceDataStoreFactory.create(
-        produceFile = { context.preferencesDataStoreFile("settings") }
-    )
+    fun provideMasterKey(context: Context): MasterKey =
+        MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
 
     @Provides
     @Singleton
-    fun provideTokenProvider(dataStore: DataStore<Preferences>): TokenProvider = TokenProvider(dataStore)
+    fun provideEncryptedSharedPreferences(context: Context, masterKey: MasterKey): SharedPreferences =
+        EncryptedSharedPreferences.create(
+            context,
+            "secret_shared_prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+        )
 }

@@ -1,6 +1,5 @@
 package com.sycosoft.allsee.di.modules
 
-import com.sycosoft.allsee.data.local.CryptoManager
 import com.sycosoft.allsee.data.local.TokenProvider
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.data.repository.AppRepositoryImpl
@@ -15,11 +14,9 @@ class RepositoryModule {
     @Singleton
     fun provideAppRepository(
         apiService: StarlingBankApiService,
-        cryptoManager: CryptoManager,
         tokenProvider: TokenProvider,
     ): AppRepository = AppRepositoryImpl(
         apiService = apiService,
-        cryptoManager = cryptoManager,
         tokenProvider = tokenProvider
     )
 }

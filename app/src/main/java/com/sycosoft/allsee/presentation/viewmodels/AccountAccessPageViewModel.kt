@@ -17,7 +17,7 @@ class AccountAccessPageViewModel @Inject constructor(
 
     fun saveToken(token: String) {
         viewModelScope.launch {
-            appRepository.saveEncryptedToken(token)
+            appRepository.saveToken(token)
             _response.value = appRepository.getAccountHolderName().accountHolderName
         }
     }
