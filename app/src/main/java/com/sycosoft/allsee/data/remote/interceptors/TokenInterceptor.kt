@@ -1,11 +1,8 @@
 package com.sycosoft.allsee.data.remote.interceptors
 
 import com.sycosoft.allsee.data.local.TokenProvider
-import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 /** The token interceptor is used to intercept outgoing HTTP requests and add the decrypted authorization header. */
