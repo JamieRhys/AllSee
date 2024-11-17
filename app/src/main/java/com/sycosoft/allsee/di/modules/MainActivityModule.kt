@@ -1,6 +1,6 @@
 package com.sycosoft.allsee.di.modules
 
-import com.sycosoft.allsee.MainActivity
+import com.sycosoft.allsee.presentation.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

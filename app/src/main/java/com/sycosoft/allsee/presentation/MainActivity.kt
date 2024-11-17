@@ -1,4 +1,4 @@
-package com.sycosoft.allsee
+package com.sycosoft.allsee.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
