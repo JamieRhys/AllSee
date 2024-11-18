@@ -3,7 +3,6 @@ package com.sycosoft.allsee.data.remote.services
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
 import com.sycosoft.allsee.data.remote.models.AccountHolderNameDto
 import com.sycosoft.allsee.data.remote.models.AccountListDto
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 
