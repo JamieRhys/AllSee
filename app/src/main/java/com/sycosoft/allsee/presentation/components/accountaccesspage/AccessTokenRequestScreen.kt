@@ -14,9 +14,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +43,9 @@ fun AccessTokenRequestScreen(
     onGetStartedButtonClick: () -> Unit,
     response: String,
     uiState: UiState<String>,
+    errorSnackbarCallback: @Composable (String) -> Unit,
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -135,7 +140,7 @@ fun AccessTokenRequestScreen(
             when (uiState) {
                 is UiState.Initial -> {}
                 is UiState.Error -> {
-                    Text(uiState.errorDescription)
+                    errorSnackbarCallback(uiState.errorDescription)
                 }
                 is UiState.Loading -> {
                     CircularProgressIndicator()
@@ -159,6 +164,7 @@ private fun LM_AccessTokenRequestScreenPreview() {
                 onGetStartedButtonClick = {},
                 response = "",
                 uiState = UiState.Initial,
+                errorSnackbarCallback = {},
             )
         }
     }
@@ -175,6 +181,7 @@ private fun DM_AccessTokenRequestScreenPreview() {
                 onGetStartedButtonClick = {},
                 response = "",
                 uiState = UiState.Initial,
+                errorSnackbarCallback = {},
             )
         }
     }
