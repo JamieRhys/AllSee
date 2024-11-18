@@ -5,19 +5,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
-import com.sycosoft.allsee.data.network.NetworkConnectivityObserver
-import com.sycosoft.allsee.ui.screens.AccountAccessPage
-import com.sycosoft.allsee.ui.theme.AllSeeTheme
-import com.sycosoft.allsee.ui.viewmodels.AccountAccessPageViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sycosoft.allsee.presentation.screens.AccountAccessPage
+import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
+
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
             AllSeeTheme {
                 Surface {
-                    AccountAccessPage(viewModel = AccountAccessPageViewModel(application = application))
+                    AccountAccessPage(viewModel = viewModel(factory = viewModelFactory))
                 }
             }
         }
