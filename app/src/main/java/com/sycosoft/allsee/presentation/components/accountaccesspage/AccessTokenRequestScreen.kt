@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sycosoft.allsee.R
-import com.sycosoft.allsee.presentation.ui.components.Header1
-import com.sycosoft.allsee.presentation.ui.components.Normal
-import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
-import com.sycosoft.allsee.presentation.ui.theme.OffWhite
+import com.sycosoft.allsee.presentation.components.Header1
+import com.sycosoft.allsee.presentation.components.Normal
+import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import com.sycosoft.allsee.presentation.theme.OffWhite
 import com.sycosoft.allsee.presentation.utils.UiState
 
 @Composable
@@ -118,6 +119,9 @@ fun AccessTokenRequestScreen(
                 color = Color.Black,
             )
             OutlinedTextField(
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                ),
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 16.dp)
                     .testTag("otf_access_token"),

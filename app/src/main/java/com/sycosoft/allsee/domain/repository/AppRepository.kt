@@ -8,5 +8,5 @@ interface AppRepository {
     suspend fun saveToken(token: String)
 
     /** Retrieves the account holder name from the API */
-    suspend fun getAccountHolderName(): AppResult<AccountHolderName>
+    suspend fun getAccountHolderName(): Result<AccountHolderName>
 }

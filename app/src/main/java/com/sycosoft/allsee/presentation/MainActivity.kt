@@ -8,7 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sycosoft.allsee.presentation.screens.AccountAccessPage
-import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
+import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 

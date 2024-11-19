@@ -1,9 +1,10 @@
 package com.sycosoft.allsee.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.repository.AppRepository
-import com.sycosoft.allsee.domain.repository.AppResult
 import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,10 +26,15 @@ class AccountAccessPageViewModel @Inject constructor(
             _loadingState.value = UiState.Loading
             appRepository.saveToken(token)
 
-            _loadingState.value = when(val accountHolderName = appRepository.getAccountHolderName()) {
-                is AppResult.Error -> UiState.Error(error = accountHolderName.errorResponse.error, errorDescription = accountHolderName.errorResponse.errorDescription)
-                is AppResult.Success -> UiState.Success(data = accountHolderName.data.accountHolderName)
-            }
+            _loadingState.value = appRepository.getAccountHolderName().fold(
+                onSuccess = { accountHolderName ->
+                    UiState.Success(data = accountHolderName.accountHolderName)
+                },
+                onFailure = { exception ->
+                    exception as RepositoryException
+                    UiState.Error(error = exception.error.error, errorDescription = exception.error.errorDescription)
+                }
+            )
         }
     }
 }

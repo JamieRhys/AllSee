@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.ui.components
+package com.sycosoft.allsee.presentation.components
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
