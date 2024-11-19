@@ -17,6 +17,7 @@ fun AccountAccessPage(
     viewModel: AccountAccessPageViewModel,
 ) {
     var accessToken by remember { mutableStateOf("") }
+    val loadingState = viewModel.loadingState.collectAsState()
     val response = viewModel.response.collectAsState()
 
     Scaffold {
@@ -25,6 +26,7 @@ fun AccountAccessPage(
             onAccessTokenChange = { accessToken = it },
             onGetStartedButtonClick = { viewModel.saveToken(accessToken) },
             response = response.value,
+            uiState = loadingState.value,
         )
     }
 }

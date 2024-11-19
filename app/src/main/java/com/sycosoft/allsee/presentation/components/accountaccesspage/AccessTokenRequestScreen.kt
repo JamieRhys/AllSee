@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -28,6 +29,7 @@ import com.sycosoft.allsee.presentation.ui.components.Header1
 import com.sycosoft.allsee.presentation.ui.components.Normal
 import com.sycosoft.allsee.presentation.ui.theme.AllSeeTheme
 import com.sycosoft.allsee.presentation.ui.theme.OffWhite
+import com.sycosoft.allsee.presentation.utils.UiState
 
 @Composable
 fun AccessTokenRequestScreen(
@@ -37,6 +39,7 @@ fun AccessTokenRequestScreen(
     onAccessTokenChange: (String) -> Unit,
     onGetStartedButtonClick: () -> Unit,
     response: String,
+    uiState: UiState<String>,
 ) {
     Box(
         modifier = Modifier
@@ -129,7 +132,18 @@ fun AccessTokenRequestScreen(
             ) {
                 Text(text = stringResource(id = R.string.button_get_started))
             }
-            Text(response)
+            when (uiState) {
+                is UiState.Initial -> {}
+                is UiState.Error -> {
+                    Text(uiState.errorDescription)
+                }
+                is UiState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is UiState.Success -> {
+                    Text(uiState.data)
+                }
+            }
         }
     }
 }
@@ -139,7 +153,13 @@ fun AccessTokenRequestScreen(
 private fun LM_AccessTokenRequestScreenPreview() {
     AllSeeTheme {
         Surface {
-            AccessTokenRequestScreen(accessToken = "", onAccessTokenChange = {}, onGetStartedButtonClick = {}, response = "")
+            AccessTokenRequestScreen(
+                accessToken = "",
+                onAccessTokenChange = {},
+                onGetStartedButtonClick = {},
+                response = "",
+                uiState = UiState.Initial,
+            )
         }
     }
 }
@@ -149,7 +169,13 @@ private fun LM_AccessTokenRequestScreenPreview() {
 private fun DM_AccessTokenRequestScreenPreview() {
     AllSeeTheme {
         Surface {
-            AccessTokenRequestScreen(accessToken = "", onAccessTokenChange = {}, onGetStartedButtonClick = {}, response = "")
+            AccessTokenRequestScreen(
+                accessToken = "",
+                onAccessTokenChange = {},
+                onGetStartedButtonClick = {},
+                response = "",
+                uiState = UiState.Initial,
+            )
         }
     }
 }

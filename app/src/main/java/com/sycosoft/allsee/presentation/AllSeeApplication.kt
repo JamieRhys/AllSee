@@ -1,4 +1,4 @@
-package com.sycosoft.allsee
+package com.sycosoft.allsee.presentation
 
 import com.sycosoft.allsee.di.components.DaggerApplicationComponent
 import dagger.android.AndroidInjector

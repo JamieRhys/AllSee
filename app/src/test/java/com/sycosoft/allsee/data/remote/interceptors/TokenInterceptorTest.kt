@@ -2,7 +2,6 @@ package com.sycosoft.allsee.data.remote.interceptors
 
 import com.sycosoft.allsee.data.local.TokenProvider
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -38,7 +37,7 @@ class TokenInterceptorTest {
         underTest.intercept(chain)
 
         // Then and Verify
-        coVerify(exactly = 1) { tokenProvider.getToken() }
+        verify(exactly = 1) { tokenProvider.getToken() }
         verify(exactly = 1) { request.newBuilder() }
         verify(exactly = 1) { requestBuilder.build() }
         verify(exactly = 1) { requestBuilder.addHeader("Authorization", "Bearer $token") }

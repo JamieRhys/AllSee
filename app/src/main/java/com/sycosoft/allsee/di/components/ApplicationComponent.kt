@@ -1,7 +1,7 @@
 package com.sycosoft.allsee.di.components
 
 import android.app.Application
-import com.sycosoft.allsee.AllSeeApplication
+import com.sycosoft.allsee.presentation.AllSeeApplication
 import com.sycosoft.allsee.di.modules.ContextModule
 import com.sycosoft.allsee.di.modules.LocalModule
 import com.sycosoft.allsee.di.modules.MainActivityModule
