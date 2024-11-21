@@ -12,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sycosoft.allsee.presentation.components.accountaccesspage.AccessTokenRequestScreen
 import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
@@ -24,9 +23,7 @@ fun AccountAccessPage(
 ) {
     var accessToken by remember { mutableStateOf("") }
     val loadingState = viewModel.loadingState.collectAsState()
-    val response = viewModel.response.collectAsState()
 
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -47,7 +44,6 @@ fun AccountAccessPage(
             accessToken = accessToken,
             onAccessTokenChange = { accessToken = it },
             onGetStartedButtonClick = { viewModel.saveToken(accessToken) },
-            response = response.value,
             uiState = loadingState.value,
             errorSnackbarCallback = { errorString ->
                 LaunchedEffect(snackbarHostState) {

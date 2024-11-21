@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sycosoft.allsee.R
+import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.presentation.components.Header1
 import com.sycosoft.allsee.presentation.components.Normal
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
@@ -39,8 +40,7 @@ fun AccessTokenRequestScreen(
     accessToken: String,
     onAccessTokenChange: (String) -> Unit,
     onGetStartedButtonClick: () -> Unit,
-    response: String,
-    uiState: UiState<String>,
+    uiState: UiState<NameAndAccountType>,
     errorSnackbarCallback: @Composable (String) -> Unit,
 ) {
 
@@ -147,7 +147,8 @@ fun AccessTokenRequestScreen(
                     CircularProgressIndicator()
                 }
                 is UiState.Success -> {
-                    Text(uiState.data)
+                    Text(uiState.data.name)
+                    Text(uiState.data.type)
                 }
             }
         }
@@ -163,7 +164,6 @@ private fun LM_AccessTokenRequestScreenPreview() {
                 accessToken = "",
                 onAccessTokenChange = {},
                 onGetStartedButtonClick = {},
-                response = "",
                 uiState = UiState.Initial,
                 errorSnackbarCallback = {},
             )
@@ -180,7 +180,6 @@ private fun DM_AccessTokenRequestScreenPreview() {
                 accessToken = "",
                 onAccessTokenChange = {},
                 onGetStartedButtonClick = {},
-                response = "",
                 uiState = UiState.Initial,
                 errorSnackbarCallback = {},
             )
