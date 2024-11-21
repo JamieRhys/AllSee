@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.ui.theme
+package com.sycosoft.allsee.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

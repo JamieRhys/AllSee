@@ -7,6 +7,7 @@ import com.sycosoft.allsee.di.modules.LocalModule
 import com.sycosoft.allsee.di.modules.MainActivityModule
 import com.sycosoft.allsee.di.modules.NetworkModule
 import com.sycosoft.allsee.di.modules.RepositoryModule
+import com.sycosoft.allsee.di.modules.UseCaseModule
 import com.sycosoft.allsee.di.modules.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
@@ -22,7 +23,8 @@ import javax.inject.Singleton
         NetworkModule::class,
         RepositoryModule::class,
         ViewModelModule::class,
-        MainActivityModule::class
+        MainActivityModule::class,
+        UseCaseModule::class,
     ]
 )
 @Singleton
