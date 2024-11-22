@@ -25,104 +25,43 @@ class AppRepositoryImpl @Inject constructor(
         tokenProvider.saveToken(token)
     }
 
-    override suspend fun getAccountHolderName(): Result<AccountHolderName> {
-        return try {
-            Result.success(apiService.getAccountHolderName().toDomain())
-        } catch(e: ApiException) {
-            Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")
-            if (e.errorResponse.errorDescription.contains("No access token provided in request")) {
-                Result.failure(
-                    RepositoryException(
-                        error = ErrorResponse(
-                            error = e.errorResponse.error,
-                            errorDescription = e.errorResponse.errorDescription.substringBefore('.')
-                        )
-                    )
-                )
-            } else {
-                Result.failure(RepositoryException(error = e.errorResponse.toDomain()))
-            }
-        } catch(e: Throwable) {
-            coroutineContext.ensureActive()
-            Log.e(logTag, "error = unknown_error, errorDescription = Unexpected error while handling request")
-            Result.failure(
-                RepositoryException(
-                    error = ErrorResponse(
-                        error = "unknown_error",
-                        errorDescription = "Unexpected error while handling request"
-                    )
-                )
-            )
-        }
+    @Throws(RepositoryException::class)
+    override suspend fun getAccountHolderName(): AccountHolderName = try {
+        apiService.getAccountHolderName().toDomain()
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
     }
 
-    override suspend fun getAccountHolder(): Result<AccountHolder> {
-        return try {
-            Result.success(apiService.getAccountHolder().toDomain())
-        } catch(e: ApiException) {
-            Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")
-            if (e.errorResponse.errorDescription.contains("No access token provided in request")) {
-                Result.failure(
-                    RepositoryException(
-                        error = ErrorResponse(
-                            error = e.errorResponse.error,
-                            errorDescription = e.errorResponse.errorDescription.substringBefore('.')
-                        )
-                    )
-                )
-            } else {
-                Result.failure(RepositoryException(error = e.errorResponse.toDomain()))
-            }
-        } catch(e: Throwable) {
-            coroutineContext.ensureActive()
-            Log.e(logTag, "error = unknown_error, errorDescription = Unexpected error while handling request")
-            Result.failure(
-                RepositoryException(
-                    error = ErrorResponse(
-                        error = "unknown_error",
-                        errorDescription = "Unexpected error while handling request"
-                    )
-                )
-            )
-        }
+    @Throws(RepositoryException::class)
+    override suspend fun getAccountHolder(): AccountHolder = try {
+        apiService.getAccountHolder().toDomain()
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
     }
 
-    override suspend fun getNameAndAccountType(): Result<NameAndAccountType> {
-        return try {
-            val name = getAccountHolderName().getOrThrow().accountHolderName
-            val accountHolder = getAccountHolder().getOrThrow()
+    @Throws(RepositoryException::class)
+    override suspend fun getNameAndAccountType(): NameAndAccountType = try {
+        NameAndAccountType(
+            name = getAccountHolderName().accountHolderName,
+            type = getAccountHolder().type.displayName,
+        )
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
+    }
 
-            Result.success(
-                NameAndAccountType(
-                    name = name,
-                    type = accountHolder.type.displayName,
+    private suspend fun throwRepositoryException(e: ApiException): ApiException {
+        coroutineContext.ensureActive()
+        Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")
+
+        if (e.errorResponse.errorDescription.contains("No access token provided in request")) {
+            throw RepositoryException(
+                error = ErrorResponse(
+                    error = e.errorResponse.error,
+                    errorDescription = e.errorResponse.errorDescription.substringBefore('.')
                 )
             )
-        } catch(e: ApiException) {
-            Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")
-            if (e.errorResponse.errorDescription.contains("No access token provided in request")) {
-                Result.failure(
-                    RepositoryException(
-                        error = ErrorResponse(
-                            error = e.errorResponse.error,
-                            errorDescription = e.errorResponse.errorDescription.substringBefore('.')
-                        )
-                    )
-                )
-            } else {
-                Result.failure(RepositoryException(error = e.errorResponse.toDomain()))
-            }
-        } catch(e: Throwable) {
-            coroutineContext.ensureActive()
-            Log.e(logTag, "error = unknown_error, errorDescription = Unexpected error while handling request")
-            Result.failure(
-                RepositoryException(
-                    error = ErrorResponse(
-                        error = "unknown_error",
-                        errorDescription = "Unexpected error while handling request"
-                    )
-                )
-            )
+        } else {
+            throw RepositoryException(error = e.errorResponse.toDomain())
         }
     }
 }

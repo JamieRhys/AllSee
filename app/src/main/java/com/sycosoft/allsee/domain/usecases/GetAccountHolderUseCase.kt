@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetAccountHolderUseCase @Inject constructor(
     private val repository: AppRepository,
 ) {
-    suspend operator fun invoke(): Result<AccountHolder> = repository.getAccountHolder()
+    suspend operator fun invoke(): AccountHolder = repository.getAccountHolder()
 }

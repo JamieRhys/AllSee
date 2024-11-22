@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetAccountHolderNameUseCase @Inject constructor(
     private val repository: AppRepository
 ) {
-    suspend operator fun invoke(): Result<AccountHolderName> = repository.getAccountHolderName()
+    suspend operator fun invoke(): AccountHolderName = repository.getAccountHolderName()
 }
