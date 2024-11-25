@@ -11,9 +11,9 @@ import com.sycosoft.allsee.domain.models.AccountHolderName
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.domain.repository.AppRepository
-import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
@@ -40,28 +40,29 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     @Throws(RepositoryException::class)
-    override suspend fun getNameAndAccountType(): NameAndAccountType = try {
-        NameAndAccountType(
-            name = getAccountHolderName().accountHolderName,
-            type = getAccountHolder().type.displayName,
-        )
-    } catch(e: ApiException) {
-        throw throwRepositoryException(e)
-    }
+    override suspend fun getNameAndAccountType(): NameAndAccountType =
+        coroutineScope {
+            val name = async { getAccountHolderName().accountHolderName }
+            val type = async { getAccountHolder().type.displayName }
 
-    private suspend fun throwRepositoryException(e: ApiException): ApiException {
-        coroutineContext.ensureActive()
+            NameAndAccountType(
+                name = name.await(),
+                type = type.await(),
+            )
+        }
+
+    private fun throwRepositoryException(e: ApiException): RepositoryException {
         Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")
 
-        if (e.errorResponse.errorDescription.contains("No access token provided in request")) {
-            throw RepositoryException(
+        return if (e.errorResponse.errorDescription.contains("No access token provided in request")) {
+            RepositoryException(
                 error = ErrorResponse(
                     error = e.errorResponse.error,
                     errorDescription = e.errorResponse.errorDescription.substringBefore('.')
                 )
             )
         } else {
-            throw RepositoryException(error = e.errorResponse.toDomain())
+            RepositoryException(error = e.errorResponse.toDomain())
         }
     }
 }
