@@ -5,6 +5,8 @@
     <string name="aap_get_started">To get started, paste your access token below.</string>
     <string name="aap_title">Oh, hey!</string>
 
+    <string name="adt_identity_confirmation">"Just to confirm, is your name %s and you hold a %s account?"</string>
+
     <string name = "button_get_started">Get Started</string>
 
     <string name = "error_internet_lost">Oh dear, it seems the internet is gone! Please reconnect to use this app.</string>

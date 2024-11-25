@@ -14,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,21 +26,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sycosoft.allsee.R
 import com.sycosoft.allsee.domain.models.NameAndAccountType
-import com.sycosoft.allsee.presentation.components.Header1
-import com.sycosoft.allsee.presentation.components.Normal
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
-import com.sycosoft.allsee.presentation.theme.OffWhite
 import com.sycosoft.allsee.presentation.utils.UiState
 
 @Composable
 fun AccessTokenRequestScreen(
-    topSectionColor: Color = OffWhite,
+    topSectionColor: Color = MaterialTheme.colorScheme.inversePrimary,
     bottomSectionColor: Color = MaterialTheme.colorScheme.background,
     accessToken: String,
     onAccessTokenChange: (String) -> Unit,
     onGetStartedButtonClick: () -> Unit,
     uiState: UiState<NameAndAccountType>,
-    errorSnackbarCallback: @Composable (String) -> Unit,
+    errorSnackBarCallback: @Composable (String) -> Unit,
+    onOpenConfirmationDialog: (Boolean) -> Unit,
 ) {
 
     Box(
@@ -106,22 +103,18 @@ fun AccessTokenRequestScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Header1(
+            Text(
                 modifier = Modifier
-                    .padding(bottom = 32.dp)
-                    .testTag("aap_title"),
+                    .testTag("aap_title")
+                    .padding(bottom = 32.dp),
                 text = stringResource(id = R.string.aap_title),
-                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge,
             )
-            Normal(
+            Text(
                 modifier = Modifier.testTag("aap_text"),
-                text = stringResource(id = R.string.aap_get_started),
-                color = Color.Black,
+                text = stringResource(id = R.string.aap_get_started)
             )
             OutlinedTextField(
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                ),
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 16.dp)
                     .testTag("otf_access_token"),
@@ -141,7 +134,7 @@ fun AccessTokenRequestScreen(
             when (uiState) {
                 is UiState.Initial -> {}
                 is UiState.Error -> {
-                    errorSnackbarCallback(uiState.errorDescription)
+                    errorSnackBarCallback(uiState.errorDescription)
                 }
                 is UiState.Loading -> {
                     CircularProgressIndicator()
@@ -149,6 +142,7 @@ fun AccessTokenRequestScreen(
                 is UiState.Success -> {
                     Text(uiState.data.name)
                     Text(uiState.data.type)
+                    onOpenConfirmationDialog(true)
                 }
             }
         }
@@ -165,7 +159,8 @@ private fun LM_AccessTokenRequestScreenPreview() {
                 onAccessTokenChange = {},
                 onGetStartedButtonClick = {},
                 uiState = UiState.Initial,
-                errorSnackbarCallback = {},
+                errorSnackBarCallback = {},
+                onOpenConfirmationDialog = {},
             )
         }
     }
@@ -181,7 +176,8 @@ private fun DM_AccessTokenRequestScreenPreview() {
                 onAccessTokenChange = {},
                 onGetStartedButtonClick = {},
                 uiState = UiState.Initial,
-                errorSnackbarCallback = {},
+                errorSnackBarCallback = {},
+                onOpenConfirmationDialog = {},
             )
         }
     }
