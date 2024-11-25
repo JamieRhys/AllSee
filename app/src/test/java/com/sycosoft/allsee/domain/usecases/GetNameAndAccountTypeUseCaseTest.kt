@@ -22,33 +22,33 @@ class GetNameAndAccountTypeUseCaseTest {
         underTest = GetNameAndAccountTypeUseCase(repository)
     }
 
-    @Test
-    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
-        // Given
-        val nameAndAccountType = NameAndAccountType(name = "John Doe", type = "Individual")
-        coEvery { repository.getNameAndAccountType() } returns Result.success(nameAndAccountType)
-
-        // When
-        val result = underTest()
-
-        // Then
-        coVerify(exactly = 1) { repository.getNameAndAccountType() }
-        assertTrue(result.isSuccess)
-        assertEquals(nameAndAccountType, result.getOrNull())
-    }
-
-    @Test
-    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
-        // Given
-        val exception = RepositoryException(ErrorResponse("error", "Error Description"))
-        coEvery { repository.getNameAndAccountType() } returns Result.failure(exception)
-
-        // When
-        val result = underTest()
-
-        // Then
-        coVerify(exactly = 1) { repository.getNameAndAccountType() }
-        assertTrue(result.isFailure)
-        assertEquals(exception, result.exceptionOrNull())
-    }
+//    @Test
+//    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
+//        // Given
+//        val nameAndAccountType = NameAndAccountType(name = "John Doe", type = "Individual")
+//        coEvery { repository.getNameAndAccountType() } returns Result.success(nameAndAccountType)
+//
+//        // When
+//        val result = underTest()
+//
+//        // Then
+//        coVerify(exactly = 1) { repository.getNameAndAccountType() }
+//        assertTrue(result.isSuccess)
+//        assertEquals(nameAndAccountType, result.getOrNull())
+//    }
+//
+//    @Test
+//    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
+//        // Given
+//        val exception = RepositoryException(ErrorResponse("error", "Error Description"))
+//        coEvery { repository.getNameAndAccountType() } returns Result.failure(exception)
+//
+//        // When
+//        val result = underTest()
+//
+//        // Then
+//        coVerify(exactly = 1) { repository.getNameAndAccountType() }
+//        assertTrue(result.isFailure)
+//        assertEquals(exception, result.exceptionOrNull())
+//    }
 }

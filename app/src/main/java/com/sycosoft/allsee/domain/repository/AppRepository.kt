@@ -1,6 +1,7 @@
 package com.sycosoft.allsee.domain.repository
 
 import com.sycosoft.allsee.data.local.TokenProvider
+import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.AccountHolderName
 import com.sycosoft.allsee.domain.models.NameAndAccountType
@@ -10,10 +11,13 @@ interface AppRepository {
     suspend fun saveToken(token: String)
 
     /** Retrieves the account holder name*/
-    suspend fun getAccountHolderName(): Result<AccountHolderName>
+    @Throws(RepositoryException::class)
+    suspend fun getAccountHolderName(): AccountHolderName
 
     /** Retrieves the account holder */
-    suspend fun getAccountHolder(): Result<AccountHolder>
+    @Throws(RepositoryException::class)
+    suspend fun getAccountHolder(): AccountHolder
 
-    suspend fun getNameAndAccountType(): Result<NameAndAccountType>
+    @Throws(RepositoryException::class)
+    suspend fun getNameAndAccountType(): NameAndAccountType
 }

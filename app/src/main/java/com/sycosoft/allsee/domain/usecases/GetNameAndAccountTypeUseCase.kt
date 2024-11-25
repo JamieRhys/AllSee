@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetNameAndAccountTypeUseCase @Inject constructor(
     private val repository: AppRepository
 ) {
-    suspend operator fun invoke(): Result<NameAndAccountType> = repository.getNameAndAccountType()
+    suspend operator fun invoke(): NameAndAccountType = repository.getNameAndAccountType()
 }

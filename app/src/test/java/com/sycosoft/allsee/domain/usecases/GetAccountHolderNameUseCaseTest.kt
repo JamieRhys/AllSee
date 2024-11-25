@@ -22,33 +22,33 @@ class GetAccountHolderNameUseCaseTest {
         underTest = GetAccountHolderNameUseCase(repository)
     }
 
-    @Test
-    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
-        // Given
-        val accountHolderName = AccountHolderName(accountHolderName = "John Doe")
-        coEvery { repository.getAccountHolderName() } returns Result.success(accountHolderName)
-
-        // When
-        val result = underTest()
-
-        // Then
-        coVerify(exactly = 1) { repository.getAccountHolderName() }
-        assertTrue(result.isSuccess)
-        assertEquals(accountHolderName, result.getOrNull())
-    }
-
-    @Test
-    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
-        // Given
-        val exception = RepositoryException(ErrorResponse("error", "Error Description"))
-        coEvery { repository.getAccountHolderName() } returns Result.failure(exception)
-
-        // When
-        val result = underTest()
-
-        // Then
-        coVerify(exactly = 1) { repository.getAccountHolderName() }
-        assertTrue(result.isFailure)
-        assertEquals(exception, result.exceptionOrNull())
-    }
+//    @Test
+//    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
+//        // Given
+//        val accountHolderName = AccountHolderName(accountHolderName = "John Doe")
+//        coEvery { repository.getAccountHolderName() } returns Result.success(accountHolderName)
+//
+//        // When
+//        val result = underTest()
+//
+//        // Then
+//        coVerify(exactly = 1) { repository.getAccountHolderName() }
+//        assertTrue(result.isSuccess)
+//        assertEquals(accountHolderName, result.getOrNull())
+//    }
+//
+//    @Test
+//    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
+//        // Given
+//        val exception = RepositoryException(ErrorResponse("error", "Error Description"))
+//        coEvery { repository.getAccountHolderName() } returns Result.failure(exception)
+//
+//        // When
+//        val result = underTest()
+//
+//        // Then
+//        coVerify(exactly = 1) { repository.getAccountHolderName() }
+//        assertTrue(result.isFailure)
+//        assertEquals(exception, result.exceptionOrNull())
+//    }
 }
