@@ -9,9 +9,7 @@ import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
 import com.sycosoft.allsee.data.remote.models.toDomain
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
-import com.sycosoft.allsee.domain.models.AccountHolder
-import com.sycosoft.allsee.domain.models.AccountHolderName
-import com.sycosoft.allsee.domain.models.ErrorResponse
+import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -20,15 +18,9 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertThrows
-import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
-import kotlin.coroutines.cancellation.CancellationException
 
 class AppRepositoryImplTest {
     private val apiService: StarlingBankApiService = mockk(relaxed = true)
@@ -63,9 +55,10 @@ class AppRepositoryImplTest {
         val apiModel = AccountHolderNameDto("John Doe")
         coEvery { apiService.getAccountHolderName() } returns apiModel
 
-        val result = underTest.getAccountHolderName()
+        val actual = underTest.getAccountHolderName()
+        val expected = apiModel.toDomain()
 
-        assertEquals(apiModel.toDomain().accountHolderName, result.accountHolderName)
+        assertEquals(expected, actual)
     }
 
     @Test
@@ -89,8 +82,6 @@ class AppRepositoryImplTest {
         val result = underTest.getAccountHolder()
 
         assertEquals(apiModel.toDomain(), result)
-        assertEquals(apiModel.toDomain().uid, result.uid)
-        assertEquals(apiModel.toDomain().type, result.type)
     }
 
     @Test
@@ -114,9 +105,9 @@ class AppRepositoryImplTest {
         coEvery { apiService.getAccountHolderName() } returns accountHolderNameDto
         coEvery { apiService.getAccountHolder() } returns accountHolderDto
 
-        val result = underTest.getNameAndAccountType()
-        assertEquals(accountHolderNameDto.toDomain().accountHolderName, result.name)
-        assertEquals(accountHolderDto.toDomain().type.displayName, result.type)
+        val actual = underTest.getNameAndAccountType()
+        val expected = NameAndAccountType(accountHolderNameDto.accountHolderName, AccountHolderType.INDIVIDUAL.displayName)
+        assertEquals(expected, actual)
     }
 
     @Test
