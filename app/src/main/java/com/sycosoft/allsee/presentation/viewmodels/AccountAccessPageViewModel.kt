@@ -20,13 +20,18 @@ class AccountAccessPageViewModel @Inject constructor(
     private var _loadingState = MutableStateFlow<UiState<NameAndAccountType>>(UiState.Initial)
     val loadingState: StateFlow<UiState<NameAndAccountType>> = _loadingState
 
-    fun saveToken(token: String) {
+    private var _accessToken = MutableStateFlow("")
+    val accessToken: StateFlow<String> = _accessToken
+
+    fun saveToken() {
         viewModelScope.launch {
             _loadingState.value = UiState.Loading
-            saveTokenUseCase(token)
+            saveTokenUseCase(_accessToken.value)
             getNameAndAccountType()
         }
     }
+
+    fun updateAccessToken(token: String) { _accessToken.value = token }
 
     private suspend fun getNameAndAccountType() = try {
         _loadingState.value = UiState.Success(getNameAndAccountTypeUseCase())
