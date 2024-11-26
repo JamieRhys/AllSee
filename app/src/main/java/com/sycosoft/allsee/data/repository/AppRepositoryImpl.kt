@@ -9,7 +9,9 @@ import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.AccountHolderName
 import com.sycosoft.allsee.domain.models.ErrorResponse
+import com.sycosoft.allsee.domain.models.Identity
 import com.sycosoft.allsee.domain.models.NameAndAccountType
+import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.repository.AppRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -50,6 +52,34 @@ class AppRepositoryImpl @Inject constructor(
                 type = type.await(),
             )
         }
+
+    @Throws(RepositoryException::class)
+    override suspend fun getIdentity(): Identity = try {
+        apiService.getIdentity().toDomain()
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
+    }
+
+    @Throws(RepositoryException::class)
+    override suspend fun getPerson(): Person = try {
+        coroutineScope {
+            val accountHolder = async { getAccountHolder() }.await()
+            val identity = async { getIdentity() }.await()
+
+            Person(
+                uid = accountHolder.uid,
+                type = accountHolder.type,
+                title = identity.title,
+                firstName = identity.firstName,
+                lastName = identity.lastName,
+                dob = identity.dob,
+                email = identity.email,
+                phone = identity.phone,
+            )
+        }
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
+    }
 
     private fun throwRepositoryException(e: ApiException): RepositoryException {
         Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")

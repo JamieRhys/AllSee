@@ -23,33 +23,34 @@ class GetAccountHolderUseCaseTest {
         underTest = GetAccountHolderUseCase(repository)
     }
 
-//    @Test
-//    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
-//        // Given
-//        val accountHolder = AccountHolder(uid = "1234567890", type = AccountHolderType.INDIVIDUAL)
-//        coEvery { repository.getAccountHolder() } returns Result.success(accountHolder)
-//
-//        // When
-//        val result = underTest()
-//
-//        // Then
-//        coVerify(exactly = 1) { repository.getAccountHolder() }
-//        assertTrue(result.isSuccess)
-//        assertEquals(accountHolder, result.getOrNull())
-//    }
-//
-//    @Test
-//    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
-//        // Given
-//        val exception = RepositoryException(ErrorResponse("error", "Error Description"))
-//        coEvery { repository.getAccountHolder() } returns Result.failure(exception)
-//
-//        // When
-//        val result = underTest()
-//
-//        // Then
-//        coVerify(exactly = 1) { repository.getAccountHolder() }
-//        assertTrue(result.isFailure)
-//        assertEquals(exception, result.exceptionOrNull())
-//    }
+    @Test
+    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
+        // Given
+        val expected = AccountHolder(uid = "1234567890", type = AccountHolderType.INDIVIDUAL)
+        coEvery { repository.getAccountHolder() } returns expected
+
+        // When
+        val actual = underTest()
+
+        // Then
+        coVerify(exactly = 1) { repository.getAccountHolder() }
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
+        // Given
+        val expected = RepositoryException(ErrorResponse("error", "Error Description"))
+        coEvery { repository.getAccountHolder() } throws expected
+
+        // When and Verify
+        try {
+            underTest()
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(expected, e)
+        } catch(e: Exception) {
+            fail("Unexpected exception thrown: ${e.message}")
+        }
+    }
 }

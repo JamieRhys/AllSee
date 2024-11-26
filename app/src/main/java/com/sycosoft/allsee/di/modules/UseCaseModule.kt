@@ -4,6 +4,7 @@ import com.sycosoft.allsee.domain.repository.AppRepository
 import com.sycosoft.allsee.domain.usecases.GetAccountHolderNameUseCase
 import com.sycosoft.allsee.domain.usecases.GetAccountHolderUseCase
 import com.sycosoft.allsee.domain.usecases.GetNameAndAccountTypeUseCase
+import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.domain.usecases.SaveTokenUseCase
 import dagger.Module
 import dagger.Provides
@@ -19,8 +20,12 @@ class UseCaseModule {
         GetAccountHolderUseCase(repository)
 
     @Provides
-    fun provideGetNameAndAccountTypeUseCase(repository: AppRepository): GetNameAndAccountTypeUseCase =
-        GetNameAndAccountTypeUseCase(repository)
+    fun provideGetNameAndAccountTypeUseCase(): GetNameAndAccountTypeUseCase =
+        GetNameAndAccountTypeUseCase()
+
+    @Provides
+    fun provideGetPersonUseCase(repository: AppRepository): GetPersonUseCase =
+        GetPersonUseCase(repository)
 
     @Provides
     fun provideSaveTokenUseCase(repository: AppRepository): SaveTokenUseCase =

@@ -14,5 +14,3 @@ fun ErrorResponseDto.toDomain(): ErrorResponse = ErrorResponse(
     error = error,
     errorDescription = errorDescription,
 )
-
-// TODO: Add toDatabase mapper.

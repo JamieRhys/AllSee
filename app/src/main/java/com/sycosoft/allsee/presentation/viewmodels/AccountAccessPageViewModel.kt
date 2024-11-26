@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.domain.usecases.GetNameAndAccountTypeUseCase
+import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.domain.usecases.SaveTokenUseCase
 import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class AccountAccessPageViewModel @Inject constructor(
     private val saveTokenUseCase: SaveTokenUseCase,
     private val getNameAndAccountTypeUseCase: GetNameAndAccountTypeUseCase,
+    private val getPersonUseCase: GetPersonUseCase,
 ) : ViewModel() {
     private var _loadingState = MutableStateFlow<UiState<NameAndAccountType>>(UiState.Initial)
     val loadingState: StateFlow<UiState<NameAndAccountType>> = _loadingState
@@ -27,14 +29,14 @@ class AccountAccessPageViewModel @Inject constructor(
         viewModelScope.launch {
             _loadingState.value = UiState.Loading
             saveTokenUseCase(_accessToken.value)
-            getNameAndAccountType()
+            getPerson()
         }
     }
 
     fun updateAccessToken(token: String) { _accessToken.value = token }
 
-    private suspend fun getNameAndAccountType() = try {
-        _loadingState.value = UiState.Success(getNameAndAccountTypeUseCase())
+    private suspend fun getPerson() = try {
+        _loadingState.value = UiState.Success(getNameAndAccountTypeUseCase(getPersonUseCase()))
     } catch(e: RepositoryException) {
         _loadingState.value = UiState.Error(e.error.error, e.error.errorDescription)
     }
