@@ -3,15 +3,19 @@ package com.sycosoft.allsee.domain.usecases
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.NameAndAccountType
+import com.sycosoft.allsee.domain.models.Person
+import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import com.sycosoft.allsee.domain.repository.AppRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.fail
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
+import java.time.LocalDate
 
 class GetNameAndAccountTypeUseCaseTest {
     private val repository: AppRepository = mockk(relaxed = true)
@@ -19,36 +23,29 @@ class GetNameAndAccountTypeUseCaseTest {
 
     @Before
     fun setup() {
-        underTest = GetNameAndAccountTypeUseCase(repository)
+        underTest = GetNameAndAccountTypeUseCase()
     }
 
-//    @Test
-//    fun `Given repository returns success, When invoke is called, Then invoke should return success result`() = runBlocking {
-//        // Given
-//        val nameAndAccountType = NameAndAccountType(name = "John Doe", type = "Individual")
-//        coEvery { repository.getNameAndAccountType() } returns Result.success(nameAndAccountType)
-//
-//        // When
-//        val result = underTest()
-//
-//        // Then
-//        coVerify(exactly = 1) { repository.getNameAndAccountType() }
-//        assertTrue(result.isSuccess)
-//        assertEquals(nameAndAccountType, result.getOrNull())
-//    }
-//
-//    @Test
-//    fun `Given repository returns failure, When invoke is called, Then invoke should return failure result`() = runBlocking {
-//        // Given
-//        val exception = RepositoryException(ErrorResponse("error", "Error Description"))
-//        coEvery { repository.getNameAndAccountType() } returns Result.failure(exception)
-//
-//        // When
-//        val result = underTest()
-//
-//        // Then
-//        coVerify(exactly = 1) { repository.getNameAndAccountType() }
-//        assertTrue(result.isFailure)
-//        assertEquals(exception, result.exceptionOrNull())
-//    }
+    @Test
+    fun `Given valid person object, Then invoke should return NameAndAccountType`() = runBlocking {
+        // Given
+        val person = Person(
+            uid = "0123456789",
+            type = AccountHolderType.INDIVIDUAL,
+            title = "Mr",
+            firstName = "John",
+            lastName = "Doe",
+            dob = LocalDate.parse("1990-01-01"),
+            email = "john.doe@example.com",
+            phone = "1234567890"
+        )
+        val expected = NameAndAccountType(name = "John Doe", type = "Individual")
+        coEvery { repository.getNameAndAccountType() } returns expected
+
+        // When
+        val actual = underTest(person)
+
+        // Then
+        assertEquals(expected, actual)
+    }
 }

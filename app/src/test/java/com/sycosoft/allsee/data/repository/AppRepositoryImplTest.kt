@@ -6,10 +6,12 @@ import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
 import com.sycosoft.allsee.data.remote.models.AccountHolderNameDto
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
+import com.sycosoft.allsee.data.remote.models.IdentityDto
 import com.sycosoft.allsee.data.remote.models.toDomain
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.NameAndAccountType
+import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -125,6 +127,88 @@ class AppRepositoryImplTest {
     @Test
     fun `When ApiException thrown in getAccountHolder, Then RepositoryException should be thrown and no object returned`() = runBlocking {
         coEvery { apiService.getAccountHolderName() } returns AccountHolderNameDto("John Doe")
+        coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
+
+        try {
+            underTest.getNameAndAccountType()
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(apiException.errorResponse.toDomain(), e.error)
+        }
+    }
+
+    // Get Identity
+    @Test
+    fun `When API succeeds, Then person identity is returned`() = runBlocking {
+        val identityDto = IdentityDto(
+            title = "Mr",
+            firstName = "Joe",
+            lastName = "Bloggs",
+            dateOfBirth = "1975-01-01",
+            email = "joe.bloggs@example.com",
+            phone = "0123456789",
+        )
+
+        coEvery { apiService.getIdentity() } returns identityDto
+
+        val actual = underTest.getIdentity()
+        val expected = identityDto.toDomain()
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When ApiException thrown, RepositoryException should be thrown and no identity returned`() = runBlocking {
+        coEvery { apiService.getIdentity() } throws apiException
+
+        try {
+            underTest.getIdentity()
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(apiException.errorResponse.toDomain(), e.error)
+        }
+    }
+
+    // Get Person
+    @Test
+    fun `When API succeeds, Then person object is returned`() = runBlocking {
+        val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")
+        val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
+        val identity = identityDto.toDomain()
+        val accountHolder = accountHolderDto.toDomain()
+
+        coEvery { apiService.getAccountHolder() } returns accountHolderDto
+        coEvery { apiService.getIdentity() } returns identityDto
+
+        val actual = underTest.getPerson()
+        val expected = Person(
+            uid = accountHolder.uid,
+            type = accountHolder.type,
+            title = identity.title,
+            firstName = identity.firstName,
+            lastName = identity.lastName,
+            dob = identity.dob,
+            email = identity.email,
+            phone = identity.phone
+        )
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When ApiException thrown in getAccountHolder from getPerson, Then RepositoryException should be thrown and no object returned`() = runBlocking {
+        coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
+
+        try {
+            underTest.getNameAndAccountType()
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(apiException.errorResponse.toDomain(), e.error)
+        }
+    }
+
+    @Test
+    fun `When ApiException thrown in getIdentity from getPerson, Then RepositoryException should be thrown and no object returned`() = runBlocking {
+        coEvery { apiService.getAccountHolder() } returns AccountHolderDto("0123456789", "INDIVIDUAL")
         coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
 
         try {
