@@ -2,15 +2,15 @@ package com.sycosoft.allsee.data.repository
 
 import android.util.Log
 import com.sycosoft.allsee.data.local.TokenProvider
+import com.sycosoft.allsee.data.mappers.AccountHolderDtoMapper
+import com.sycosoft.allsee.data.mappers.ErrorResponseDtoMapper
+import com.sycosoft.allsee.data.mappers.IdentityDtoMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
-import com.sycosoft.allsee.data.remote.models.toDomain
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.AccountHolder
-import com.sycosoft.allsee.domain.models.AccountHolderName
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.Identity
-import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.repository.AppRepository
 import kotlinx.coroutines.async
@@ -28,34 +28,15 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     @Throws(RepositoryException::class)
-    override suspend fun getAccountHolderName(): AccountHolderName = try {
-        apiService.getAccountHolderName().toDomain()
-    } catch(e: ApiException) {
-        throw throwRepositoryException(e)
-    }
-
-    @Throws(RepositoryException::class)
     override suspend fun getAccountHolder(): AccountHolder = try {
-        apiService.getAccountHolder().toDomain()
+        AccountHolderDtoMapper.toDomain(apiService.getAccountHolder())
     } catch(e: ApiException) {
         throw throwRepositoryException(e)
     }
-
-    @Throws(RepositoryException::class)
-    override suspend fun getNameAndAccountType(): NameAndAccountType =
-        coroutineScope {
-            val name = async { getAccountHolderName().accountHolderName }
-            val type = async { getAccountHolder().type.displayName }
-
-            NameAndAccountType(
-                name = name.await(),
-                type = type.await(),
-            )
-        }
 
     @Throws(RepositoryException::class)
     override suspend fun getIdentity(): Identity = try {
-        apiService.getIdentity().toDomain()
+        IdentityDtoMapper.toDomain(apiService.getIdentity())
     } catch(e: ApiException) {
         throw throwRepositoryException(e)
     }
@@ -92,7 +73,7 @@ class AppRepositoryImpl @Inject constructor(
                 )
             )
         } else {
-            RepositoryException(error = e.errorResponse.toDomain())
+            RepositoryException(error = ErrorResponseDtoMapper.toDomain(e.errorResponse))
         }
     }
 }
