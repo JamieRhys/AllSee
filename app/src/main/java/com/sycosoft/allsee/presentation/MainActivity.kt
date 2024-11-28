@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            AllSeeTheme {
+            AllSeeTheme(dynamicColor = false) {
                 Surface {
                     AccountAccessPage(viewModel = viewModel(factory = viewModelFactory))
                 }

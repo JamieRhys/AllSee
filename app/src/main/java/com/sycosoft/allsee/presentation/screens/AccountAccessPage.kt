@@ -30,6 +30,7 @@ fun AccountAccessPage(
     val loadingState = viewModel.loadingState.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val showProgressBar = remember { mutableStateOf(false) }
     val openConfirmationDialog = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -49,15 +50,27 @@ fun AccountAccessPage(
         AccessTokenRequestScreen(
             accessToken = accessToken.value,
             onAccessTokenChange = { viewModel.updateAccessToken(it) },
-            onGetStartedButtonClick = { viewModel.saveToken() },
-            uiState = loadingState.value,
-            errorSnackBarCallback = { errorString ->
-                LaunchedEffect(snackbarHostState) {
-                    snackbarHostState.showSnackbar(errorString)
-                }
-            },
-            onOpenConfirmationDialog = { openConfirmationDialog.value = it },
+            showProgressBar = showProgressBar.value,
+            onButtonClick = { viewModel.saveToken() },
         )
+        when (val state = loadingState.value) {
+            is UiState.Initial -> {
+                showProgressBar.value = false
+            }
+            is UiState.Loading -> {
+                showProgressBar.value = true
+            }
+            is UiState.Success -> {
+                showProgressBar.value = false
+                openConfirmationDialog.value = true
+            }
+            is UiState.Error -> {
+                showProgressBar.value = false
+                LaunchedEffect(snackbarHostState) {
+                    snackbarHostState.showSnackbar(state.errorDescription)
+                }
+            }
+        }
         when {
             openConfirmationDialog.value -> {
                 // Given this dialog is open, it should be safe to say that we have successfully been given
@@ -68,15 +81,23 @@ fun AccountAccessPage(
                     text = {
                         Text(text = stringResource(id = R.string.adt_identity_confirmation, nameAndAccountType.data.name, nameAndAccountType.data.type))
                     },
-                    onDismissRequest = {openConfirmationDialog.value = false },
+                    onDismissRequest = {
+                        openConfirmationDialog.value = false
+                        viewModel.resetLoadingState()
+                    },
                     confirmButton = {
                         // TODO: Navigate to main screen when confirmed (once implemented) for now, just dismiss.
-                        Button(onClick = { openConfirmationDialog.value = false }) {
+                        Button(onClick = {
+                            openConfirmationDialog.value = false
+                        }) {
                             Text(text = "Yes")
                         }
                     },
                     dismissButton = {
-                        Button(onClick = { openConfirmationDialog.value = false}) {
+                        Button(onClick = {
+                            openConfirmationDialog.value = false
+                            viewModel.resetLoadingState()
+                        }) {
                             Text("No")
                         }
                     }

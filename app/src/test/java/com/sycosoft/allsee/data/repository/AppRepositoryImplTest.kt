@@ -2,17 +2,16 @@ package com.sycosoft.allsee.data.repository
 
 import android.util.Log
 import com.sycosoft.allsee.data.local.TokenProvider
+import com.sycosoft.allsee.data.mappers.AccountHolderDtoMapper
+import com.sycosoft.allsee.data.mappers.ErrorResponseDtoMapper
+import com.sycosoft.allsee.data.mappers.IdentityDtoMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
-import com.sycosoft.allsee.data.remote.models.AccountHolderNameDto
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
 import com.sycosoft.allsee.data.remote.models.IdentityDto
-import com.sycosoft.allsee.data.remote.models.toDomain
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
-import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.domain.models.Person
-import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -51,30 +50,6 @@ class AppRepositoryImplTest {
         coVerify { tokenProvider.saveToken(token) }
     }
 
-    // Account Holder Name
-    @Test
-    fun `When API succeeds, Then account holder name is returned`() = runBlocking {
-        val apiModel = AccountHolderNameDto("John Doe")
-        coEvery { apiService.getAccountHolderName() } returns apiModel
-
-        val actual = underTest.getAccountHolderName()
-        val expected = apiModel.toDomain()
-
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `When ApiException thrown, RepositoryException should be thrown and no account holder name returned`() = runBlocking {
-        coEvery { apiService.getAccountHolderName() } throws apiException
-
-        try {
-            underTest.getAccountHolderName()
-            fail("Expected RepositoryException to be thrown")
-        } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
-        }
-    }
-
     // Get Account Holder
     @Test
     fun `When API succeeds, Then account holder is returned`() = runBlocking {
@@ -83,7 +58,7 @@ class AppRepositoryImplTest {
 
         val result = underTest.getAccountHolder()
 
-        assertEquals(apiModel.toDomain(), result)
+        assertEquals(AccountHolderDtoMapper.toDomain(apiModel), result)
     }
 
     @Test
@@ -94,46 +69,7 @@ class AppRepositoryImplTest {
             underTest.getAccountHolder()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
-        }
-    }
-
-    // Get Name and Account Type
-    @Test
-    fun `When API succeeds, Then name and account type is returned`() = runBlocking {
-        val accountHolderNameDto = AccountHolderNameDto("John Doe")
-        val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")
-
-        coEvery { apiService.getAccountHolderName() } returns accountHolderNameDto
-        coEvery { apiService.getAccountHolder() } returns accountHolderDto
-
-        val actual = underTest.getNameAndAccountType()
-        val expected = NameAndAccountType(accountHolderNameDto.accountHolderName, AccountHolderType.INDIVIDUAL.displayName)
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `When ApiException thrown in getAccountHolderName, Then RepositoryException should be thrown and no object returned`() = runBlocking {
-        coEvery { underTest.getAccountHolderName() } throws ApiException(errorResponseDto)
-
-        try {
-            underTest.getNameAndAccountType()
-            fail("Expected RepositoryException to be thrown")
-        } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
-        }
-    }
-
-    @Test
-    fun `When ApiException thrown in getAccountHolder, Then RepositoryException should be thrown and no object returned`() = runBlocking {
-        coEvery { apiService.getAccountHolderName() } returns AccountHolderNameDto("John Doe")
-        coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
-
-        try {
-            underTest.getNameAndAccountType()
-            fail("Expected RepositoryException to be thrown")
-        } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
+            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 
@@ -152,7 +88,7 @@ class AppRepositoryImplTest {
         coEvery { apiService.getIdentity() } returns identityDto
 
         val actual = underTest.getIdentity()
-        val expected = identityDto.toDomain()
+        val expected = IdentityDtoMapper.toDomain(identityDto)
 
         assertEquals(expected, actual)
     }
@@ -165,7 +101,7 @@ class AppRepositoryImplTest {
             underTest.getIdentity()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
+            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 
@@ -174,8 +110,8 @@ class AppRepositoryImplTest {
     fun `When API succeeds, Then person object is returned`() = runBlocking {
         val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
-        val identity = identityDto.toDomain()
-        val accountHolder = accountHolderDto.toDomain()
+        val identity = IdentityDtoMapper.toDomain(identityDto)
+        val accountHolder = AccountHolderDtoMapper.toDomain(accountHolderDto)
 
         coEvery { apiService.getAccountHolder() } returns accountHolderDto
         coEvery { apiService.getIdentity() } returns identityDto
@@ -199,10 +135,10 @@ class AppRepositoryImplTest {
         coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
 
         try {
-            underTest.getNameAndAccountType()
+            underTest.getPerson()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
+            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 
@@ -212,10 +148,10 @@ class AppRepositoryImplTest {
         coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
 
         try {
-            underTest.getNameAndAccountType()
+            underTest.getPerson()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(apiException.errorResponse.toDomain(), e.error)
+            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 }
