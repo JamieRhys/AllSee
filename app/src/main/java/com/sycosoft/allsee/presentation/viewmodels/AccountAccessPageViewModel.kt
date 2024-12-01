@@ -25,14 +25,16 @@ class AccountAccessPageViewModel @Inject constructor(
     val accessToken: StateFlow<String> = _accessToken
 
     fun saveToken() {
+        _loadingState.value = UiState.Loading
         viewModelScope.launch {
-            _loadingState.value = UiState.Loading
             saveTokenUseCase(_accessToken.value)
             getPerson()
         }
     }
 
     fun updateAccessToken(token: String) { _accessToken.value = token }
+
+    fun resetLoadingState() { _loadingState.value = UiState.Initial }
 
     private suspend fun getPerson() = try {
         _loadingState.value = UiState.Success(NameAndAccountTypeMapper.map(getPersonUseCase()))

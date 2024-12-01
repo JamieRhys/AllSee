@@ -84,6 +84,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Constraint Layout
+    implementation(libs.androidx.constraintlayout.compose)
+
     // Dagger
     implementation(libs.dagger)
     implementation(libs.dagger.android)
@@ -119,4 +122,7 @@ dependencies {
 
     // Gson
     implementation(libs.gson)
+
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
 }

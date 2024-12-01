@@ -24,42 +24,52 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.sycosoft.allsee.R
-import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
-import com.sycosoft.allsee.presentation.utils.UiState
 
 @Composable
 fun AccessTokenRequestScreen(
-    topSectionColor: Color = MaterialTheme.colorScheme.inversePrimary,
-    bottomSectionColor: Color = MaterialTheme.colorScheme.background,
+    topSectionColor: Color = MaterialTheme.colorScheme.surface,
+    bottomSectionColor: Color = MaterialTheme.colorScheme.inverseSurface,
     accessToken: String,
     onAccessTokenChange: (String) -> Unit,
-    onGetStartedButtonClick: () -> Unit,
-    uiState: UiState<NameAndAccountType>,
-    errorSnackBarCallback: @Composable (String) -> Unit,
-    onOpenConfirmationDialog: (Boolean) -> Unit,
+    showProgressBar: Boolean,
+    onButtonClick: () -> Unit,
 ) {
-
-    Box(
+    ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .testTag("screen_access_token_request")
     ) {
+        val (
+            backgroundBottom,
+            backgroundBottomLeft,
+            backgroundTop,
+            backgroundTopRight,
+            button,
+            contentTop,
+            contentBottom,
+        ) = createRefs()
+
         // Background/TopRight
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.60f)
-                .align(Alignment.TopEnd)
+                .fillMaxHeight(0.6f)
                 .background(bottomSectionColor)
+                .constrainAs(backgroundTopRight) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(backgroundBottom.top)
+                }
         )
+
         // Background/Top
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.60f)
-                .align(Alignment.TopCenter)
+                .fillMaxHeight(0.6f)
                 .background(
                     color = topSectionColor,
                     shape = RoundedCornerShape(
@@ -67,83 +77,116 @@ fun AccessTokenRequestScreen(
                         topEnd = 0.dp,
                         bottomStart = 0.dp,
                         bottomEnd = 90.dp
-                    )
+                    ),
                 )
+                .constrainAs(backgroundTop) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(backgroundBottom.top)
+                }
         )
+
         // Background/BottomLeft
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.40f)
-                .align(Alignment.BottomStart)
+                .fillMaxHeight(0.4f)
                 .background(topSectionColor)
+                .constrainAs(backgroundBottomLeft) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    top.linkTo(backgroundTop.bottom)
+                }
         )
+
         // Background/Bottom
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.40f)
-                .align(Alignment.BottomCenter)
+                .fillMaxHeight(0.4f)
                 .background(
                     color = bottomSectionColor,
                     shape = RoundedCornerShape(
                         topStart = 90.dp,
                         topEnd = 0.dp,
                         bottomStart = 0.dp,
-                        bottomEnd = 0.dp
+                        bottomEnd = 0.dp,
                     )
                 )
+                .constrainAs(backgroundBottom) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(backgroundTop.bottom)
+                }
         )
-        // Foreground/Content
+
+        // Foreground/Button
+        Button(
+            modifier = Modifier
+                .testTag("atrs_button")
+                .constrainAs(button) {
+                    top.linkTo(backgroundTop.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(backgroundBottom.top)
+                },
+            onClick = { onButtonClick() },
+        ) {
+            Text(text = stringResource(id = R.string.button_get_started))
+        }
+
+        // Foreground/ContentTop
         Column(
             modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.5f)
                 .padding(16.dp)
-                .fillMaxSize()
-                .align(Alignment.Center),
+                .constrainAs(contentTop) {
+                    bottom.linkTo(button.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 modifier = Modifier
-                    .testTag("aap_title")
+                    .testTag("atrs_title")
                     .padding(bottom = 32.dp),
                 text = stringResource(id = R.string.aap_title),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                modifier = Modifier.testTag("aap_text"),
+                modifier = Modifier.testTag("atrs_text"),
                 text = stringResource(id = R.string.aap_get_started)
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(top = 16.dp, bottom = 16.dp)
+                    .padding(top = 64.dp, bottom = 16.dp)
                     .testTag("otf_access_token"),
                 value = accessToken,
                 singleLine = true,
                 onValueChange = onAccessTokenChange,
                 placeholder = { Text(text = stringResource(id = R.string.aap_access_token)) }
             )
-            Button(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 80.dp)
-                    .testTag("button_get_started"),
-                onClick = onGetStartedButtonClick,
-            ) {
-                Text(text = stringResource(id = R.string.button_get_started))
-            }
-            when (uiState) {
-                is UiState.Initial -> {}
-                is UiState.Error -> {
-                    errorSnackBarCallback(uiState.errorDescription)
+        }
+
+        // Foreground/ContentBottom
+        Column(
+            modifier = Modifier
+                .constrainAs(contentBottom) {
+                    bottom.linkTo(parent.bottom)
+                    top.linkTo(button.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
                 }
-                is UiState.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is UiState.Success -> {
-                    Text(uiState.data.name)
-                    Text(uiState.data.type)
-                    onOpenConfirmationDialog(true)
-                }
+        ) {
+            when {
+                showProgressBar -> CircularProgressIndicator(
+                    modifier = Modifier.testTag("account-access-screen_progressbar")
+                )
             }
         }
     }
@@ -152,15 +195,13 @@ fun AccessTokenRequestScreen(
 @Preview
 @Composable
 private fun LM_AccessTokenRequestScreenPreview() {
-    AllSeeTheme {
+    AllSeeTheme(dynamicColor = false) {
         Surface {
             AccessTokenRequestScreen(
                 accessToken = "",
                 onAccessTokenChange = {},
-                onGetStartedButtonClick = {},
-                uiState = UiState.Initial,
-                errorSnackBarCallback = {},
-                onOpenConfirmationDialog = {},
+                onButtonClick = {},
+                showProgressBar = false,
             )
         }
     }
@@ -169,15 +210,13 @@ private fun LM_AccessTokenRequestScreenPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun DM_AccessTokenRequestScreenPreview() {
-    AllSeeTheme {
+    AllSeeTheme(dynamicColor = false) {
         Surface {
             AccessTokenRequestScreen(
                 accessToken = "",
                 onAccessTokenChange = {},
-                onGetStartedButtonClick = {},
-                uiState = UiState.Initial,
-                errorSnackBarCallback = {},
-                onOpenConfirmationDialog = {},
+                onButtonClick = {},
+                showProgressBar = false,
             )
         }
     }
