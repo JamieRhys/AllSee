@@ -20,6 +20,7 @@ import javax.inject.Inject
 class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
     private val tokenProvider: TokenProvider,
+    private val identityDtoMapper: IdentityDtoMapper,
 ) : AppRepository {
     private val logTag = AppRepositoryImpl::class.java.simpleName
 
@@ -36,7 +37,7 @@ class AppRepositoryImpl @Inject constructor(
 
     @Throws(RepositoryException::class)
     override suspend fun getIdentity(): Identity = try {
-        IdentityDtoMapper.toDomain(apiService.getIdentity())
+        identityDtoMapper.toDomain(apiService.getIdentity())
     } catch(e: ApiException) {
         throw throwRepositoryException(e)
     }
