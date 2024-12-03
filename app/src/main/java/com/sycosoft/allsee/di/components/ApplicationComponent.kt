@@ -5,7 +5,6 @@ import com.sycosoft.allsee.presentation.AllSeeApplication
 import com.sycosoft.allsee.di.modules.ContextModule
 import com.sycosoft.allsee.di.modules.LocalModule
 import com.sycosoft.allsee.di.modules.MainActivityModule
-import com.sycosoft.allsee.di.modules.NavigationModule
 import com.sycosoft.allsee.di.modules.NetworkModule
 import com.sycosoft.allsee.di.modules.RepositoryModule
 import com.sycosoft.allsee.di.modules.UseCaseModule
@@ -25,7 +24,6 @@ import javax.inject.Singleton
         RepositoryModule::class,
         ViewModelModule::class,
         MainActivityModule::class,
-        NavigationModule::class,
         UseCaseModule::class,
     ]
 )

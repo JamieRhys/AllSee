@@ -1,9 +1,9 @@
-package com.sycosoft.allsee.data.mappers
+package com.sycosoft.allsee.domain.mappers
 
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
 import com.sycosoft.allsee.domain.models.ErrorResponse
 
-object ErrorResponseDtoMapper {
+object ErrorResponseMapper {
     fun toDomain(dto: ErrorResponseDto): ErrorResponse = ErrorResponse(
         error = dto.error,
         errorDescription = dto.errorDescription
