@@ -2,9 +2,9 @@ package com.sycosoft.allsee.data.repository
 
 import android.util.Log
 import com.sycosoft.allsee.data.local.TokenProvider
-import com.sycosoft.allsee.data.mappers.AccountHolderDtoMapper
-import com.sycosoft.allsee.data.mappers.ErrorResponseDtoMapper
-import com.sycosoft.allsee.data.mappers.IdentityDtoMapper
+import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
+import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
+import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
@@ -26,6 +26,7 @@ import org.junit.Test
 class AppRepositoryImplTest {
     private val apiService: StarlingBankApiService = mockk(relaxed = true)
     private val tokenProvider: TokenProvider = mockk(relaxed = true)
+    private val identityMapper: IdentityMapper = IdentityMapper()
     private lateinit var underTest: AppRepositoryImpl
 
     private val errorResponseDto = ErrorResponseDto("error", "Error Description")
@@ -33,7 +34,7 @@ class AppRepositoryImplTest {
 
     @Before
     fun setUp() {
-        underTest = AppRepositoryImpl(apiService, tokenProvider)
+        underTest = AppRepositoryImpl(apiService, tokenProvider, identityMapper)
 
         mockkStatic(Log::class)
         every { Log.e(any(), any()) } returns 0
@@ -58,7 +59,7 @@ class AppRepositoryImplTest {
 
         val result = underTest.getAccountHolder()
 
-        assertEquals(AccountHolderDtoMapper.toDomain(apiModel), result)
+        assertEquals(AccountHolderMapper.toDomain(apiModel), result)
     }
 
     @Test
@@ -69,7 +70,7 @@ class AppRepositoryImplTest {
             underTest.getAccountHolder()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
+            assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 
@@ -88,7 +89,7 @@ class AppRepositoryImplTest {
         coEvery { apiService.getIdentity() } returns identityDto
 
         val actual = underTest.getIdentity()
-        val expected = IdentityDtoMapper.toDomain(identityDto)
+        val expected = identityMapper.toDomain(identityDto)
 
         assertEquals(expected, actual)
     }
@@ -101,7 +102,7 @@ class AppRepositoryImplTest {
             underTest.getIdentity()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
+            assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 
@@ -110,8 +111,8 @@ class AppRepositoryImplTest {
     fun `When API succeeds, Then person object is returned`() = runBlocking {
         val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
-        val identity = IdentityDtoMapper.toDomain(identityDto)
-        val accountHolder = AccountHolderDtoMapper.toDomain(accountHolderDto)
+        val identity = identityMapper.toDomain(identityDto)
+        val accountHolder = AccountHolderMapper.toDomain(accountHolderDto)
 
         coEvery { apiService.getAccountHolder() } returns accountHolderDto
         coEvery { apiService.getIdentity() } returns identityDto
@@ -138,7 +139,7 @@ class AppRepositoryImplTest {
             underTest.getPerson()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
+            assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 
@@ -151,7 +152,7 @@ class AppRepositoryImplTest {
             underTest.getPerson()
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
-            assertEquals(ErrorResponseDtoMapper.toDomain(apiException.errorResponse), e.error)
+            assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
 }
