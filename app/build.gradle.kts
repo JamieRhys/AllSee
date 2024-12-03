@@ -127,4 +127,9 @@ dependencies {
 
     // Coroutines Test
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    testImplementation(libs.androidx.room.testing)
 }

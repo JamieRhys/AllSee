@@ -34,6 +34,7 @@ mockitoInline = "5.2.0"
 mockitoAndroidVersion = "5.4.0"
 mockitoKotlin = "5.4.0"
 mockwebserver = "5.0.0-alpha.3"
+roomRuntime = "2.6.1"
 securityCrypto = "1.1.0-alpha06"
 navigationCommonKtx = "2.8.4"
 navigationRuntimeKtx = "2.8.4"
@@ -43,6 +44,9 @@ navigationCompose = "2.8.4"
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomRuntime" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
