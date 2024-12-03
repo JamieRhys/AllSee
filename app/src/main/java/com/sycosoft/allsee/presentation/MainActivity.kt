@@ -6,8 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sycosoft.allsee.presentation.screens.AccountAccessPage
+import com.sycosoft.allsee.presentation.navigation.AppNavigation
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -25,7 +24,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             AllSeeTheme(dynamicColor = false) {
                 Surface {
-                    AccountAccessPage(viewModel = viewModel(factory = viewModelFactory))
+                    AppNavigation(viewModelFactory = viewModelFactory)
+                    //AccountAccessPage(viewModel = viewModel(factory = viewModelFactory))
+                    //HomePage(viewModel = viewModel(factory = viewModelFactory))
                 }
             }
         }

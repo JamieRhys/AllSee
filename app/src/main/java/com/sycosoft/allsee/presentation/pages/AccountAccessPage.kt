@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.screens
+package com.sycosoft.allsee.presentation.pages
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.AlertDialog
@@ -25,6 +25,7 @@ import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
 @Composable
 fun AccountAccessPage(
     viewModel: AccountAccessPageViewModel,
+    onNavigateToHomePage: () -> Unit,
 ) {
     val accessToken = viewModel.accessToken.collectAsState()
     val loadingState = viewModel.loadingState.collectAsState()
@@ -88,7 +89,7 @@ fun AccountAccessPage(
                     confirmButton = {
                         // TODO: Navigate to main screen when confirmed (once implemented) for now, just dismiss.
                         Button(onClick = {
-                            openConfirmationDialog.value = false
+                            onNavigateToHomePage()
                         }) {
                             Text(text = "Yes")
                         }
