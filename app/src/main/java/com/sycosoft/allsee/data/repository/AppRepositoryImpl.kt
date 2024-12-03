@@ -2,9 +2,9 @@ package com.sycosoft.allsee.data.repository
 
 import android.util.Log
 import com.sycosoft.allsee.data.local.TokenProvider
-import com.sycosoft.allsee.data.mappers.AccountHolderDtoMapper
-import com.sycosoft.allsee.data.mappers.ErrorResponseDtoMapper
-import com.sycosoft.allsee.data.mappers.IdentityDtoMapper
+import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
+import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
+import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
     private val tokenProvider: TokenProvider,
-    private val identityDtoMapper: IdentityDtoMapper,
+    private val identityMapper: IdentityMapper,
 ) : AppRepository {
     private val logTag = AppRepositoryImpl::class.java.simpleName
 
@@ -30,14 +30,14 @@ class AppRepositoryImpl @Inject constructor(
 
     @Throws(RepositoryException::class)
     override suspend fun getAccountHolder(): AccountHolder = try {
-        AccountHolderDtoMapper.toDomain(apiService.getAccountHolder())
+        AccountHolderMapper.toDomain(apiService.getAccountHolder())
     } catch(e: ApiException) {
         throw throwRepositoryException(e)
     }
 
     @Throws(RepositoryException::class)
     override suspend fun getIdentity(): Identity = try {
-        identityDtoMapper.toDomain(apiService.getIdentity())
+        identityMapper.toDomain(apiService.getIdentity())
     } catch(e: ApiException) {
         throw throwRepositoryException(e)
     }
@@ -74,7 +74,7 @@ class AppRepositoryImpl @Inject constructor(
                 )
             )
         } else {
-            RepositoryException(error = ErrorResponseDtoMapper.toDomain(e.errorResponse))
+            RepositoryException(error = ErrorResponseMapper.toDomain(e.errorResponse))
         }
     }
 }
