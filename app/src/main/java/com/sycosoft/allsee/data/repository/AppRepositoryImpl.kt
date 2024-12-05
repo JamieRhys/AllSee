@@ -61,7 +61,7 @@ class AppRepositoryImpl @Inject constructor(
     @Throws(RepositoryException::class)
     override suspend fun getPerson(): Person = try {
         coroutineScope {
-            var person = personDao.getPersonById(1)
+            var person = personDao.getPerson()
 
             if (person == null) {
                 val accountHolder = async { getAccountHolder() }.await()

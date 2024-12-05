@@ -13,18 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="AccessTokenRequestScreenKtTest">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-28T12:52:48.182361600Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=P2129D000948" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
-      </SelectionState>
-      <SelectionState runConfigName="DM_HomePageScreenPreview - Dark Mode">
+      <SelectionState runConfigName="Tests in 'com.sycosoft.allsee'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

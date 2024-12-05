@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class PersonMapper @Inject constructor() {
     fun toDomain(entity: PersonEntity): Person = Person(
-        id = entity.id,
         uid = entity.uid,
         type = AccountHolderType.valueOf(entity.type),
         title = entity.title,
@@ -20,7 +19,6 @@ class PersonMapper @Inject constructor() {
     )
 
     fun toEntity(domain: Person): PersonEntity = PersonEntity(
-        id = domain.id,
         uid = domain.uid,
         type = domain.type.name,
         title = domain.title,
