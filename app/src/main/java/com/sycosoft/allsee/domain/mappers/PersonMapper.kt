@@ -18,4 +18,16 @@ class PersonMapper @Inject constructor() {
         email = entity.email,
         phone = entity.phone,
     )
+
+    fun toEntity(domain: Person): PersonEntity = PersonEntity(
+        id = domain.id,
+        uid = domain.uid,
+        type = domain.type.name,
+        title = domain.title,
+        firstName = domain.firstName,
+        lastName = domain.lastName,
+        dob = domain.dob.toString(),
+        email = domain.email,
+        phone = domain.phone,
+    )
 }
