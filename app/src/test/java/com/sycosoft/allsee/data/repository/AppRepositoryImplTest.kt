@@ -126,7 +126,6 @@ class AppRepositoryImplTest {
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
         val expected = personMapper.toDomain(
             PersonEntity(
-                id = 0,
                 uid = accountHolderDto.accountHolderUid,
                 type = AccountHolderMapper.toDomain(accountHolderDto).type.toString(),
                 title = identityDto.title,
@@ -138,7 +137,7 @@ class AppRepositoryImplTest {
             )
         )
 
-        coEvery { personDao.getPersonById(any()) } returns null
+        coEvery { personDao.getPerson() } returns null
         coEvery { apiService.getAccountHolder() } returns accountHolderDto
         coEvery { apiService.getIdentity() } returns identityDto
 
@@ -150,7 +149,7 @@ class AppRepositoryImplTest {
     @Test
     fun `When DatabaseException thrown during saving of person, Then RepositoryException should be returned and no person object returned`() = runBlocking {
         val expected = DatabaseException(ErrorResponse("error", "Error Response"))
-        coEvery { personDao.getPersonById(any()) } throws expected
+        coEvery { personDao.getPerson() } throws expected
 
         try {
             underTest.getPerson()
@@ -167,7 +166,7 @@ class AppRepositoryImplTest {
         val identity = identityMapper.toDomain(identityDto)
         val accountHolder = AccountHolderMapper.toDomain(accountHolderDto)
 
-        coEvery { personDao.getPersonById(any()) } returns null
+        coEvery { personDao.getPerson() } returns null
         coEvery { apiService.getAccountHolder() } returns accountHolderDto
         coEvery { apiService.getIdentity() } returns identityDto
 
@@ -187,7 +186,7 @@ class AppRepositoryImplTest {
 
     @Test
     fun `When ApiException thrown in getAccountHolder from getPerson, Then RepositoryException should be thrown and no object returned`() = runBlocking {
-        coEvery { personDao.getPersonById(any()) } returns null
+        coEvery { personDao.getPerson() } returns null
         coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
 
         try {
@@ -200,7 +199,7 @@ class AppRepositoryImplTest {
 
     @Test
     fun `When ApiException thrown in getIdentity from getPerson, Then RepositoryException should be thrown and no object returned`() = runBlocking {
-        coEvery { personDao.getPersonById(any()) } returns null
+        coEvery { personDao.getPerson() } returns null
         coEvery { apiService.getAccountHolder() } returns AccountHolderDto("0123456789", "INDIVIDUAL")
         coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
 

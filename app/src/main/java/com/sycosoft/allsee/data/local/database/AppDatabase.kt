@@ -17,7 +17,7 @@ import com.sycosoft.allsee.data.local.models.PersonEntity
 // Let's define the databases configuration
 @Database(
     entities = [PersonEntity::class,], // List of entity classes that will be a part of the database.
-    version = 3 // The version of the database.
+    version = 1 // The version of the database.
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract val personDao: PersonDao
@@ -53,6 +53,5 @@ abstract class AppDatabase: RoomDatabase() {
             // singleton class), so return the instance.
             return INSTANCE!!
         }
-    }
     }
 }

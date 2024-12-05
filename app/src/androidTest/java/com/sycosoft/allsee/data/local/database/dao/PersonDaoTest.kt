@@ -36,7 +36,6 @@ class PersonDaoTest {
     fun whenPersonObjectInserted_thenIdIsReturnedFromDatabase() = runTest {
         val expected = 1L
         val person = PersonEntity(
-            id = 0,
             uid = "uid",
             type = "INDIVIDUAL",
             title = "Mr",
@@ -53,9 +52,8 @@ class PersonDaoTest {
     }
 
     @Test
-    fun whenRequestingPersonWithValidId_thenPersonObjectIsReturned() = runTest {
+    fun whenRequestingPerson_thenPersonObjectIsReturned() = runTest {
         val expected = PersonEntity(
-            id = 1,
             uid = "uid",
             type = "INDIVIDUAL",
             title = "Mr",
@@ -67,31 +65,8 @@ class PersonDaoTest {
         )
         underTest.insertPerson(expected)
 
-        val actual = underTest.getPersonById(expected.id)
+        val actual = underTest.getPerson()
 
         assertEquals(expected, actual)
-    }
-
-    @Test
-    fun whenRequestingPersonWithInvalidId_thenNullIsReturned() = runTest {
-        val expected = null
-        val person = PersonEntity(
-            id = 1,
-            uid = "uid",
-            type = "INDIVIDUAL",
-            title = "Mr",
-            firstName = "Joe",
-            lastName = "Bloggs",
-            dob = "1975-01-01",
-            email = "test@test.com",
-            phone = "0123456789"
-        )
-
-        underTest.insertPerson(person)
-
-        val actual = underTest.getPersonById(2)
-
-        assertEquals(expected, actual)
-
     }
 }
