@@ -34,16 +34,18 @@ abstract class AppDatabase: RoomDatabase() {
                 // at any one time, preventing multiple threads from creating duplicate instances
                 // of the database.
                 synchronized(this) {
-                    INSTANCE = Room.databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        "allsee.db",
-                    )
-                        .fallbackToDestructiveMigration() // Set to allow destructive migration,
-                        // meaning if the database schema changes, it will drop the existing
-                        // database and recreate it.
-                        // TODO: Remove fallbackToDestructiveMigration for production release as we do not want this!
-                        .build()
+                   if(INSTANCE == null) {
+                         INSTANCE = Room.databaseBuilder(
+                            context.applicationContext,
+                            AppDatabase::class.java,
+                            "allsee.db",
+                        )
+                            .fallbackToDestructiveMigration() // Set to allow destructive migration,
+                            // meaning if the database schema changes, it will drop the existing
+                            // database and recreate it.
+                            // TODO: Remove fallbackToDestructiveMigration for production release as we do not want this!
+                            .build()
+                    }
                 }
             }
 
@@ -51,5 +53,6 @@ abstract class AppDatabase: RoomDatabase() {
             // singleton class), so return the instance.
             return INSTANCE!!
         }
+    }
     }
 }
