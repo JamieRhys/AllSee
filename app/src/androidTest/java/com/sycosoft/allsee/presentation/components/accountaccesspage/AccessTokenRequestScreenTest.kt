@@ -13,7 +13,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
-class AccessTokenRequestScreenKtTest {
+class AccessTokenRequestScreenTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
