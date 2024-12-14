@@ -33,11 +33,11 @@ class AccessTokenRequestScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("atrs_title").isDisplayed()
-        composeTestRule.onNodeWithTag("atrs_text").isDisplayed()
-        composeTestRule.onNodeWithTag("atrs_button").isDisplayed()
-        composeTestRule.onNodeWithTag("otf_access_token").isDisplayed()
-        composeTestRule.onNodeWithTag("atrs_progressbar").isNotDisplayed()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.TITLE).isDisplayed()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.TEXT).isDisplayed()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED).isDisplayed()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT).isDisplayed()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.PROGRESS_BAR).isNotDisplayed()
     }
 
     @Test
