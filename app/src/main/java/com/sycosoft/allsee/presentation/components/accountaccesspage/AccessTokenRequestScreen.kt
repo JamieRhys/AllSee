@@ -40,7 +40,7 @@ fun AccessTokenRequestScreen(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .testTag("screen_access_token_request")
+            .testTag(AccessTokenRequestScreenTestTags.SCREEN)
     ) {
         val (
             backgroundBottom,
@@ -125,7 +125,7 @@ fun AccessTokenRequestScreen(
         // Foreground/Button
         Button(
             modifier = Modifier
-                .testTag("atrs_button")
+                .testTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED)
                 .constrainAs(button) {
                     top.linkTo(backgroundTop.bottom)
                     start.linkTo(parent.start)
@@ -153,19 +153,19 @@ fun AccessTokenRequestScreen(
         ) {
             Text(
                 modifier = Modifier
-                    .testTag("atrs_title")
+                    .testTag(AccessTokenRequestScreenTestTags.TITLE)
                     .padding(bottom = 32.dp),
                 text = stringResource(id = R.string.aap_title),
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                modifier = Modifier.testTag("atrs_text"),
+                modifier = Modifier.testTag(AccessTokenRequestScreenTestTags.TEXT),
                 text = stringResource(id = R.string.aap_get_started)
             )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = 64.dp, bottom = 16.dp)
-                    .testTag("otf_access_token"),
+                    .testTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT),
                 value = accessToken,
                 singleLine = true,
                 onValueChange = onAccessTokenChange,
@@ -185,7 +185,7 @@ fun AccessTokenRequestScreen(
         ) {
             when {
                 showProgressBar -> CircularProgressIndicator(
-                    modifier = Modifier.testTag("account-access-screen_progressbar")
+                    modifier = Modifier.testTag(AccessTokenRequestScreenTestTags.PROGRESS_BAR)
                 )
             }
         }

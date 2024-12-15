@@ -31,8 +31,8 @@ class HomePageScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("hps_account_name").isDisplayed()
-        composeTestRule.onNodeWithTag("hps_person_button").isDisplayed()
+        composeTestRule.onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).isDisplayed()
+        composeTestRule.onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
     }
 
     // #############################################################################################
@@ -56,7 +56,7 @@ class HomePageScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("hps_account_name").assertTextEquals(expected)
+        composeTestRule.onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
     }
 
     @Test
@@ -76,7 +76,7 @@ class HomePageScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("hps_account_name").assertTextEquals(expected)
+        composeTestRule.onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
     }
 
     // #############################################################################################
@@ -101,7 +101,7 @@ class HomePageScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("hps_person_button").performClick()
+        composeTestRule.onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).performClick()
         assertTrue(buttonClicked)
     }
 }
