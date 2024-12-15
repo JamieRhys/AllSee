@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.accountaccesspage
+package com.sycosoft.allsee.presentation.components.screens.accountaccesspage
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background

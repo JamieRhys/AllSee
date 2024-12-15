@@ -7,6 +7,8 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreen
+import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreenTestTags
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
