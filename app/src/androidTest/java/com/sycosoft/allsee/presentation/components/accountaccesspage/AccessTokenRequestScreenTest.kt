@@ -59,7 +59,7 @@ class AccessTokenRequestScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("otf_access_token").assertTextEquals(expected)
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT).assertTextEquals(expected)
     }
 
     @Test
@@ -80,7 +80,7 @@ class AccessTokenRequestScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithTag("otf_access_token").performTextInput(expected)
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT).performTextInput(expected)
 
         assertEquals(expected, accessToken)
     }
@@ -104,7 +104,7 @@ class AccessTokenRequestScreenTest {
         }
 
         // Then and Verify
-        composeTestRule.onNodeWithTag("atrs_button").performClick()
-        composeTestRule.onNodeWithTag("atrs_progressbar").isDisplayed()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED).performClick()
+        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.PROGRESS_BAR).isDisplayed()
     }
 }

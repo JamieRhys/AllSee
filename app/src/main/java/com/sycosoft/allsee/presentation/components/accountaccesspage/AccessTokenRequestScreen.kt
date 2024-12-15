@@ -165,7 +165,7 @@ fun AccessTokenRequestScreen(
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = 64.dp, bottom = 16.dp)
-                    .testTag("otf_access_token"),
+                    .testTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT),
                 value = accessToken,
                 singleLine = true,
                 onValueChange = onAccessTokenChange,

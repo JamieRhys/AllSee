@@ -44,13 +44,13 @@ fun HomePageScreen(
     val roundedCornerSize = 30.dp
 
     Scaffold(
-        modifier = Modifier.testTag("screen_home_page"),
+        modifier = Modifier.testTag(HomePageScreenTestTags.SCREEN),
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         modifier = Modifier
-                            .testTag("hps_account_name")
+                            .testTag(HomePageScreenTestTags.ACCOUNT_NAME)
                             .padding(start = 5.dp),
                         text = accountName ?: "Loading",
                         style = MaterialTheme.typography.bodyLarge
@@ -58,7 +58,7 @@ fun HomePageScreen(
                 },
                 actions = {
                     IconButton(
-                        modifier = Modifier.testTag("hps_person_button"),
+                        modifier = Modifier.testTag(HomePageScreenTestTags.BUTTON_PERSON),
                         onClick = onPersonButtonClick
                     ) {
                         Icon(
