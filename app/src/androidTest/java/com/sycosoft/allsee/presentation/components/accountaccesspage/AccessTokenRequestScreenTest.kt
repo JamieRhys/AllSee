@@ -8,6 +8,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
+import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreenTestTags
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
