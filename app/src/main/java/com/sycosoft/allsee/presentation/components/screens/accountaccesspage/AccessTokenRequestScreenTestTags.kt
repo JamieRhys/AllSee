@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.accountaccesspage
+package com.sycosoft.allsee.presentation.components.screens.accountaccesspage
 
 object AccessTokenRequestScreenTestTags {
     const val SCREEN = "access_token_request"

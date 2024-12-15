@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.homepage
+package com.sycosoft.allsee.presentation.components.screens.homepage
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration

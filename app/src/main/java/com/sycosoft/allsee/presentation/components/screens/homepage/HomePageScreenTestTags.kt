@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.homepage
+package com.sycosoft.allsee.presentation.components.screens.homepage
 
 object HomePageScreenTestTags {
     const val SCREEN = "screen_home_page"
