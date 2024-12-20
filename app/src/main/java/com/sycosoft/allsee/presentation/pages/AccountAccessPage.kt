@@ -53,9 +53,9 @@ fun AccountAccessPage(
                 UserConfirmationDialog(
                     name = state.data.name,
                     accountType = state.data.type,
-                    onDismissButtonClick = { viewModel.resetLoadingState() },
-                    onConfirmButtonClick = { onNavigateToHomePage() },
-                    onDismissRequest = { viewModel.resetLoadingState() }
+                    onDismissButtonClick = remember { viewModel::resetLoadingState },
+                    onConfirmButtonClick = remember { { onNavigateToHomePage() } },
+                    onDismissRequest = remember { viewModel::resetLoadingState }
                 )
 
             is UiState.Error ->
