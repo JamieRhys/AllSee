@@ -8,9 +8,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.presentation.components.dialogs.UserConfirmationDialog
 import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
@@ -23,12 +23,8 @@ fun AccountAccessPage(
     viewModel: AccountAccessPageViewModel,
     onNavigateToHomePage: () -> Unit,
 ) {
-    val accessToken = viewModel.accessToken.collectAsState()
-    val loadingState = viewModel.loadingState.collectAsState()
-
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val showProgressBar = remember { mutableStateOf(false) }
-    val openConfirmationDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost = {
@@ -45,51 +41,29 @@ fun AccountAccessPage(
         }
     ) {
         AccessTokenRequestScreen(
-            accessToken = accessToken.value,
-            onAccessTokenChange = { viewModel.updateAccessToken(it) },
-            showProgressBar = showProgressBar.value,
-            onButtonClick = { viewModel.saveToken() },
+            accessToken = viewState.accessToken,
+            onAccessTokenChange = remember { viewModel::updateAccessToken },
+            showProgressBar = viewState.nameAndAccountState is UiState.Loading,
+            onButtonClick = remember { viewModel::saveToken },
         )
-        when (val state = loadingState.value) {
-            is UiState.Initial -> {
-                showProgressBar.value = false
-            }
-            is UiState.Loading -> {
-                showProgressBar.value = true
-            }
-            is UiState.Success -> {
-                showProgressBar.value = false
-                openConfirmationDialog.value = true
-            }
-            is UiState.Error -> {
-                showProgressBar.value = false
-                LaunchedEffect(snackbarHostState) {
+
+        when (val state = viewState.nameAndAccountState) {
+
+            is UiState.Success<NameAndAccountType> ->
+                UserConfirmationDialog(
+                    name = state.data.name,
+                    accountType = state.data.type,
+                    onDismissButtonClick = remember { viewModel::resetLoadingState },
+                    onConfirmButtonClick = remember { { onNavigateToHomePage() } },
+                    onDismissRequest = remember { viewModel::resetLoadingState }
+                )
+
+            is UiState.Error ->
+                LaunchedEffect(key1 = Unit) {
                     snackbarHostState.showSnackbar(state.errorDescription)
                 }
-            }
-        }
-        when {
-            openConfirmationDialog.value -> {
-                // Given this dialog is open, it should be safe to say that we have successfully been given
-                // the Success UiState. We should be able to cast it to the correct object we need going forward.
-                val nameAndAccountType = loadingState.value as UiState.Success<NameAndAccountType>
 
-                UserConfirmationDialog(
-                    name = nameAndAccountType.data.name,
-                    accountType = nameAndAccountType.data.type,
-                    onDismissButtonClick = {
-                        openConfirmationDialog.value = false
-                        viewModel.resetLoadingState()
-                    },
-                    onConfirmButtonClick = {
-                        onNavigateToHomePage()
-                    },
-                    onDismissRequest = {
-                        openConfirmationDialog.value = false
-                        viewModel.resetLoadingState()
-                    }
-                )
-            }
+            else -> {}
         }
     }
 }

@@ -9,36 +9,61 @@ import com.sycosoft.allsee.domain.usecases.SaveTokenUseCase
 import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
 import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 class AccountAccessPageViewModel @Inject constructor(
     private val saveTokenUseCase: SaveTokenUseCase,
     private val getPersonUseCase: GetPersonUseCase,
 ) : ViewModel() {
-    private var _loadingState = MutableStateFlow<UiState<NameAndAccountType>>(UiState.Initial)
-    val loadingState: StateFlow<UiState<NameAndAccountType>> = _loadingState
 
-    private var _accessToken = MutableStateFlow("")
-    val accessToken: StateFlow<String> = _accessToken
+    private val nameAndAccountTypeUiState = MutableStateFlow<UiState<NameAndAccountType>>(value = UiState.Initial)
+    private val accessToken = MutableStateFlow(value = "")
+
+    val viewState: StateFlow<ViewState> by lazy {
+        combine(
+            accessToken,
+            nameAndAccountTypeUiState,
+            ::ViewState
+        ).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = ViewState(
+                accessToken = accessToken.value,
+                nameAndAccountState = nameAndAccountTypeUiState.value
+            )
+        )
+    }
 
     fun saveToken() {
-        _loadingState.value = UiState.Loading
         viewModelScope.launch {
-            saveTokenUseCase(_accessToken.value)
-            getPerson()
+            nameAndAccountTypeUiState.update { UiState.Loading }
+            saveTokenUseCase(token = accessToken.value)
+            nameAndAccountTypeUiState.update { getPersonState() }
         }
     }
 
-    fun updateAccessToken(token: String) { _accessToken.value = token }
-
-    fun resetLoadingState() { _loadingState.value = UiState.Initial }
-
-    private suspend fun getPerson() = try {
-        _loadingState.value = UiState.Success(NameAndAccountTypeMapper.map(getPersonUseCase()))
-    } catch(e: RepositoryException) {
-        _loadingState.value = UiState.Error(e.error.error, e.error.errorDescription)
+    fun updateAccessToken(token: String) {
+        accessToken.update { token }
     }
+
+    fun resetLoadingState() {
+        nameAndAccountTypeUiState.update { UiState.Initial }
+    }
+
+    private suspend fun getPersonState() = try {
+        UiState.Success(NameAndAccountTypeMapper.map(getPersonUseCase()))
+    } catch (e: RepositoryException) {
+        UiState.Error(e.error.error, e.error.errorDescription)
+    }
+
+    data class ViewState(
+        val accessToken: String,
+        val nameAndAccountState: UiState<NameAndAccountType>
+    )
 }
