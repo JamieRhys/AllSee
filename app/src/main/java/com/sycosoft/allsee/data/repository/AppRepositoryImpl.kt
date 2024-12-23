@@ -53,6 +53,8 @@ class AppRepositoryImpl @Inject constructor(
             if (accounts.isEmpty()) {
                 accounts = AccountsMapper.toDomain(apiService.getAccounts())
 
+                println()
+
                 // TODO: Save account list to database.
             }
 
