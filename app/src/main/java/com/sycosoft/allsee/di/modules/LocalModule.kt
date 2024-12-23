@@ -43,4 +43,8 @@ class LocalModule {
     @Provides
     @Singleton
     fun providePersonDao(appDatabase: AppDatabase) = appDatabase.personDao
+
+    @Provides
+    @Singleton
+    fun provideAccountsDao(appDatabase: AppDatabase) = appDatabase.accountsDao
 }

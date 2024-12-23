@@ -2,9 +2,10 @@ package com.sycosoft.allsee.domain.models
 
 import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import java.time.LocalDate
+import java.util.UUID
 
 data class Person(
-    val uid: String,
+    val uid: UUID,
     val type: AccountHolderType,
     val title: String,
     val firstName: String,
