@@ -5,6 +5,7 @@ import com.sycosoft.allsee.data.remote.models.AccountHolderNameDto
 import com.sycosoft.allsee.data.remote.models.AccountListDto
 import com.sycosoft.allsee.data.remote.models.IdentityDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 
 interface StarlingBankApiService {

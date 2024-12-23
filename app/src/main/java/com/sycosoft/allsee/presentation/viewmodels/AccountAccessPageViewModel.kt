@@ -11,6 +11,7 @@ import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -60,6 +61,7 @@ class AccountAccessPageViewModel @Inject constructor(
         UiState.Success(NameAndAccountTypeMapper.map(getPersonUseCase()))
     } catch (e: RepositoryException) {
         UiState.Error(e.error.error, e.error.errorDescription)
+
     }
 
     data class ViewState(
