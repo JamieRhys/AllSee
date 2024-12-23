@@ -60,6 +60,7 @@ class AccountAccessPageViewModel @Inject constructor(
         UiState.Success(NameAndAccountTypeMapper.map(getPersonUseCase()))
     } catch (e: RepositoryException) {
         UiState.Error(e.error.error, e.error.errorDescription)
+
     }
 
     data class ViewState(

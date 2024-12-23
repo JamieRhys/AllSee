@@ -12,7 +12,9 @@ import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
+import com.sycosoft.allsee.domain.mappers.AccountsMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
+import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.Identity
@@ -42,6 +44,22 @@ class AppRepositoryImpl @Inject constructor(
         databaseCall { personDao.insertPerson(personMapper.toEntity(person)) }
     } catch(e: DatabaseException) {
         throw RepositoryException(e.errorResponse)
+    }
+
+    override suspend fun getAccounts(): List<Account> = try {
+        coroutineScope {
+            var accounts: List<Account> = emptyList() // TODO: Check database for accounts
+
+            if (accounts.isEmpty()) {
+                accounts = AccountsMapper.toDomain(apiService.getAccounts())
+
+                // TODO: Save account list to database.
+            }
+
+            accounts
+        }
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
     }
 
     @Throws(RepositoryException::class)
