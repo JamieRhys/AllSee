@@ -53,7 +53,10 @@ class AppRepositoryImplTest {
         every { Log.e(any(), any()) } returns 0
     }
 
-    // Save Token
+    // =============================================================================================
+    // == Save Token                                                                              ==
+    // =============================================================================================
+
     @Test
     fun `When saveToken is called, Then it should delegate saving token to TokenProvider`() = runBlocking {
         // When and Then
@@ -64,7 +67,10 @@ class AppRepositoryImplTest {
         coVerify { tokenProvider.saveToken(token) }
     }
 
-    // Get Account Holder
+    // =============================================================================================
+    // == Get Account Holder                                                                      ==
+    // =============================================================================================
+
     @Test
     fun `When API succeeds, Then account holder is returned`() = runBlocking {
         val apiModel = AccountHolderDto("012456789", "INDIVIDUAL")
@@ -87,7 +93,9 @@ class AppRepositoryImplTest {
         }
     }
 
-    // Get Identity
+    // =============================================================================================
+    // == Get Identity                                                                            ==
+    // =============================================================================================
     @Test
     fun `When API succeeds, Then person identity is returned`() = runBlocking {
         val identityDto = IdentityDto(
@@ -119,7 +127,15 @@ class AppRepositoryImplTest {
         }
     }
 
-    // Get Person
+    // =============================================================================================
+    // == Get Accounts                                                                            ==
+    // =============================================================================================
+
+
+
+    // =============================================================================================
+    // == Get Person                                                                              ==
+    // =============================================================================================
     @Test
     fun `When Database returns valid object, Then database person is returned`() = runBlocking {
         val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")

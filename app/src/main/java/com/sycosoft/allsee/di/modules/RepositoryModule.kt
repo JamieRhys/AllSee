@@ -1,6 +1,7 @@
 package com.sycosoft.allsee.di.modules
 
 import com.sycosoft.allsee.data.local.TokenProvider
+import com.sycosoft.allsee.data.local.database.dao.AccountsDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
@@ -21,9 +22,11 @@ class RepositoryModule {
         tokenProvider: TokenProvider,
         identityMapper: IdentityMapper,
         personMapper: PersonMapper,
+        accountsDao: AccountsDao,
     ): AppRepository = AppRepositoryImpl(
         apiService = apiService,
         personDao = personDao,
+        accountsDao = accountsDao,
         tokenProvider = tokenProvider,
         identityMapper = identityMapper,
         personMapper = personMapper,

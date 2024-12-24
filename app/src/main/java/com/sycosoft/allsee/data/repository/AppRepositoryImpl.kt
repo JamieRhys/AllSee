@@ -4,15 +4,18 @@ import android.database.sqlite.SQLiteException
 import android.util.Log
 import com.sycosoft.allsee.data.local.DatabaseException
 import com.sycosoft.allsee.data.local.TokenProvider
+import com.sycosoft.allsee.data.local.database.dao.AccountsDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.data.local.models.PersonEntity
-import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
-import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
-import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
+import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
+import com.sycosoft.allsee.domain.mappers.AccountsMapper
+import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
+import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
+import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.Identity
@@ -28,6 +31,7 @@ import javax.inject.Inject
 class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
     private val personDao: PersonDao,
+    private val accountsDao: AccountsDao,
     private val tokenProvider: TokenProvider,
     private val identityMapper: IdentityMapper,
     private val personMapper: PersonMapper,
@@ -42,6 +46,28 @@ class AppRepositoryImpl @Inject constructor(
         databaseCall { personDao.insertPerson(personMapper.toEntity(person)) }
     } catch(e: DatabaseException) {
         throw RepositoryException(e.errorResponse)
+    }
+
+    override suspend fun saveAccounts(accounts: List<Account>): List<Long> = try {
+        databaseCall { accountsDao.insertAccounts(AccountsMapper.toEntity(accounts)) }
+    } catch(e: DatabaseException) {
+        throw RepositoryException(e.errorResponse)
+    }
+
+    override suspend fun getAccounts(): List<Account> = try {
+        coroutineScope {
+            var accounts: List<Account> = AccountsMapper.toDomain(databaseCall { accountsDao.getAccounts() })
+
+            if (accounts.isEmpty()) {
+                accounts = AccountsMapper.toDomain(apiService.getAccounts())
+
+                saveAccounts(accounts)
+            }
+
+            accounts
+        }
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
     }
 
     @Throws(RepositoryException::class)

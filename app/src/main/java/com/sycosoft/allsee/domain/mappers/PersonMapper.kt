@@ -4,11 +4,12 @@ import com.sycosoft.allsee.data.local.models.PersonEntity
 import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import java.time.LocalDate
+import java.util.UUID
 import javax.inject.Inject
 
 class PersonMapper @Inject constructor() {
     fun toDomain(entity: PersonEntity): Person = Person(
-        uid = entity.uid,
+        uid = UUID.fromString(entity.uid),
         type = AccountHolderType.valueOf(entity.type),
         title = entity.title,
         firstName = entity.firstName,
@@ -19,7 +20,7 @@ class PersonMapper @Inject constructor() {
     )
 
     fun toEntity(domain: Person): PersonEntity = PersonEntity(
-        uid = domain.uid,
+        uid = domain.uid.toString(),
         type = domain.type.name,
         title = domain.title,
         firstName = domain.firstName,
