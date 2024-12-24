@@ -28,6 +28,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/** This is the implementation of the [AppRepository] interface. */
 class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
     private val personDao: PersonDao,

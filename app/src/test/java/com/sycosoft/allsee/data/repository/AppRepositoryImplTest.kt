@@ -1,22 +1,25 @@
 package com.sycosoft.allsee.data.repository
 
+import android.database.sqlite.SQLiteException
 import android.util.Log
 import com.sycosoft.allsee.data.local.DatabaseException
 import com.sycosoft.allsee.data.local.TokenProvider
+import com.sycosoft.allsee.data.local.database.dao.AccountsDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.data.local.models.PersonEntity
-import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
-import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
-import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
 import com.sycosoft.allsee.data.remote.models.IdentityDto
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
+import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
+import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
+import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.Person
+import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -27,23 +30,38 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
+import java.time.LocalDate
+import java.util.UUID
 
 class AppRepositoryImplTest {
     private val apiService: StarlingBankApiService = mockk(relaxed = true)
     private val tokenProvider: TokenProvider = mockk(relaxed = true)
     private val personDao: PersonDao = mockk(relaxed = true)
+    private val accountsDao: AccountsDao = mockk(relaxed = true)
     private val identityMapper: IdentityMapper = IdentityMapper()
     private val personMapper: PersonMapper = PersonMapper()
     private lateinit var underTest: AppRepositoryImpl
 
     private val errorResponseDto = ErrorResponseDto("error", "Error Description")
     private val apiException = ApiException(errorResponseDto)
+    private val databaseException = DatabaseException(ErrorResponseMapper.toDomain(errorResponseDto.copy(error = "database_error", errorDescription = "")))
+    private val validPerson = Person(
+        uid = UUID.randomUUID(),
+        type = AccountHolderType.INDIVIDUAL,
+        title = "Mr",
+        firstName = "Joe",
+        lastName = "Bloggs",
+        dob = LocalDate.parse("1975-01-01"),
+        email = "joe.bloggs@allsee.com",
+        phone = "0192"
+    )
 
     @Before
     fun setUp() {
         underTest = AppRepositoryImpl(
             apiService = apiService,
             personDao = personDao,
+            accountsDao = accountsDao,
             tokenProvider = tokenProvider,
             identityMapper = identityMapper,
             personMapper = personMapper,
@@ -65,6 +83,39 @@ class AppRepositoryImplTest {
 
         // Verify
         coVerify { tokenProvider.saveToken(token) }
+    }
+
+    // =============================================================================================
+    // == Save Token                                                                              ==
+    // =============================================================================================
+
+    @Test
+    fun `When saving valid person object, Then object should be saved and row returned`() = runBlocking {
+        val person = validPerson.copy()
+
+        val expected = 1L
+        coEvery { personDao.insertPerson(any()) } returns expected
+
+        val actual = underTest.savePerson(person)
+
+        coVerify(exactly = 1) { personDao.insertPerson(any()) }
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When saving person and database throws SQLiteException, Then RepositoryException should be thrown`() = runBlocking {
+        val person = validPerson.copy()
+        val expected = RepositoryException(databaseException.errorResponse)
+
+        coEvery { personDao.insertPerson(any()) } throws SQLiteException()
+
+        try {
+            underTest.savePerson(person)
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(expected.error.error, e.error.error)
+            assertEquals(expected.error.errorDescription, e.error.errorDescription)
+        }
     }
 
     // =============================================================================================
@@ -138,7 +189,7 @@ class AppRepositoryImplTest {
     // =============================================================================================
     @Test
     fun `When Database returns valid object, Then database person is returned`() = runBlocking {
-        val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")
+        val accountHolderDto = AccountHolderDto(UUID.randomUUID().toString(), "INDIVIDUAL")
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
         val expected = personMapper.toDomain(
             PersonEntity(
@@ -177,7 +228,7 @@ class AppRepositoryImplTest {
 
     @Test
     fun `When API succeeds, Then person object is returned`() = runBlocking {
-        val accountHolderDto = AccountHolderDto("012456789", "INDIVIDUAL")
+        val accountHolderDto = AccountHolderDto(UUID.randomUUID().toString(), "INDIVIDUAL")
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
         val identity = identityMapper.toDomain(identityDto)
         val accountHolder = AccountHolderMapper.toDomain(accountHolderDto)
@@ -188,7 +239,7 @@ class AppRepositoryImplTest {
 
         val actual = underTest.getPerson()
         val expected = Person(
-            uid = accountHolder.uid,
+            uid = UUID.fromString(accountHolder.uid),
             type = accountHolder.type,
             title = identity.title,
             firstName = identity.firstName,

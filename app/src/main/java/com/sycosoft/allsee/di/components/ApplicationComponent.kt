@@ -15,6 +15,9 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
+/** A Dagger Component that serves as the central dependency injection graph for the application.
+ * It provides the required dependencies for each module.
+ */
 @Component(
     modules = [
         AndroidInjectionModule::class,
@@ -30,6 +33,9 @@ import javax.inject.Singleton
 @Singleton
 interface ApplicationComponent : AndroidInjector<AllSeeApplication> {
 
+    /** A Factory interface to create an instance of the [ApplicationComponent].
+     * Allows passing an Application instance to be used in the dependency injection graph.
+     */
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance application: Application): ApplicationComponent
