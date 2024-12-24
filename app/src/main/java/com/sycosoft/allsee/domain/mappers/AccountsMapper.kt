@@ -6,6 +6,7 @@ import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.types.AccountType
 import com.sycosoft.allsee.domain.models.types.CurrencyType
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.UUID
 
 object AccountsMapper {
@@ -15,7 +16,7 @@ object AccountsMapper {
             accountType = AccountType.valueOf(account.accountType),
             defaultCategory = UUID.fromString(account.defaultCategory),
             currency = CurrencyType.valueOf(account.currency),
-            createdAt = LocalDateTime.parse(account.createdAt),
+            createdAt = OffsetDateTime.parse(account.createdAt),
             name = account.name,
         )
     }
@@ -26,7 +27,7 @@ object AccountsMapper {
             accountType = AccountType.entries[entity.accountType],
             defaultCategory = UUID.fromString(entity.defaultCategory),
             currency = CurrencyType.entries[entity.currency],
-            createdAt = LocalDateTime.parse(entity.createdAt),
+            createdAt = OffsetDateTime.parse(entity.createdAt),
             name = entity.name,
         )
     }
