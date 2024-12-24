@@ -32,6 +32,7 @@ class ApiHandlerInterceptor : Interceptor {
         }
     }
 
+    /** Takes in the json string and parses it into an [ErrorResponseDto] object for consumption. */
     private fun parseErrorResponse(jsonString: String): ErrorResponseDto {
         val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val jsonAdapter: JsonAdapter<ErrorResponseDto> = moshi.adapter(ErrorResponseDto::class.java)

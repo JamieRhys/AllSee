@@ -18,6 +18,7 @@ interface AppRepository {
     suspend fun saveAccounts(accounts: List<Account>): List<Long>
 
     /** Retrieves all the [Account]s from the database */
+
     suspend fun getAccounts(): List<Account>
 
     /** Retrieves the [AccountHolder] */
