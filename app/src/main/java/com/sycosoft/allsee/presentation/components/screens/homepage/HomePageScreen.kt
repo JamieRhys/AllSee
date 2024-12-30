@@ -1,10 +1,9 @@
 package com.sycosoft.allsee.presentation.components.screens.homepage
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -30,14 +31,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomePageScreen(
     topSectionColor: Color = MaterialTheme.colorScheme.surface,
     bottomSectionColor: Color = MaterialTheme.colorScheme.inverseSurface,
     accountName: String?,
+    clearedBalance: String,
     onPersonButtonClick: () -> Unit,
-    innerPadding: PaddingValues,
 ) {
     val topSectionHeight = 0.90f
     val bottomSectionHeight = 0.10f
@@ -69,10 +69,11 @@ fun HomePageScreen(
                 }
             )
         }
-    ) {
+    ) { innerPadding ->
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
         ) {
             val (
                 backgroundTop,
@@ -148,15 +149,28 @@ fun HomePageScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(topSectionHeight)
-                    .padding(top = innerPadding.calculateTopPadding())
                     .constrainAs(foregroundTop) {
                         top.linkTo(backgroundTop.top)
                         bottom.linkTo(backgroundTop.bottom)
                         start.linkTo(backgroundTop.start)
                         end.linkTo(backgroundTop.end)
-                    }
+                    },
+                contentAlignment = Alignment.Center
             ) {
-
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                ) {
+                    Card(
+                        modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(10.dp),
+                            text = clearedBalance
+                        )
+                    }
+                }
             }
 
             // Foreground/Bottom
@@ -183,8 +197,8 @@ private fun LM_HomePageScreenPreview() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
             HomePageScreen(
-                innerPadding = PaddingValues(),
                 accountName = "Individual",
+                clearedBalance = "£1,000",
                 onPersonButtonClick = {},
             )
         }
@@ -199,8 +213,8 @@ private fun DM_HomePageScreenPreview() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
             HomePageScreen(
-                innerPadding = PaddingValues(),
                 accountName = "Individual",
+                clearedBalance = "£1,000",
                 onPersonButtonClick = {},
             )
         }
