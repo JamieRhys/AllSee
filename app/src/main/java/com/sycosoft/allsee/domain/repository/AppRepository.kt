@@ -7,6 +7,7 @@ import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.FullBalance
 import com.sycosoft.allsee.domain.models.Identity
 import com.sycosoft.allsee.domain.models.Person
+import java.util.UUID
 
 interface AppRepository {
     /** Encrypts the given token and then saves the result into the [TokenProvider] */
@@ -17,6 +18,8 @@ interface AppRepository {
 
     /** Saves all user [Account]s to the database */
     suspend fun saveAccounts(accounts: List<Account>): List<Long>
+
+    suspend fun saveFullBalance(fullBalance: FullBalance, accountUid: UUID): List<Long>
 
     /** Retrieves all the [Account]s from the database */
 

@@ -5,8 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.sycosoft.allsee.data.local.database.dao.AccountsDao
+import com.sycosoft.allsee.data.local.database.dao.BalanceDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.data.local.models.AccountEntity
+import com.sycosoft.allsee.data.local.models.BalanceEntity
 import com.sycosoft.allsee.data.local.models.PersonEntity
 
 /**
@@ -18,12 +20,17 @@ import com.sycosoft.allsee.data.local.models.PersonEntity
  */
 // Let's define the databases configuration
 @Database(
-    entities = [PersonEntity::class, AccountEntity::class,], // List of entity classes that will be a part of the database.
-    version = 2 // The version of the database.
+    entities = [
+        PersonEntity::class,
+        AccountEntity::class,
+        BalanceEntity::class,
+    ], // List of entity classes that will be a part of the database.
+    version = 3 // The version of the database.
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract val personDao: PersonDao
     abstract val accountsDao: AccountsDao
+    abstract val balanceDao: BalanceDao
 
     companion object {
         // This volatile variable ensures that the value is read from and written to main memory directly,

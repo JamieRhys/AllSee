@@ -5,29 +5,36 @@ import android.util.Log
 import com.sycosoft.allsee.data.local.DatabaseException
 import com.sycosoft.allsee.data.local.TokenProvider
 import com.sycosoft.allsee.data.local.database.dao.AccountsDao
+import com.sycosoft.allsee.data.local.database.dao.BalanceDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
+import com.sycosoft.allsee.data.local.models.BalanceEntity
 import com.sycosoft.allsee.data.local.models.PersonEntity
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
 import com.sycosoft.allsee.domain.mappers.AccountsMapper
+import com.sycosoft.allsee.domain.mappers.BalanceMapper
 import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
 import com.sycosoft.allsee.domain.mappers.FullBalanceMapper
 import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
 import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
+import com.sycosoft.allsee.domain.models.Balance
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.FullBalance
 import com.sycosoft.allsee.domain.models.Identity
 import com.sycosoft.allsee.domain.models.Person
+import com.sycosoft.allsee.domain.models.types.BalanceType
+import com.sycosoft.allsee.domain.models.types.CurrencyType
 import com.sycosoft.allsee.domain.repository.AppRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.inject.Inject
 
 /** This is the implementation of the [AppRepository] interface. */
@@ -35,7 +42,9 @@ class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
     private val personDao: PersonDao,
     private val accountsDao: AccountsDao,
+    private val balanceDao: BalanceDao,
     private val tokenProvider: TokenProvider,
+    private val balanceMapper: BalanceMapper,
     private val fullBalanceMapper: FullBalanceMapper,
     private val identityMapper: IdentityMapper,
     private val personMapper: PersonMapper,
@@ -54,6 +63,28 @@ class AppRepositoryImpl @Inject constructor(
 
     override suspend fun saveAccounts(accounts: List<Account>): List<Long> = try {
         databaseCall { accountsDao.insertAccounts(AccountsMapper.toEntity(accounts)) }
+    } catch(e: DatabaseException) {
+        throw RepositoryException(e.errorResponse)
+    }
+
+    override suspend fun saveFullBalance(fullBalance: FullBalance, accountUid: UUID): List<Long> = try {
+        val list: List<Balance> = listOf(
+            fullBalance.acceptedOverdraft,
+            fullBalance.amount,
+            fullBalance.clearedBalance,
+            fullBalance.effectiveBalance,
+            fullBalance.pendingTransactions,
+            fullBalance.totalClearedBalance,
+            fullBalance.totalEffectiveBalance
+        )
+
+        val savedList: List<Long> = emptyList()
+
+        list.forEach {
+            savedList.plus(databaseCall{balanceDao.insertBalance(listOf(balanceMapper.toEntity(it, accountUid)))})
+        }
+
+        savedList
     } catch(e: DatabaseException) {
         throw RepositoryException(e.errorResponse)
     }
@@ -93,15 +124,61 @@ class AppRepositoryImpl @Inject constructor(
         // TODO: Add index of the account the full balance is needed for.
         coroutineScope {
             val accounts = getAccounts()
+            var fullBalance: FullBalance? = null
 
-            var fullBalance: FullBalance? = null // TODO: Get full balance from database.
+            val acceptedOverdraft: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.ACCEPTED_OVERDRAFT.ordinal,
+            )
+            val amount: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.AMOUNT.ordinal,
+            )
+            val clearedBalance: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.CLEARED_BALANCE.ordinal,
+            )
+            val effectiveBalance: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.EFFECTIVE_BALANCE.ordinal,
+            )
+            val totalClearedBalance: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.TOTAL_CLEARED_BALANCE.ordinal,
+            )
+            val totalEffectiveBalance: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.TOTAL_EFFECTIVE_BALANCE.ordinal,
+            )
+            val pendingTransactions: BalanceEntity? = balanceDao.getBalanceFromType(
+                accountUid = accounts[0].accountUid.toString(),
+                type = BalanceType.PENDING_TRANSACTIONS.ordinal,
+            )
+
+            if (acceptedOverdraft != null &&
+                amount != null &&
+                clearedBalance != null &&
+                effectiveBalance != null &&
+                totalClearedBalance != null &&
+                totalEffectiveBalance != null &&
+                pendingTransactions != null) {
+                fullBalance = FullBalance(
+                    acceptedOverdraft = balanceMapper.toDomain(acceptedOverdraft),
+                    pendingTransactions = balanceMapper.toDomain(pendingTransactions),
+                    amount = balanceMapper.toDomain(amount),
+                    clearedBalance = balanceMapper.toDomain(clearedBalance),
+                    effectiveBalance = balanceMapper.toDomain(effectiveBalance),
+                    totalClearedBalance = balanceMapper.toDomain(totalClearedBalance),
+                    totalEffectiveBalance = balanceMapper.toDomain(totalEffectiveBalance),
+                )
+            }
 
             if (fullBalance == null) {
                 fullBalance = fullBalanceMapper.toDomain(apiService.getFullBalance(accounts[0].accountUid.toString()))
 
-                // TODO: Save full balance to database.
-            }
+                saveFullBalance(fullBalance, accounts[0].accountUid)
 
+            }
             fullBalance
         }
     } catch(e: ApiException) {
