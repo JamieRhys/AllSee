@@ -27,7 +27,6 @@ import com.sycosoft.allsee.domain.models.FullBalance
 import com.sycosoft.allsee.domain.models.Identity
 import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.BalanceType
-import com.sycosoft.allsee.domain.models.types.CurrencyType
 import com.sycosoft.allsee.domain.repository.AppRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -185,6 +184,23 @@ class AppRepositoryImpl @Inject constructor(
         throw throwRepositoryException(e)
     } catch(e: DatabaseException) {
         throw throwRepositoryException(e)
+    }
+
+    @Throws(RepositoryException::class)
+    override suspend fun getBalance(type: BalanceType): Balance = try {
+        val fullBalance = getFullBalance()
+
+        when (type) {
+            BalanceType.ACCEPTED_OVERDRAFT -> fullBalance.acceptedOverdraft
+            BalanceType.AMOUNT -> fullBalance.amount
+            BalanceType.CLEARED_BALANCE -> fullBalance.clearedBalance
+            BalanceType.EFFECTIVE_BALANCE -> fullBalance.effectiveBalance
+            BalanceType.PENDING_TRANSACTIONS -> fullBalance.pendingTransactions
+            BalanceType.TOTAL_CLEARED_BALANCE -> fullBalance.totalClearedBalance
+            BalanceType.TOTAL_EFFECTIVE_BALANCE -> fullBalance.totalEffectiveBalance
+        }
+    } catch(e: RepositoryException) {
+        throw e
     }
 
     @Throws(RepositoryException::class)

@@ -2,6 +2,7 @@ package com.sycosoft.allsee.di.modules
 
 import com.sycosoft.allsee.domain.repository.AppRepository
 import com.sycosoft.allsee.domain.usecases.GetAccountHolderUseCase
+import com.sycosoft.allsee.domain.usecases.GetBalanceUseCase
 import com.sycosoft.allsee.domain.usecases.GetFullBalanceUseCase
 import com.sycosoft.allsee.domain.usecases.GetNameAndAccountTypeUseCase
 import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
@@ -23,6 +24,10 @@ class UseCaseModule {
     @Provides
     fun provideGetFullBalanceUseCase(repository: AppRepository): GetFullBalanceUseCase =
         GetFullBalanceUseCase(repository)
+
+    @Provides
+    fun provideGetBalanceUseCase(repository: AppRepository): GetBalanceUseCase =
+        GetBalanceUseCase(repository)
 
     @Provides
     fun provideGetPersonUseCase(repository: AppRepository): GetPersonUseCase =
