@@ -13,11 +13,13 @@ import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
 import com.sycosoft.allsee.domain.mappers.AccountsMapper
 import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
+import com.sycosoft.allsee.domain.mappers.FullBalanceMapper
 import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
 import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
 import com.sycosoft.allsee.domain.models.ErrorResponse
+import com.sycosoft.allsee.domain.models.FullBalance
 import com.sycosoft.allsee.domain.models.Identity
 import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.repository.AppRepository
@@ -34,6 +36,7 @@ class AppRepositoryImpl @Inject constructor(
     private val personDao: PersonDao,
     private val accountsDao: AccountsDao,
     private val tokenProvider: TokenProvider,
+    private val fullBalanceMapper: FullBalanceMapper,
     private val identityMapper: IdentityMapper,
     private val personMapper: PersonMapper,
 ) : AppRepository {
@@ -82,6 +85,28 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun getIdentity(): Identity = try {
         identityMapper.toDomain(apiService.getIdentity())
     } catch(e: ApiException) {
+        throw throwRepositoryException(e)
+    }
+
+    @Throws(RepositoryException::class)
+    override suspend fun getFullBalance(): FullBalance = try {
+        // TODO: Add index of the account the full balance is needed for.
+        coroutineScope {
+            val accounts = getAccounts()
+
+            var fullBalance: FullBalance? = null // TODO: Get full balance from database.
+
+            if (fullBalance == null) {
+                fullBalance = fullBalanceMapper.toDomain(apiService.getFullBalance(accounts[0].accountUid.toString()))
+
+                // TODO: Save full balance to database.
+            }
+
+            fullBalance
+        }
+    } catch(e: ApiException) {
+        throw throwRepositoryException(e)
+    } catch(e: DatabaseException) {
         throw throwRepositoryException(e)
     }
 
