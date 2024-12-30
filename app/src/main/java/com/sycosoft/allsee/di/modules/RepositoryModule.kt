@@ -6,6 +6,7 @@ import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.data.repository.AppRepositoryImpl
+import com.sycosoft.allsee.domain.mappers.FullBalanceMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
 import com.sycosoft.allsee.domain.repository.AppRepository
 import dagger.Module
@@ -21,6 +22,7 @@ class RepositoryModule {
         personDao: PersonDao,
         tokenProvider: TokenProvider,
         identityMapper: IdentityMapper,
+        fullBalanceMapper: FullBalanceMapper,
         personMapper: PersonMapper,
         accountsDao: AccountsDao,
     ): AppRepository = AppRepositoryImpl(
@@ -28,6 +30,7 @@ class RepositoryModule {
         personDao = personDao,
         accountsDao = accountsDao,
         tokenProvider = tokenProvider,
+        fullBalanceMapper = fullBalanceMapper,
         identityMapper = identityMapper,
         personMapper = personMapper,
     )

@@ -4,6 +4,7 @@ import com.sycosoft.allsee.data.local.TokenProvider
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.AccountHolder
+import com.sycosoft.allsee.domain.models.FullBalance
 import com.sycosoft.allsee.domain.models.Identity
 import com.sycosoft.allsee.domain.models.Person
 
@@ -24,6 +25,9 @@ interface AppRepository {
     /** Retrieves the [AccountHolder] */
     @Throws(RepositoryException::class)
     suspend fun getAccountHolder(): AccountHolder
+
+    @Throws(RepositoryException::class)
+    suspend fun getFullBalance(): FullBalance
 
     @Throws(RepositoryException::class)
     suspend fun getIdentity(): Identity
