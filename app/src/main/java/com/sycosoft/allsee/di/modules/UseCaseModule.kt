@@ -3,8 +3,7 @@ package com.sycosoft.allsee.di.modules
 import com.sycosoft.allsee.domain.repository.AppRepository
 import com.sycosoft.allsee.domain.usecases.GetAccountHolderUseCase
 import com.sycosoft.allsee.domain.usecases.GetBalanceUseCase
-import com.sycosoft.allsee.domain.usecases.GetFullBalanceUseCase
-import com.sycosoft.allsee.domain.usecases.GetNameAndAccountTypeUseCase
+import com.sycosoft.allsee.presentation.usecases.GetNameAndAccountTypeUseCase
 import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.domain.usecases.SaveTokenUseCase
 import dagger.Module
@@ -20,10 +19,6 @@ class UseCaseModule {
     @Provides
     fun provideGetNameAndAccountTypeUseCase(): GetNameAndAccountTypeUseCase =
         GetNameAndAccountTypeUseCase()
-
-    @Provides
-    fun provideGetFullBalanceUseCase(repository: AppRepository): GetFullBalanceUseCase =
-        GetFullBalanceUseCase(repository)
 
     @Provides
     fun provideGetBalanceUseCase(repository: AppRepository): GetBalanceUseCase =

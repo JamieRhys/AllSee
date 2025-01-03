@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.domain.usecases
+package com.sycosoft.allsee.presentation.usecases
 
 import com.sycosoft.allsee.domain.models.NameAndAccountType
 import com.sycosoft.allsee.domain.models.Person

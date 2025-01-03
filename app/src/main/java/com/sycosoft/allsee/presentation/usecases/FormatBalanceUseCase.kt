@@ -1,9 +1,17 @@
 package com.sycosoft.allsee.presentation.usecases
 
+import kotlin.math.abs
+
 class FormatBalanceUseCase {
     operator fun invoke(minorUnits: Int): String {
-        val wholeUnits = minorUnits / 100
-        val decimalUnits = minorUnits % 100
-        return "£$wholeUnits.${decimalUnits.toString().padStart(2, '0')}"
+        val isNegative = minorUnits < 0
+        val absoluteBalance = abs(minorUnits)
+
+        val wholeUnits = absoluteBalance / 100
+        val decimalUnits = absoluteBalance % 100
+
+        val formattedBalance = "£$wholeUnits.${decimalUnits.toString().padStart(2, '0')}"
+
+        return if (isNegative) "-$formattedBalance" else formattedBalance
     }
 }

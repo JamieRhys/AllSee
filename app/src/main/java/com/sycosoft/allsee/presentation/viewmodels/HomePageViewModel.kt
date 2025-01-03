@@ -6,7 +6,6 @@ import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.BalanceType
 import com.sycosoft.allsee.domain.usecases.GetAccountsUseCase
 import com.sycosoft.allsee.domain.usecases.GetBalanceUseCase
-import com.sycosoft.allsee.domain.usecases.GetFullBalanceUseCase
 import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +19,6 @@ import javax.inject.Inject
 class HomePageViewModel @Inject constructor(
     private val getPersonUseCase: GetPersonUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getFullBalanceUseCase: GetFullBalanceUseCase,
     private val getBalanceUseCase: GetBalanceUseCase,
 ) : ViewModel() {
     private val _personDetails = MutableStateFlow<Person?>(null)

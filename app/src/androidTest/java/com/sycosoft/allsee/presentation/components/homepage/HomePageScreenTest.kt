@@ -1,6 +1,5 @@
 package com.sycosoft.allsee.presentation.components.homepage
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDisplayed
@@ -26,7 +25,7 @@ class HomePageScreenTest {
                     HomePageScreen(
                         accountName = "Individual",
                         onPersonButtonClick = { /*TODO*/ },
-                        innerPadding = PaddingValues()
+                        clearedBalance = "£0.00",
                     )
                 }
             }
@@ -51,7 +50,7 @@ class HomePageScreenTest {
                     HomePageScreen(
                         accountName = null,
                         onPersonButtonClick = {},
-                        innerPadding = PaddingValues()
+                        clearedBalance = "£0.00",
                     )
                 }
             }
@@ -71,7 +70,7 @@ class HomePageScreenTest {
                     HomePageScreen(
                         accountName = expected,
                         onPersonButtonClick = {},
-                        innerPadding = PaddingValues()
+                        clearedBalance = "£0.00",
                     )
                 }
             }
@@ -96,7 +95,7 @@ class HomePageScreenTest {
                     HomePageScreen(
                         accountName = null,
                         onPersonButtonClick = { buttonClicked = true },
-                        innerPadding = PaddingValues()
+                        clearedBalance = "£0.00",
                     )
                 }
             }
