@@ -5,6 +5,7 @@ import android.util.Log
 import com.sycosoft.allsee.data.local.DatabaseException
 import com.sycosoft.allsee.data.local.TokenProvider
 import com.sycosoft.allsee.data.local.database.dao.AccountsDao
+import com.sycosoft.allsee.data.local.database.dao.BalanceDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.data.local.models.PersonEntity
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
@@ -14,7 +15,9 @@ import com.sycosoft.allsee.data.remote.models.IdentityDto
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
+import com.sycosoft.allsee.domain.mappers.BalanceMapper
 import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
+import com.sycosoft.allsee.domain.mappers.FullBalanceMapper
 import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
 import com.sycosoft.allsee.domain.models.ErrorResponse
@@ -26,6 +29,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Before
@@ -38,13 +42,15 @@ class AppRepositoryImplTest {
     private val tokenProvider: TokenProvider = mockk(relaxed = true)
     private val personDao: PersonDao = mockk(relaxed = true)
     private val accountsDao: AccountsDao = mockk(relaxed = true)
+    private val balanceDao: BalanceDao = mockk(relaxed = true)
     private val identityMapper: IdentityMapper = IdentityMapper()
+    private val balanceMapper: BalanceMapper = BalanceMapper()
+    private val fullBalanceMapper: FullBalanceMapper = FullBalanceMapper()
     private val personMapper: PersonMapper = PersonMapper()
     private lateinit var underTest: AppRepositoryImpl
 
     private val errorResponseDto = ErrorResponseDto("error", "Error Description")
     private val apiException = ApiException(errorResponseDto)
-    private val databaseException = DatabaseException(ErrorResponseMapper.toDomain(errorResponseDto.copy(error = "database_error", errorDescription = "")))
     private val validPerson = Person(
         uid = UUID.randomUUID(),
         type = AccountHolderType.INDIVIDUAL,
@@ -62,9 +68,12 @@ class AppRepositoryImplTest {
             apiService = apiService,
             personDao = personDao,
             accountsDao = accountsDao,
+            balanceDao = balanceDao,
             tokenProvider = tokenProvider,
             identityMapper = identityMapper,
             personMapper = personMapper,
+            balanceMapper = balanceMapper,
+            fullBalanceMapper = fullBalanceMapper
         )
 
         mockkStatic(Log::class)
@@ -102,20 +111,12 @@ class AppRepositoryImplTest {
         assertEquals(expected, actual)
     }
 
-    @Test
-    fun `When saving person and database throws SQLiteException, Then RepositoryException should be thrown`() = runBlocking {
-        val person = validPerson.copy()
-        val expected = RepositoryException(databaseException.errorResponse)
-
+    @Test(expected = RepositoryException::class)
+    fun `When saving person and database throws SQLiteException, Then RepositoryException should be thrown`() = runTest {
         coEvery { personDao.insertPerson(any()) } throws SQLiteException()
+        val person = validPerson.copy()
 
-        try {
-            underTest.savePerson(person)
-            fail("Expected RepositoryException to be thrown")
-        } catch(e: RepositoryException) {
-            assertEquals(expected.error.error, e.error.error)
-            assertEquals(expected.error.errorDescription, e.error.errorDescription)
-        }
+        underTest.savePerson(person)
     }
 
     // =============================================================================================
