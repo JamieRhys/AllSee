@@ -1,6 +1,10 @@
 package com.sycosoft.allsee.presentation.components.accountaccesspage
 
 import androidx.compose.material3.Surface
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
@@ -15,53 +19,70 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
+private typealias ATRSTT = AccessTokenRequestScreenTestTags
+
 class AccessTokenRequestScreenTest {
     @get:Rule val composeTestRule = createComposeRule()
 
+    /*
+     * =============================================================================================
+     * == Default State                                                                           ==
+     * =============================================================================================
+     */
+
     @Test
     fun whenScreenIsInDefaultState_thenEnsureCorrectComponentsAreDisplayed() {
-        // When
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    AccessTokenRequestScreen(
-                        accessToken = "",
-                        onAccessTokenChange = {},
-                        onButtonClick = {},
-                        showProgressBar = false,
-                    )
+
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        AccessTokenRequestScreen(
+                            accessToken = "",
+                            onAccessTokenChange = {},
+                            onButtonClick = {},
+                            showProgressBar = false,
+                        )
+                    }
                 }
             }
-        }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.TITLE).isDisplayed()
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.TEXT).isDisplayed()
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED).isDisplayed()
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT).isDisplayed()
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.PROGRESS_BAR).isNotDisplayed()
+            onNodeWithTag(ATRSTT.TITLE).assertIsDisplayed()
+            onNodeWithTag(ATRSTT.TEXT).assertIsDisplayed()
+            onNodeWithTag(ATRSTT.ACCESS_TOKEN_INPUT).assertIsDisplayed()
+            onNodeWithTag(ATRSTT.BUTTON_GET_STARTED).assertIsDisplayed().assertIsNotEnabled()
+            onNodeWithTag(ATRSTT.PROGRESS_BAR).isNotDisplayed()
+        }
     }
+
+    /*
+     * =============================================================================================
+     * == Access Token Input                                                                      ==
+     * =============================================================================================
+     */
 
     @Test
     fun whenProvidedWithString_thenAccessTokenOTFShouldDisplayThatString() {
         val expected = "test_token"
 
-        // When
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    AccessTokenRequestScreen(
-                        accessToken = expected,
-                        onAccessTokenChange = {},
-                        onButtonClick = {},
-                        showProgressBar = false,
-                    )
+        with (composeTestRule) {
+            // When
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        AccessTokenRequestScreen(
+                            accessToken = expected,
+                            onAccessTokenChange = {},
+                            onButtonClick = {},
+                            showProgressBar = false,
+                        )
+                    }
                 }
             }
-        }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT).assertTextEquals(expected)
+            // Then and Verify
+            onNodeWithTag(ATRSTT.ACCESS_TOKEN_INPUT).assertTextEquals(expected)
+        }
     }
 
     @Test
@@ -69,44 +90,54 @@ class AccessTokenRequestScreenTest {
         var accessToken = ""
         val expected = "test_token"
 
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    AccessTokenRequestScreen(
-                        accessToken = accessToken,
-                        onAccessTokenChange = { accessToken = it },
-                        onButtonClick = {},
-                        showProgressBar = false,
-                    )
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        AccessTokenRequestScreen(
+                            accessToken = accessToken,
+                            onAccessTokenChange = { accessToken = it },
+                            onButtonClick = {},
+                            showProgressBar = false,
+                        )
+                    }
                 }
             }
+
+            onNodeWithTag(ATRSTT.ACCESS_TOKEN_INPUT).performTextInput(expected)
+
+            assertEquals(expected, accessToken)
         }
-
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT).performTextInput(expected)
-
-        assertEquals(expected, accessToken)
     }
+
+    /*
+     * =============================================================================================
+     * == Get Started Button                                                                      ==
+     * =============================================================================================
+     */
 
     @Test
     fun whenButtonIsPressed_thenProgressBarShouldBeDisplayed() {
         var showProgressBar = false
 
-        // When
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    AccessTokenRequestScreen(
-                        accessToken = "",
-                        onAccessTokenChange = {},
-                        onButtonClick = { showProgressBar = true },
-                        showProgressBar = showProgressBar,
-                    )
+        with (composeTestRule) {
+            // When
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        AccessTokenRequestScreen(
+                            accessToken = "Test",
+                            onAccessTokenChange = {},
+                            onButtonClick = { showProgressBar = true },
+                            showProgressBar = showProgressBar,
+                        )
+                    }
                 }
             }
-        }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED).performClick()
-        composeTestRule.onNodeWithTag(AccessTokenRequestScreenTestTags.PROGRESS_BAR).isDisplayed()
+            // Then and Verify
+            onNodeWithTag(ATRSTT.BUTTON_GET_STARTED).assertIsEnabled().performClick()
+            onNodeWithTag(ATRSTT.PROGRESS_BAR).isDisplayed()
+        }
     }
 }

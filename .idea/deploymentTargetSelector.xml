@@ -16,6 +16,9 @@
       <SelectionState runConfigName="Tests in 'com.sycosoft.allsee'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="AccessTokenRequestScreenTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

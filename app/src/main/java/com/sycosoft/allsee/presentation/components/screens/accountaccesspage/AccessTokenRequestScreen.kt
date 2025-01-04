@@ -133,6 +133,7 @@ fun AccessTokenRequestScreen(
                     bottom.linkTo(backgroundBottom.top)
                 },
             onClick = { onButtonClick() },
+            enabled = accessToken.isNotBlank(),
         ) {
             Text(text = stringResource(id = R.string.button_get_started))
         }
