@@ -5,5 +5,7 @@ object HomePageScreenTestTags {
 
     const val ACCOUNT_NAME = "account_name"
 
+    const val BALANCE_CARD = "balance_card"
+
     const val BUTTON_PERSON = "button_person"
 }
