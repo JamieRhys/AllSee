@@ -25,8 +25,6 @@ class MainActivity : ComponentActivity() {
             AllSeeTheme(dynamicColor = false) {
                 Surface {
                     AppNavigation(viewModelFactory = viewModelFactory)
-                    //AccountAccessPage(viewModel = viewModel(factory = viewModelFactory))
-                    //HomePage(viewModel = viewModel(factory = viewModelFactory))
                 }
             }
         }

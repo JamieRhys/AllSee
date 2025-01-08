@@ -19,21 +19,26 @@ class HomePageScreenTest {
     @Test
     fun whenScreenInDefaultState_thenEnsureCorrectComponentsAreDisplayed() {
         // When
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    HomePageScreen(
-                        accountName = "Individual",
-                        onPersonButtonClick = { /*TODO*/ },
-                        clearedBalance = "£0.00",
-                    )
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        HomePageScreen(
+                            accountName = "Individual",
+                            onPersonButtonClick = { /*TODO*/ },
+                            clearedBalance = "£0.00",
+                            onBalanceCardClick = { /* TODO */ },
+                        )
+                    }
                 }
             }
+
+            // Then and Verify
+            onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).isDisplayed()
+            onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
+            onNodeWithTag(HomePageScreenTestTags.BALANCE_CARD).isDisplayed()
         }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).isDisplayed()
-        composeTestRule.onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
     }
 
     // #############################################################################################
@@ -44,40 +49,46 @@ class HomePageScreenTest {
     fun whenScreenInitiallyShown_thenAccountNameLabelShouldDisplayLoadingText() {
         // When
         val expected = "Loading"
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    HomePageScreen(
-                        accountName = null,
-                        onPersonButtonClick = {},
-                        clearedBalance = "£0.00",
-                    )
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        HomePageScreen(
+                            accountName = null,
+                            onPersonButtonClick = {},
+                            clearedBalance = "£0.00",
+                            onBalanceCardClick = { /* TODO */ },
+                        )
+                    }
                 }
             }
-        }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
+            // Then and Verify
+            onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
+        }
     }
 
     @Test
     fun whenScreenLoadedWithAccountName_thenAccountNameLabelShouldDisplayValue() {
         // When
         val expected = "Individual"
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    HomePageScreen(
-                        accountName = expected,
-                        onPersonButtonClick = {},
-                        clearedBalance = "£0.00",
-                    )
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        HomePageScreen(
+                            accountName = expected,
+                            onPersonButtonClick = {},
+                            clearedBalance = "£0.00",
+                            onBalanceCardClick = { /* TODO */ },
+                        )
+                    }
                 }
             }
-        }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
+            // Then and Verify
+            onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
+        }
     }
 
     // #############################################################################################
@@ -89,20 +100,23 @@ class HomePageScreenTest {
         // When
         var buttonClicked = false
 
-        composeTestRule.setContent {
-            AllSeeTheme {
-                Surface {
-                    HomePageScreen(
-                        accountName = null,
-                        onPersonButtonClick = { buttonClicked = true },
-                        clearedBalance = "£0.00",
-                    )
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    Surface {
+                        HomePageScreen(
+                            accountName = null,
+                            onPersonButtonClick = { buttonClicked = true },
+                            clearedBalance = "£0.00",
+                            onBalanceCardClick = { /* TODO */ },
+                        )
+                    }
                 }
             }
-        }
 
-        // Then and Verify
-        composeTestRule.onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).performClick()
-        assertTrue(buttonClicked)
+            // Then and Verify
+            onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).performClick()
+            assertTrue(buttonClicked)
+        }
     }
 }

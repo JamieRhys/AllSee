@@ -17,3 +17,4 @@ val DarkRed = Color(0xFF4D0011)
 
 val PastelBlue = Color(0xFFDBF3FA)
 val PastelRed = Color(0xFFFF6961)
+val PastelGreen = Color(0xFF80EF80)

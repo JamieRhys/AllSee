@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +27,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +38,7 @@ fun HomePageScreen(
     accountName: String?,
     clearedBalance: String,
     onPersonButtonClick: () -> Unit,
+    onBalanceCardClick: () -> Unit,
 ) {
     val topSectionHeight = 0.90f
     val bottomSectionHeight = 0.10f
@@ -73,7 +74,7 @@ fun HomePageScreen(
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
         ) {
             val (
                 backgroundTop,
@@ -162,14 +163,11 @@ fun HomePageScreen(
                         .fillMaxWidth()
                         .fillMaxHeight()
                 ) {
-                    Card(
-                        modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(10.dp),
-                            text = clearedBalance
-                        )
-                    }
+                    BalanceCard(
+                        modifier = Modifier.testTag(HomePageScreenTestTags.BALANCE_CARD),
+                        clearedBalance = clearedBalance,
+                        onClick = { onBalanceCardClick() }
+                    )
                 }
             }
 
@@ -200,6 +198,7 @@ private fun LM_HomePageScreenPreview() {
                 accountName = "Individual",
                 clearedBalance = "£1,000",
                 onPersonButtonClick = {},
+                onBalanceCardClick = {},
             )
         }
     }
@@ -216,6 +215,7 @@ private fun DM_HomePageScreenPreview() {
                 accountName = "Individual",
                 clearedBalance = "£1,000",
                 onPersonButtonClick = {},
+                onBalanceCardClick = {},
             )
         }
     }

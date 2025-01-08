@@ -8,7 +8,8 @@
     <string name="user_confirmation_dialog_title">Hold on a second!</string>
     <string name="user_confirmation_dialog_text">Just to confirm, is your name %s and you hold a %s account?</string>
 
-    <string name = "button_get_started">Get Started</string>
+    <string name="button_add_funds">Add Funds</string>
+    <string name="button_get_started">Get Started</string>
     <string name="button_no">No</string>
     <string name="button_yes">Yes</string>
 
