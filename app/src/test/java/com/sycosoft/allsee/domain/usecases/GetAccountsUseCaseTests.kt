@@ -33,7 +33,11 @@ class GetAccountsUseCaseTests {
             defaultCategory = UUID.randomUUID(),
             currency = CurrencyType.GBP,
             createdAt = OffsetDateTime.now(),
-            name = "Primary"
+            name = "Primary",
+            accountIdentifier = "12345678",
+            bankIdentifier = "123456",
+            iban = "GB12345612345678",
+            bic = "GB123456"
         ))
         coEvery { repository.getAccounts() } returns expected
 

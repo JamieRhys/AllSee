@@ -9,20 +9,27 @@ import com.sycosoft.allsee.data.local.database.dao.BalanceDao
 import com.sycosoft.allsee.data.local.database.dao.PersonDao
 import com.sycosoft.allsee.data.local.models.PersonEntity
 import com.sycosoft.allsee.data.remote.exceptions.ApiException
+import com.sycosoft.allsee.data.remote.models.AccountDto
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
+import com.sycosoft.allsee.data.remote.models.AccountIdentifierDto
+import com.sycosoft.allsee.data.remote.models.AccountListDto
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
 import com.sycosoft.allsee.data.remote.models.IdentityDto
 import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.mappers.AccountHolderMapper
+import com.sycosoft.allsee.domain.mappers.AccountsMapper
 import com.sycosoft.allsee.domain.mappers.BalanceMapper
 import com.sycosoft.allsee.domain.mappers.ErrorResponseMapper
 import com.sycosoft.allsee.domain.mappers.FullBalanceMapper
 import com.sycosoft.allsee.domain.mappers.IdentityMapper
 import com.sycosoft.allsee.domain.mappers.PersonMapper
+import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.ErrorResponse
 import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.AccountHolderType
+import com.sycosoft.allsee.domain.models.types.AccountType
+import com.sycosoft.allsee.domain.models.types.CurrencyType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -35,6 +42,7 @@ import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.util.UUID
 
 class AppRepositoryImplTest {
@@ -61,6 +69,18 @@ class AppRepositoryImplTest {
         email = "joe.bloggs@allsee.com",
         phone = "0192"
     )
+    private val validAccount = Account(
+        accountUid = UUID.randomUUID(),
+        accountType = AccountType.PRIMARY,
+        defaultCategory = UUID.randomUUID(),
+        currency = CurrencyType.GBP,
+        createdAt = OffsetDateTime.now(),
+        name = "Personal",
+        accountIdentifier = "12345678",
+        bankIdentifier = "123456",
+        iban = "GB12345612345678",
+        bic = "SIC1234221",
+    )
 
     @Before
     fun setUp() {
@@ -81,21 +101,42 @@ class AppRepositoryImplTest {
     }
 
     // =============================================================================================
-    // == Save Token                                                                              ==
+    // == Save Accounts                                                                           ==
     // =============================================================================================
 
     @Test
-    fun `When saveToken is called, Then it should delegate saving token to TokenProvider`() = runBlocking {
-        // When and Then
-        val token = "dummy_token"
-        underTest.saveToken(token)
+    fun `When saving accounts, Then objects should be saved and row returned`() = runBlocking {
+        val accounts: List<Account> = listOf(
+            validAccount.copy(),
+            validAccount.copy(accountUid = UUID.randomUUID()),
+            validAccount.copy(accountUid = UUID.randomUUID()),
+            validAccount.copy(accountUid = UUID.randomUUID()),
+        )
 
-        // Verify
-        coVerify { tokenProvider.saveToken(token) }
+        val expected = listOf(1L, 2L, 3L, 4L)
+        coEvery { accountsDao.insertAccounts(any()) } returns expected
+
+        val actual = underTest.saveAccounts(accounts)
+
+        coVerify(exactly = 1) { accountsDao.insertAccounts(any()) }
+        assertEquals(expected, actual)
+    }
+
+    @Test(expected = RepositoryException::class)
+    fun `When saving accounts and database throws SQLiteException, Then RepositoryException should be thrown`() = runTest {
+        coEvery { accountsDao.insertAccounts(any()) } throws SQLiteException()
+        val accounts: List<Account> = listOf(
+            validAccount.copy(),
+            validAccount.copy(accountUid = UUID.randomUUID()),
+            validAccount.copy(accountUid = UUID.randomUUID()),
+            validAccount.copy(accountUid = UUID.randomUUID()),
+        )
+
+        underTest.saveAccounts(accounts)
     }
 
     // =============================================================================================
-    // == Save Token                                                                              ==
+    // == Save Person                                                                             ==
     // =============================================================================================
 
     @Test
@@ -117,6 +158,77 @@ class AppRepositoryImplTest {
         val person = validPerson.copy()
 
         underTest.savePerson(person)
+    }
+
+    // =============================================================================================
+    // == Save Token                                                                              ==
+    // =============================================================================================
+
+    @Test
+    fun `When saveToken is called, Then it should delegate saving token to TokenProvider`() = runBlocking {
+        // When and Then
+        val token = "dummy_token"
+        underTest.saveToken(token)
+
+        // Verify
+        coVerify { tokenProvider.saveToken(token) }
+    }
+
+    // =============================================================================================
+    // == Get Accounts                                                                            ==
+    // =============================================================================================
+
+    @Test
+    fun `When API succeeds, Then accounts are returned`() = runTest {
+        val apiAccountModel = AccountDto(
+            accountUid = UUID.randomUUID().toString(),
+            accountType = AccountType.PRIMARY.name,
+            defaultCategory = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.name,
+            createdAt = OffsetDateTime.now().toString(),
+            name = "Personal"
+        )
+        val apiAccountListDto = AccountListDto(
+            accounts = listOf(apiAccountModel),
+        )
+        val apiIdentifierModel = AccountIdentifierDto(
+            accountIdentifier = "12345678",
+            bankIdentifier = "123456",
+            iban = "GB12345612345678",
+            bic = "SIC1234221",
+            accountIdentifiers = emptyList(),
+        )
+        val expected: List<Account> = listOf(
+            AccountsMapper.toDomain(apiAccountModel, apiIdentifierModel)
+        )
+
+        coEvery { accountsDao.getAccounts() } returns emptyList()
+        coEvery { apiService.getAccountIdentifiers(any()) } returns apiIdentifierModel
+        coEvery { apiService.getAccounts() } returns apiAccountListDto
+
+        val actual = underTest.getAccounts()
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When ApiException thrown, RepositoryException should be thrown and no accounts returned`() = runTest {
+        coEvery { accountsDao.getAccounts() } returns emptyList()
+        coEvery { apiService.getAccounts() } throws apiException
+
+        try {
+            underTest.getAccounts()
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
+        }
+    }
+
+    @Test(expected = RepositoryException::class)
+    fun `When DatabaseException thrown, RepositoryException should be thrown and no accounts returned`() = runTest {
+        coEvery { accountsDao.getAccounts() } throws SQLiteException()
+
+        underTest.getAccounts()
     }
 
     // =============================================================================================
@@ -178,12 +290,6 @@ class AppRepositoryImplTest {
             assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
-
-    // =============================================================================================
-    // == Get Accounts                                                                            ==
-    // =============================================================================================
-
-
 
     // =============================================================================================
     // == Get Person                                                                              ==

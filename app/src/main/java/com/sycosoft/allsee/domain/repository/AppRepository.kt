@@ -40,6 +40,6 @@ interface AppRepository {
     @Throws(RepositoryException::class)
     suspend fun getIdentity(): Identity
 
-    @Throws
+    @Throws(RepositoryException::class)
     suspend fun getPerson(): Person
 }

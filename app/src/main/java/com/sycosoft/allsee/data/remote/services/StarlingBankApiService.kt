@@ -2,6 +2,7 @@ package com.sycosoft.allsee.data.remote.services
 
 import com.sycosoft.allsee.data.remote.models.AccountHolderDto
 import com.sycosoft.allsee.data.remote.models.AccountHolderNameDto
+import com.sycosoft.allsee.data.remote.models.AccountIdentifierDto
 import com.sycosoft.allsee.data.remote.models.AccountListDto
 import com.sycosoft.allsee.data.remote.models.FullBalanceDto
 import com.sycosoft.allsee.data.remote.models.IdentityDto
@@ -28,4 +29,11 @@ interface StarlingBankApiService {
     /** Requests the identity of the account holder. This is more in depth than just requesting the name. */
     @GET("identity/individual")
     suspend fun getIdentity(): IdentityDto
+
+    /** Requests the identifiers of the account.
+     *
+     * This includes the account number (account identifier), sort code (bank identifier), IBAN and BIC.
+     */
+    @GET("accounts/{accountUid}/identifiers")
+    suspend fun getAccountIdentifiers(@Path("accountUid") accountUid: String): AccountIdentifierDto
 }
