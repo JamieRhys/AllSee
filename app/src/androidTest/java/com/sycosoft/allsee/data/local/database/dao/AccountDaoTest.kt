@@ -53,7 +53,11 @@ class AccountDaoTest {
                 defaultCategory = UUID.randomUUID().toString(),
                 currency = CurrencyType.GBP.ordinal,
                 createdAt = LocalDateTime.now().toString(),
-                name = "Personal"
+                name = "Personal",
+                accountIdentifier = "12345678",
+                bankIdentifier = "123456",
+                iban = "GB01234567890",
+                bic = "30456VHG"
             ),
             AccountEntity(
                 uid = expectedAccount2Uid,
@@ -61,7 +65,11 @@ class AccountDaoTest {
                 defaultCategory = UUID.randomUUID().toString(),
                 currency = CurrencyType.GBP.ordinal,
                 createdAt = LocalDateTime.now().toString(),
-                name = "Personal"
+                name = "Personal",
+                accountIdentifier = "12345678",
+                bankIdentifier = "123456",
+                iban = "GB01234567890",
+                bic = "30456VHG"
             ),
             AccountEntity(
                 uid = expectedAccount3Uid,
@@ -69,7 +77,11 @@ class AccountDaoTest {
                 defaultCategory = UUID.randomUUID().toString(),
                 currency = CurrencyType.GBP.ordinal,
                 createdAt = LocalDateTime.now().toString(),
-                name = "Personal"
+                name = "Personal",
+                accountIdentifier = "12345678",
+                bankIdentifier = "123456",
+                iban = "GB01234567890",
+                bic = "30456VHG"
             ),
         )
 
@@ -96,7 +108,11 @@ class AccountDaoTest {
                 defaultCategory = UUID.randomUUID().toString(),
                 currency = CurrencyType.GBP.ordinal,
                 createdAt = LocalDateTime.now().toString(),
-                name = "Personal"
+                name = "Personal",
+                accountIdentifier = "12345678",
+                bankIdentifier = "123456",
+                iban = "GB01234567890",
+                bic = "30456VHG"
             ),
             AccountEntity(
                 uid = expectedAccount2Uid,
@@ -104,7 +120,11 @@ class AccountDaoTest {
                 defaultCategory = UUID.randomUUID().toString(),
                 currency = CurrencyType.GBP.ordinal,
                 createdAt = LocalDateTime.now().toString(),
-                name = "Personal"
+                name = "Personal",
+                accountIdentifier = "12345678",
+                bankIdentifier = "123456",
+                iban = "GB01234567890",
+                bic = "30456VHG"
             ),
             AccountEntity(
                 uid = expectedAccount3Uid,
@@ -112,7 +132,11 @@ class AccountDaoTest {
                 defaultCategory = UUID.randomUUID().toString(),
                 currency = CurrencyType.GBP.ordinal,
                 createdAt = LocalDateTime.now().toString(),
-                name = "Personal"
+                name = "Personal",
+                accountIdentifier = "12345678",
+                bankIdentifier = "123456",
+                iban = "GB01234567890",
+                bic = "30456VHG"
             ),
         )
 

@@ -1,7 +1,8 @@
 package com.sycosoft.allsee.domain.mappers
 
 import com.sycosoft.allsee.data.local.models.AccountEntity
-import com.sycosoft.allsee.data.remote.models.AccountListDto
+import com.sycosoft.allsee.data.remote.models.AccountDto
+import com.sycosoft.allsee.data.remote.models.AccountIdentifierDto
 import com.sycosoft.allsee.domain.models.Account
 import com.sycosoft.allsee.domain.models.types.AccountType
 import com.sycosoft.allsee.domain.models.types.CurrencyType
@@ -9,16 +10,19 @@ import java.time.OffsetDateTime
 import java.util.UUID
 
 object AccountsMapper {
-    fun toDomain(dto: AccountListDto): List<Account> = dto.accounts.map { account ->
-        Account(
-            accountUid = UUID.fromString(account.accountUid),
-            accountType = AccountType.valueOf(account.accountType),
-            defaultCategory = UUID.fromString(account.defaultCategory),
-            currency = CurrencyType.valueOf(account.currency),
-            createdAt = OffsetDateTime.parse(account.createdAt),
-            name = account.name,
-        )
-    }
+
+    fun toDomain(dto: AccountDto, identifier: AccountIdentifierDto): Account = Account(
+        accountUid = UUID.fromString(dto.accountUid),
+        accountType = AccountType.valueOf(dto.accountType),
+        defaultCategory = UUID.fromString(dto.defaultCategory),
+        currency = CurrencyType.valueOf(dto.currency),
+        createdAt = OffsetDateTime.parse(dto.createdAt),
+        name = dto.name,
+        accountIdentifier = identifier.accountIdentifier,
+        bankIdentifier = identifier.bankIdentifier,
+        iban = identifier.iban,
+        bic = identifier.bic,
+    )
 
     fun toDomain(entities: List<AccountEntity>): List<Account> = entities.map { entity ->
         Account(
@@ -28,6 +32,10 @@ object AccountsMapper {
             currency = CurrencyType.entries[entity.currency],
             createdAt = OffsetDateTime.parse(entity.createdAt),
             name = entity.name,
+            accountIdentifier = entity.accountIdentifier,
+            bankIdentifier = entity.bankIdentifier,
+            iban = entity.iban,
+            bic = entity.bic,
         )
     }
 
@@ -39,17 +47,10 @@ object AccountsMapper {
             currency =  account.currency.ordinal,
             createdAt = account.createdAt.toString(),
             name = account.name,
-        )
-    }
-
-    fun toEntity(dto: AccountListDto): List<AccountEntity> = dto.accounts.map { account ->
-        AccountEntity(
-            uid = account.accountUid,
-            defaultCategory = account.defaultCategory,
-            accountType = AccountType.valueOf(account.accountType).ordinal,
-            currency = CurrencyType.valueOf(account.currency).ordinal,
-            createdAt = account.createdAt,
-            name = account.name,
+            accountIdentifier = account.accountIdentifier,
+            bankIdentifier = account.bankIdentifier,
+            iban = account.iban,
+            bic = account.bic,
         )
     }
 }

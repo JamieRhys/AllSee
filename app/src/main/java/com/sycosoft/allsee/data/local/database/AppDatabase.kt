@@ -25,7 +25,7 @@ import com.sycosoft.allsee.data.local.models.PersonEntity
         AccountEntity::class,
         BalanceEntity::class,
     ], // List of entity classes that will be a part of the database.
-    version = 3 // The version of the database.
+    version = 4 // The version of the database.
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract val personDao: PersonDao

@@ -13,6 +13,10 @@ import com.sycosoft.allsee.domain.models.types.CurrencyType
  * @property currency The currency type of the account.
  * @property createdAt The date and time the account was created.
  * @property name The name of the account given by the user.
+ * @property accountIdentifier The account identifier for the account (also known as account number).
+ * @property bankIdentifier The bank identifier for the account (also known as sort code).
+ * @property iban The International Bank Account Number for the account.
+ * @property bic The Bank Identifier Code for the account.
  *
  * @see AccountType
  * @see CurrencyType
@@ -25,4 +29,8 @@ data class AccountEntity(
     @ColumnInfo(name = "currency_type") val currency: Int,
     @ColumnInfo(name = "created_at") val createdAt: String,
     @ColumnInfo(name = "account_name") val name: String,
+    @ColumnInfo(name = "account_identifier") val accountIdentifier: String,
+    @ColumnInfo(name = "bank_identifier") val bankIdentifier: String,
+    @ColumnInfo(name = "iban") val iban: String,
+    @ColumnInfo(name = "bic") val bic: String,
 )

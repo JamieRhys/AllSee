@@ -90,17 +90,33 @@ class AppRepositoryImpl @Inject constructor(
 
     override suspend fun getAccounts(): List<Account> = try {
         coroutineScope {
-            var accounts: List<Account> = AccountsMapper.toDomain(databaseCall { accountsDao.getAccounts() })
+            var accounts: List<Account> = AccountsMapper.toDomain(databaseCall { accountsDao.getAccounts() } )
 
             if (accounts.isEmpty()) {
-                accounts = AccountsMapper.toDomain(apiService.getAccounts())
+                val accountList = mutableListOf<Account>()
+                val accountsDto = async { apiService.getAccounts() }.await()
 
+                accountsDto.accounts.forEach { accountDto ->
+                    val identifier = async { apiService.getAccountIdentifiers(accountDto.accountUid) }.await()
+
+                    val account = AccountsMapper.toDomain(
+                        dto = accountDto,
+                        identifier = identifier,
+                    )
+
+                    accountList.add(account)
+                }
+
+                accounts = accountList
                 saveAccounts(accounts)
             }
 
             accounts
         }
-    } catch(e: ApiException) {
+
+    } catch (e: ApiException) {
+        throw throwRepositoryException(e)
+    } catch (e: DatabaseException) {
         throw throwRepositoryException(e)
     }
 
