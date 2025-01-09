@@ -11,7 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sycosoft.allsee.domain.models.NameAndAccountType
+import com.sycosoft.allsee.presentation.models.NameAndAccountType
 import com.sycosoft.allsee.presentation.components.dialogs.UserConfirmationDialog
 import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
 import com.sycosoft.allsee.presentation.utils.UiState
