@@ -5,6 +5,8 @@
     <string name="aap_get_started">To get started, paste your access token below.</string>
     <string name="aap_title">Oh, hey!</string>
 
+    <string name="account_details_page_title">Account Details</string>
+
     <string name="user_confirmation_dialog_title">Hold on a second!</string>
     <string name="user_confirmation_dialog_text">Just to confirm, is your name %s and you hold a %s account?</string>
 

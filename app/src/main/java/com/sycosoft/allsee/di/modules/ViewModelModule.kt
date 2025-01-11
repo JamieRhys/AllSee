@@ -3,6 +3,7 @@ package com.sycosoft.allsee.di.modules
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
+import com.sycosoft.allsee.presentation.viewmodels.AccountDetailsPageViewModel
 import com.sycosoft.allsee.presentation.viewmodels.HomePageViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -42,6 +43,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AccountAccessPageViewModel::class)
     abstract fun bindAccountAccessPageViewModel(viewModel: AccountAccessPageViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AccountDetailsPageViewModel::class)
+    abstract fun bindAccountDetailsPageViewModel(viewModel: AccountDetailsPageViewModel): ViewModel
 
     @Binds
     @IntoMap

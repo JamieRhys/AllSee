@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sycosoft.allsee.presentation.pages.AccountAccessPage
+import com.sycosoft.allsee.presentation.pages.AccountDetailsPage
 import com.sycosoft.allsee.presentation.pages.HomePage
 
 @Composable
@@ -27,9 +28,20 @@ fun AppNavigation(
                 },
             )
         }
+        composable(NavigationDestination.AccountDetails.route) {
+            AccountDetailsPage(
+                viewModel = viewModel(factory = viewModelFactory),
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
         composable(NavigationDestination.Home.route) {
             HomePage(
                 viewModel = viewModel(factory = viewModelFactory),
+                onBalanceCardClick = {
+                    navController.navigate(NavigationDestination.AccountDetails.route)
+                }
             )
         }
 
