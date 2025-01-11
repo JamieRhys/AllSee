@@ -1,16 +1,15 @@
-package com.sycosoft.allsee.presentation.components.screens.homepage
+package com.sycosoft.allsee.presentation.components.screens.accountdetailspage
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,50 +19,54 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
+import com.sycosoft.allsee.R
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePageScreen(
+fun AccountDetailsPageScreen(
     topSectionColor: Color = MaterialTheme.colorScheme.surface,
     bottomSectionColor: Color = MaterialTheme.colorScheme.inverseSurface,
-    accountName: String?,
-    clearedBalance: String,
-    onPersonButtonClick: () -> Unit,
-    onBalanceCardClick: () -> Unit,
+    name: String,
+    type: String,
+    accountNumber: String,
+    sortCode: String,
+    iban: String,
+    bic: String,
+    onBackButtonClick: () -> Unit,
 ) {
-    val topSectionHeight = 0.90f
-    val bottomSectionHeight = 0.10f
-    val roundedCornerSize = 30.dp
+    val topSectionHeight = 0.50f
+    val topSectionWidth = 0.50f
+    val bottomSectionHeight = 0.50f
+    val bottomSectionWidth = 0.50f
+    val roundedCornerSize = 90.dp
 
     Scaffold(
-        modifier = Modifier.testTag(HomePageScreenTestTags.SCREEN),
+        modifier = Modifier.testTag(AccountDetailsPageScreenTestTags.SCREEN),
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         modifier = Modifier
-                            .testTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME)
-                            .padding(start = 5.dp),
-                        text = accountName ?: "Loading",
-                        style = MaterialTheme.typography.bodyLarge
+                            .testTag(AccountDetailsPageScreenTestTags.TEXT_SCREEN_TITLE),
+                        text = stringResource(id = R.string.account_details_page_title),
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                 },
-                actions = {
+                navigationIcon = {
                     IconButton(
-                        modifier = Modifier.testTag(HomePageScreenTestTags.BUTTON_PERSON),
-                        onClick = onPersonButtonClick
+                        modifier = Modifier.testTag(AccountDetailsPageScreenTestTags.BUTTON_BACK),
+                        onClick = { onBackButtonClick() },
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Person,
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null
                         )
                     }
@@ -81,14 +84,13 @@ fun HomePageScreen(
                 backgroundTopRight,
                 backgroundBottomLeft,
                 backgroundBottom,
-                foregroundTop,
-                foregroundBottom,
+                foregroundContent,
             ) = createRefs()
 
             // Background/TopRight
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.25f)
+                    .fillMaxWidth(topSectionWidth)
                     .fillMaxHeight(topSectionHeight)
                     .background(color = bottomSectionColor)
                     .constrainAs(backgroundTopRight) {
@@ -97,7 +99,7 @@ fun HomePageScreen(
                         end.linkTo(parent.end)
                     }
             )
-
+            
             // Background/Top
             Box(
                 modifier = Modifier
@@ -105,7 +107,7 @@ fun HomePageScreen(
                     .fillMaxHeight(topSectionHeight)
                     .background(
                         color = topSectionColor,
-                        shape = RoundedCornerShape(bottomEnd = roundedCornerSize)
+                        shape = RoundedCornerShape(bottomEnd = roundedCornerSize),
                     )
                     .constrainAs(backgroundTop) {
                         top.linkTo(parent.top)
@@ -118,10 +120,10 @@ fun HomePageScreen(
             // Background/BottomLeft
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.25f)
+                    .fillMaxWidth(bottomSectionWidth)
                     .fillMaxHeight(bottomSectionHeight)
                     .background(color = topSectionColor)
-                    .constrainAs(backgroundBottomLeft) {
+                    .constrainAs(backgroundBottom) {
                         top.linkTo(backgroundTop.bottom)
                         bottom.linkTo(parent.bottom)
                         start.linkTo(parent.start)
@@ -138,49 +140,29 @@ fun HomePageScreen(
                         shape = RoundedCornerShape(topStart = roundedCornerSize)
                     )
                     .constrainAs(backgroundBottom) {
-                        top.linkTo(backgroundTop.bottom)
-                        bottom.linkTo(parent.bottom)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(backgroundBottom.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
             )
 
-            // Foreground/Top
+            // Foreground/Content
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(topSectionHeight)
-                    .constrainAs(foregroundTop) {
-                        top.linkTo(backgroundTop.top)
-                        bottom.linkTo(backgroundTop.bottom)
-                        start.linkTo(backgroundTop.start)
-                        end.linkTo(backgroundTop.end)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                ) {
-                    BalanceCard(
-                        modifier = Modifier.testTag(HomePageScreenTestTags.BALANCE_CARD),
-                        clearedBalance = clearedBalance,
-                        onClick = { onBalanceCardClick() }
+                    .padding(
+                        top = 8.dp,
+                        bottom = 16.dp,
+                        start = 8.dp,
+                        end = 8.dp,
                     )
-                }
-            }
-
-            // Foreground/Bottom
-            Box(
-                modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(bottomSectionHeight)
-                    .constrainAs(foregroundBottom) {
-                        top.linkTo(backgroundBottom.top)
+                    .fillMaxHeight()
+                    .constrainAs(foregroundContent) {
+                        top.linkTo(backgroundTop.top)
                         bottom.linkTo(backgroundBottom.bottom)
-                        start.linkTo(backgroundBottom.start)
-                        end.linkTo(backgroundBottom.end)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
             ) {
 
@@ -191,14 +173,17 @@ fun HomePageScreen(
 
 @Preview(name = "Light Mode", showSystemUi = true, showBackground = true)
 @Composable
-private fun LM_HomePageScreenPreview() {
+private fun LM_AccountDetailsPageScreen() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
-            HomePageScreen(
-                accountName = "Individual",
-                clearedBalance = "£1,000",
-                onPersonButtonClick = {},
-                onBalanceCardClick = {},
+            AccountDetailsPageScreen(
+                name = "Joe Bloggs",
+                type = "Individual",
+                accountNumber = "12345678",
+                sortCode = "123456",
+                iban = "GB12345678123456",
+                bic = "1324567",
+                onBackButtonClick = {},
             )
         }
     }
@@ -208,14 +193,17 @@ private fun LM_HomePageScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-private fun DM_HomePageScreenPreview() {
+private fun DM_AccountDetailsPageScreen() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
-            HomePageScreen(
-                accountName = "Individual",
-                clearedBalance = "£1,000",
-                onPersonButtonClick = {},
-                onBalanceCardClick = {},
+            AccountDetailsPageScreen(
+                name = "Joe Bloggs",
+                type = "Individual",
+                accountNumber = "12345678",
+                sortCode = "123456",
+                iban = "GB12345678123456",
+                bic = "1324567",
+                onBackButtonClick = {},
             )
         }
     }
