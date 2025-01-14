@@ -1,7 +1,9 @@
 package com.sycosoft.allsee.presentation.components.cards.accountdetailscard
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +23,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +53,23 @@ fun AccountDetailsCard(
     iban: String = "",
     bic: String = "",
 ) {
+    val clipboardManager = LocalClipboardManager.current
+    val copyString: String = if (accountNumber.isNotEmpty() && sortCode.isNotEmpty()) {
+        stringResource(
+            id = R.string.share_bank_details_text,
+            "${stringResource(R.string.account_holder_name)}: $accountHolderName",
+            "${stringResource(R.string.account_number)}: $accountNumber",
+            "${stringResource(R.string.sort_code)}: $sortCode",
+        )
+    } else if (iban.isNotEmpty() && bic.isNotEmpty()) {
+        stringResource(
+            id = R.string.share_bank_details_text,
+            "${stringResource(R.string.account_holder_name)}: $accountHolderName",
+            "${stringResource(R.string.iban)}: $iban",
+            "${stringResource(R.string.bic)}: $bic",
+        )
+    } else { "" }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,67 +97,95 @@ fun AccountDetailsCard(
             ) {
                 Text(
                     modifier = Modifier
-                        .testTag(AccountDetailsCardTestTags.TEXT_TITLE)
+                        .testTag(AccountDetailsCardTestTags.TITLE_COUNTRY_NAME)
                         .padding(start = 8.dp),
                     text = countryName,
                 )
                 Button(
                     modifier = Modifier.testTag(AccountDetailsCardTestTags.BUTTON_SHARE),
-                    onClick = { /* TODO */ },
+                    onClick = {
+                        if (copyString.isNotEmpty()) {
+                            clipboardManager.setText(AnnotatedString(copyString))
+                        }
+                    },
                     content = { Text("Share") }
                 )
             }
         }
         Column {
             AccountDetailEntry(
-                modifier = Modifier
-                    .testTag(AccountDetailsCardTestTags.TEXT_ACCOUNT_HOLDER_NAME),
                 title = stringResource(id = R.string.account_holder_name),
                 text = accountHolderName,
+                titleTestTag = AccountDetailsCardTestTags.TITLE_ACCOUNT_HOLDER_NAME,
+                textTestTag = AccountDetailsCardTestTags.TEXT_ACCOUNT_HOLDER_NAME,
+                buttonCopyTestTag = AccountDetailsCardTestTags.BUTTON_COPY_ACCOUNT_HOLDER_NAME,
+                clipboardManager = clipboardManager,
             )
             HorizontalDivider()
             if (accountNumber.isNotEmpty()) {
                 AccountDetailEntry(
-                    modifier = Modifier.
-                        testTag(AccountDetailsCardTestTags.TEXT_ACCOUNT_NUMBER),
                     title = stringResource(id = R.string.account_number),
                     text = accountNumber,
+                    titleTestTag = AccountDetailsCardTestTags.TITLE_ACCOUNT_NUMBER,
+                    textTestTag = AccountDetailsCardTestTags.TEXT_ACCOUNT_NUMBER,
+                    buttonCopyTestTag = AccountDetailsCardTestTags.BUTTON_COPY_ACCOUNT_NUMBER,
+                    clipboardManager = clipboardManager,
                 )
                 HorizontalDivider()
                 AccountDetailEntry(
-                    modifier = Modifier
-                        .testTag(AccountDetailsCardTestTags.TEXT_SORT_CODE),
                     title = stringResource(id = R.string.sort_code),
                     text = sortCode,
+                    titleTestTag = AccountDetailsCardTestTags.TITLE_SORT_CODE,
+                    textTestTag = AccountDetailsCardTestTags.TEXT_SORT_CODE,
+                    buttonCopyTestTag = AccountDetailsCardTestTags.BUTTON_COPY_SORT_CODE,
+                    clipboardManager = clipboardManager,
                 )
             } else if (iban.isNotEmpty() && bic.isNotEmpty()) {
                 AccountDetailEntry(
-                    modifier = Modifier.
-                    testTag(AccountDetailsCardTestTags.TEXT_IBAN),
                     title = stringResource(id = R.string.iban),
                     text = iban,
+                    titleTestTag = AccountDetailsCardTestTags.TITLE_IBAN,
+                    textTestTag = AccountDetailsCardTestTags.TEXT_IBAN,
+                    buttonCopyTestTag = AccountDetailsCardTestTags.BUTTON_COPY_IBAN,
+                    clipboardManager = clipboardManager,
                 )
                 HorizontalDivider()
                 AccountDetailEntry(
-                    modifier = Modifier
-                        .testTag(AccountDetailsCardTestTags.TEXT_BIC),
                     title = stringResource(id = R.string.bic),
                     text = bic,
+                    titleTestTag = AccountDetailsCardTestTags.TITLE_BIC,
+                    textTestTag = AccountDetailsCardTestTags.TEXT_BIC,
+                    buttonCopyTestTag = AccountDetailsCardTestTags.BUTTON_COPY_BIC,
+                    clipboardManager = clipboardManager,
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AccountDetailEntry(
     modifier: Modifier = Modifier,
+    titleTestTag: String,
+    textTestTag: String,
+    buttonCopyTestTag: String,
     title: String,
     text: String,
+    clipboardManager: ClipboardManager,
 ) {
+
     Row(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {},
+                onLongClick = {
+                    if (text.isNotEmpty() && title.isNotEmpty()) {
+                        clipboardManager.setText(AnnotatedString("$title: $text"))
+                    }
+                },
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -146,11 +197,13 @@ private fun AccountDetailEntry(
                 ),
         ) {
             Text(
+                modifier = Modifier.testTag(titleTestTag),
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
             )
             Text(
                 modifier = Modifier
+                    .testTag(textTestTag)
                     .padding(
                         top = 4.dp,
                         bottom = 4.dp,
@@ -163,7 +216,13 @@ private fun AccountDetailEntry(
             )
         }
         IconButton(
-            onClick = { /* TODO */ },
+            modifier = Modifier
+                .testTag(buttonCopyTestTag),
+            onClick = {
+                if (text.isNotEmpty() && title.isNotEmpty()) {
+                    clipboardManager.setText(AnnotatedString("$title: $text"))
+                }
+            },
         ) {
             Icon(
                 imageVector = Icons.Default.ContentCopy,
