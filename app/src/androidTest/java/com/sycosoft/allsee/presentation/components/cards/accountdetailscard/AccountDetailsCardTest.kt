@@ -1,6 +1,6 @@
 package com.sycosoft.allsee.presentation.components.cards.accountdetailscard
 
-import android.content.Context
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.test.assertIsDisplayed
@@ -11,9 +11,13 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.AnnotatedString
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 
@@ -21,6 +25,8 @@ private typealias ADCTT = AccountDetailsCardTestTags
 
 class AccountDetailsCardTest {
     @get:Rule val composeTestRule = createComposeRule()
+    private val clipboardManager = mockk<ClipboardManager>(relaxed = true)
+    private val slot = slot<AnnotatedString>()
 
 // region Expected Variables
 
@@ -39,6 +45,10 @@ class AccountDetailsCardTest {
     private val expectedTitleSortCode = "Sort Code"
     private val expectedFullInternationalAccountDetailsCopyText = "Hey, here's my bank details.\n$expectedTitleAccountHolderName: $expectedTextAccountHolderName,\n$expectedTitleIBAN: $expectedTextIBAN,\n$expectedTitleBIC: $expectedTextBIC"
     private val expectedUKFullAccountDetailsCopyText = "Hey, here's my bank details.\n$expectedTitleAccountHolderName: $expectedTextAccountHolderName,\n$expectedTitleAccountNumber: $expectedTextAccountNumber,\n$expectedTitleSortCode: $expectedTextSortCode"
+    private val expectedAccountHolderDetailsFullCopyText = "$expectedTitleAccountHolderName: $expectedTextAccountHolderName"
+    private val expectedSortCodeDetailsFullCopyText = "$expectedTitleSortCode: $expectedTextSortCode"
+    private val expectedIBANDetailsFullCopyText = "$expectedTitleIBAN: $expectedTextIBAN"
+    private val expectedBICDetailsFullCopyText = "$expectedTitleBIC: $expectedTextBIC"
 
 // endregion
 
@@ -106,58 +116,335 @@ class AccountDetailsCardTest {
     }
 
 // endregion
-// region Share Button
+// region Share Button (UK)
 
     @Test
     fun whenShareButtonClicked_GivenUKValues_ThenCopyTextToClipboard() {
-        var actual = ""
+        every { clipboardManager.setText(capture(slot)) } just runs
+
         // When
         with (composeTestRule) {
             setContent {
-                // Clear clipboard prior to test to ensure any previous tests does not cause issues.
-                LocalClipboardManager.current.setText(AnnotatedString(""))
-
-                AllSeeTheme {
-                    AccountDetailsCard(
-                        countryName = expectedCountryNameUK,
-                        accountHolderName = expectedTextAccountHolderName,
-                        accountNumber = expectedTextAccountNumber,
-                        sortCode = expectedTextSortCode,
-                    )
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameUK,
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTextAccountNumber,
+                            sortCode = expectedTextSortCode,
+                        )
+                    }
                 }
-                actual = LocalClipboardManager.current.getText().toString()
             }
 
             onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
-            assertEquals(expectedUKFullAccountDetailsCopyText, actual)
+
+            verify(timeout = 1000) { clipboardManager.setText(any()) }
+
+            assertEquals(AnnotatedString(expectedUKFullAccountDetailsCopyText), slot.captured)
         }
     }
 
     @Test
     fun whenShareButtonClicked_GivenMissingAccountNumber_ThenNoDetailsCopied() {
-        val expected = ""
-        var actual = ""
-        // When
-        with (composeTestRule) {
-            setContent {
-                // Clear clipboard prior to test to ensure any previous tests does not cause issues.
-                LocalClipboardManager.current.setText(AnnotatedString(""))
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
 
-                AllSeeTheme {
-                    AccountDetailsCard(
-                        countryName = expectedCountryNameUK,
-                        accountHolderName = expectedTextAccountHolderName,
-                        sortCode = expectedTextSortCode,
-                    )
+        // When
+        with(composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameUK,
+                            accountHolderName = expectedTextAccountHolderName,
+                            sortCode = expectedTextSortCode,
+                        )
+                    }
                 }
-                actual = LocalClipboardManager.current.getText().toString()
             }
 
             onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
-            waitForIdle()
-            assertEquals(expected, actual)
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 0) { clipboardManager.setText(any()) }
         }
     }
+
+    @Test
+    fun whenShareButtonClicked_GivenMissingSortCode_ThenNoDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameUK,
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTextAccountNumber,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 0) { clipboardManager.setText(any()) }
+        }
+    }
+
+// endregion
+// region Share Button (International)
+
+    @Test
+    fun whenShareButtonClicked_GivenInternationalValues_ThenCopyTextToClipboard() {
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameInt,
+                            accountHolderName = expectedTextAccountHolderName,
+                            iban = expectedTextIBAN,
+                            bic = expectedTextBIC,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+
+            verify(timeout = 1000) { clipboardManager.setText(any()) }
+
+            assertEquals(AnnotatedString(expectedFullInternationalAccountDetailsCopyText), slot.captured)
+        }
+    }
+
+    @Test
+    fun whenShareButtonClicked_GivenMissingIBANNumber_ThenNoDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with(composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameInt,
+                            accountHolderName = expectedTextAccountHolderName,
+                            bic = expectedTextBIC,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 0) { clipboardManager.setText(any()) }
+        }
+    }
+
+    @Test
+    fun whenShareButtonClicked_GivenMissingBIC_ThenNoDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameInt,
+                            accountHolderName = expectedTextAccountHolderName,
+                            iban = expectedTextIBAN,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 0) { clipboardManager.setText(any()) }
+        }
+    }
+
+// endregion
+// region Entry Share Button
+
+    @Test
+    fun whenAccountHolderNameEntryShareButtonClicked_ThenAccountHolderNameEntryDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameUK,
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTitleAccountNumber,
+                            sortCode = expectedTextSortCode,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_COPY_ACCOUNT_HOLDER_NAME).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 1) { clipboardManager.setText(any()) }
+
+            // Make sure that the clipboard equals that of the expected text.
+            assertEquals(AnnotatedString(expectedAccountHolderDetailsFullCopyText), slot.captured)
+        }
+    }
+
+    @Test
+    fun whenAccountNumberEntryShareButtonClicked_ThenAccountNumberEntryDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameUK,
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTitleAccountNumber,
+                            sortCode = expectedTextSortCode,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_COPY_SORT_CODE).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 1) { clipboardManager.setText(any()) }
+
+            // Make sure that the clipboard equals that of the expected text.
+            assertEquals(AnnotatedString(expectedSortCodeDetailsFullCopyText), slot.captured)
+        }
+    }
+
+    @Test
+    fun whenSortCodeEntryShareButtonClicked_ThenSortCodeEntryDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameUK,
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTitleAccountNumber,
+                            sortCode = expectedTextSortCode,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_COPY_SORT_CODE).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 1) { clipboardManager.setText(any()) }
+
+            // Make sure that the clipboard equals that of the expected text.
+            assertEquals(AnnotatedString(expectedSortCodeDetailsFullCopyText), slot.captured)
+        }
+    }
+
+    @Test
+    fun whenIBANEntryShareButtonClicked_ThenIBANEntryDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameInt,
+                            accountHolderName = expectedTextAccountHolderName,
+                            iban = expectedTextIBAN,
+                            bic = expectedTextBIC,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_COPY_IBAN).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 1) { clipboardManager.setText(any()) }
+
+            // Make sure that the clipboard equals that of the expected text.
+            assertEquals(AnnotatedString(expectedIBANDetailsFullCopyText), slot.captured)
+        }
+    }
+
+    @Test
+    fun whenBICEntryShareButtonClicked_ThenBICEntryDetailsCopied() {
+        // Link the mock to use the slot
+        every { clipboardManager.setText(capture(slot)) } just runs
+
+        // When
+        with (composeTestRule) {
+            setContent {
+                CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
+                    AllSeeTheme {
+                        AccountDetailsCard(
+                            countryName = expectedCountryNameInt,
+                            accountHolderName = expectedTextAccountHolderName,
+                            iban = expectedTextIBAN,
+                            bic = expectedTextBIC,
+                        )
+                    }
+                }
+            }
+
+            onNodeWithTag(ADCTT.BUTTON_COPY_BIC).performClick()
+
+            // Verify the setText method was not called. If so, there's no need to check if the
+            // clipboard content has changed because it shouldn't have by this.
+            verify(exactly = 1) { clipboardManager.setText(any()) }
+
+            // Make sure that the clipboard equals that of the expected text.
+            assertEquals(AnnotatedString(expectedBICDetailsFullCopyText), slot.captured)
+        }
+    }
+
+// endregion
+// region Entry Long Press Click
+
+    // TODO: Populate with tests to ensure entry long press works.
 
 // endregion
 }
