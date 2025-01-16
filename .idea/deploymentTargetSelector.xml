@@ -13,10 +13,10 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="AccessTokenRequestScreenTest">
+      <SelectionState runConfigName="accountDetailsCardRendersCorrectlyWhenProvidedUkValues()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="BalanceCardTests">
+      <SelectionState runConfigName="AccountDetailsCardTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

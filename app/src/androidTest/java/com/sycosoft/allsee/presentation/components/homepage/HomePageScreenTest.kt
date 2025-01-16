@@ -34,7 +34,7 @@ class HomePageScreenTest {
             }
 
             // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).isDisplayed()
+            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME).isDisplayed()
             onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
             onNodeWithTag(HomePageScreenTestTags.BALANCE_CARD).isDisplayed()
         }
@@ -64,7 +64,7 @@ class HomePageScreenTest {
             }
 
             // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
+            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME).assertTextEquals(expected)
         }
     }
 
@@ -87,7 +87,7 @@ class HomePageScreenTest {
             }
 
             // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.ACCOUNT_NAME).assertTextEquals(expected)
+            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME).assertTextEquals(expected)
         }
     }
 
