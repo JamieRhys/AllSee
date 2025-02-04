@@ -3,13 +3,17 @@ package com.sycosoft.allsee.presentation.components.screens.accountdetailspage
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.sycosoft.allsee.R
+import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsCard
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -153,8 +158,8 @@ fun AccountDetailsPageScreen(
                     .padding(
                         top = 8.dp,
                         bottom = 16.dp,
-                        start = 8.dp,
-                        end = 8.dp,
+                        start = 16.dp,
+                        end = 16.dp,
                     )
                     .fillMaxWidth()
                     .fillMaxHeight()
@@ -165,8 +170,65 @@ fun AccountDetailsPageScreen(
                         end.linkTo(parent.end)
                     }
             ) {
-
+                Content(
+                    type = type,
+                    accountHolderName = name,
+                    accountNumber = accountNumber,
+                    sortCode = sortCode,
+                    iban = iban,
+                    bic = bic,
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun Content(
+    modifier: Modifier = Modifier,
+    type: String,
+    accountHolderName: String,
+    accountNumber: String,
+    sortCode: String,
+    iban: String,
+    bic: String,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        Text(
+            modifier = Modifier.testTag(AccountDetailsPageScreenTestTags.TEXT_SCREEN_DESCRIPTION),
+            text = stringResource(id = R.string.account_details_page_description),
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .testTag(AccountDetailsPageScreenTestTags.TEXT_ACCOUNT_TYPE),
+            text = type,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 16.dp)
+        ) {
+            AccountDetailsCard(
+                countryName = stringResource(id = R.string.country_name_uk),
+                accountHolderName = accountHolderName,
+                accountNumber = accountNumber,
+                sortCode = sortCode,
+            )
+            AccountDetailsCard(
+                countryName = stringResource(id = R.string.country_name_international),
+                accountHolderName = accountHolderName,
+                iban = iban,
+                bic = bic,
+            )
         }
     }
 }

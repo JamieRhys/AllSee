@@ -6,9 +6,11 @@ object AccountDetailsPageScreenTestTags {
     const val BUTTON_BACK = "button_back"
 
     const val TEXT_ACCOUNT_NUMBER = "account_number"
+    const val TEXT_ACCOUNT_TYPE = "account_type"
     const val TEXT_BIC = "bic"
     const val TEXT_IBAN = "iban"
     const val TEXT_PERSON_NAME = "person_name"
     const val TEXT_SORT_CODE = "sort_code"
+    const val TEXT_SCREEN_DESCRIPTION = "screen_description"
     const val TEXT_SCREEN_TITLE = "screen_title"
 }
