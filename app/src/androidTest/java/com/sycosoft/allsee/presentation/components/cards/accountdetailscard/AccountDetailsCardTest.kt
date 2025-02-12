@@ -5,6 +5,7 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -55,18 +56,47 @@ class AccountDetailsCardTest {
 // region Default State
 
     @Test
+    fun accountDetailsCardPlaceholderRendersCorrectly() {
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    AccountDetailsCard(
+                        testTag = "testTag",
+                        countryType = CountryType.UK,
+                        value = AccountDetailsType.Placeholder,
+                    )
+                }
+            }
+
+            onNodeWithTag(ADCTT.PLACEHOLDER + "testTag").assertIsDisplayed()
+        }
+    }
+
+
+
+    @Test
     fun accountDetailsCardRendersCorrectlyWhenProvidedUkValues() {
         with (composeTestRule) {
             setContent {
                 AllSeeTheme {
                     AccountDetailsCard(
-                        countryName = expectedCountryNameUK,
-                        accountHolderName = expectedTextAccountHolderName,
-                        accountNumber = expectedTextAccountNumber,
-                        sortCode = expectedTextSortCode,
+                        testTag = "testTag",
+                        countryType = CountryType.UK,
+                        value = AccountDetailsType.Value(
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTextAccountNumber,
+                            sortCode = expectedTextSortCode,
+                            iban = expectedTextIBAN,
+                            bic = expectedTextBIC,
+                        )
                     )
                 }
             }
+
+            onNodeWithTag(ADCTT.PLACEHOLDER + "testTag").assertDoesNotExist()
+
+            onNodeWithTag(ADCTT.FLAG_UK).assertIsDisplayed()
+            onNodeWithTag(ADCTT.FLAG_INTERNATIONAL).assertIsNotDisplayed()
 
             onNodeWithTag(ADCTT.TITLE_COUNTRY_NAME).assertIsDisplayed().assertTextEquals(expectedCountryNameUK)
             onNodeWithTag(ADCTT.BUTTON_SHARE).assertIsDisplayed().assertTextEquals(expectedTextShare)
@@ -91,10 +121,15 @@ class AccountDetailsCardTest {
             setContent {
                 AllSeeTheme {
                     AccountDetailsCard(
-                        countryName = expectedCountryNameInt,
-                        accountHolderName = expectedTextAccountHolderName,
-                        iban = expectedTextIBAN,
-                        bic = expectedTextBIC,
+                        testTag = "testTag",
+                        countryType = CountryType.INTERNATIONAL,
+                        value = AccountDetailsType.Value(
+                            accountHolderName = expectedTextAccountHolderName,
+                            accountNumber = expectedTextAccountNumber,
+                            sortCode = expectedTextSortCode,
+                            iban = expectedTextIBAN,
+                            bic = expectedTextBIC,
+                        )
                     )
                 }
             }
@@ -128,10 +163,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameUK,
-                            accountHolderName = expectedTextAccountHolderName,
-                            accountNumber = expectedTextAccountNumber,
-                            sortCode = expectedTextSortCode,
+                            testTag = "testTag",
+                            countryType = CountryType.UK,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -156,9 +196,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameUK,
-                            accountHolderName = expectedTextAccountHolderName,
-                            sortCode = expectedTextSortCode,
+                            testTag = "testTag",
+                            countryType = CountryType.UK,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = "",
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -183,9 +229,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameUK,
-                            accountHolderName = expectedTextAccountHolderName,
-                            accountNumber = expectedTextAccountNumber,
+                            testTag = "testTag",
+                            countryType = CountryType.UK,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = "",
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -212,10 +264,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameInt,
-                            accountHolderName = expectedTextAccountHolderName,
-                            iban = expectedTextIBAN,
-                            bic = expectedTextBIC,
+                            testTag = "testTag",
+                            countryType = CountryType.INTERNATIONAL,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -240,9 +297,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameInt,
-                            accountHolderName = expectedTextAccountHolderName,
-                            bic = expectedTextBIC,
+                            testTag = "testTag",
+                            countryType = CountryType.INTERNATIONAL,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = "",
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -267,9 +330,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameInt,
-                            accountHolderName = expectedTextAccountHolderName,
-                            iban = expectedTextIBAN,
+                            testTag = "testTag",
+                            countryType = CountryType.INTERNATIONAL,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = "",
+                            )
                         )
                     }
                 }
@@ -297,10 +366,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameUK,
-                            accountHolderName = expectedTextAccountHolderName,
-                            accountNumber = expectedTitleAccountNumber,
-                            sortCode = expectedTextSortCode,
+                            testTag = "testTag",
+                            countryType = CountryType.UK,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -328,10 +402,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameUK,
-                            accountHolderName = expectedTextAccountHolderName,
-                            accountNumber = expectedTitleAccountNumber,
-                            sortCode = expectedTextSortCode,
+                            testTag = "testTag",
+                            countryType = CountryType.UK,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -359,10 +438,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameUK,
-                            accountHolderName = expectedTextAccountHolderName,
-                            accountNumber = expectedTitleAccountNumber,
-                            sortCode = expectedTextSortCode,
+                            testTag = "testTag",
+                            countryType = CountryType.UK,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -390,10 +474,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameInt,
-                            accountHolderName = expectedTextAccountHolderName,
-                            iban = expectedTextIBAN,
-                            bic = expectedTextBIC,
+                            testTag = "testTag",
+                            countryType = CountryType.INTERNATIONAL,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
@@ -421,10 +510,15 @@ class AccountDetailsCardTest {
                 CompositionLocalProvider(LocalClipboardManager provides clipboardManager) {
                     AllSeeTheme {
                         AccountDetailsCard(
-                            countryName = expectedCountryNameInt,
-                            accountHolderName = expectedTextAccountHolderName,
-                            iban = expectedTextIBAN,
-                            bic = expectedTextBIC,
+                            testTag = "testTag",
+                            countryType = CountryType.INTERNATIONAL,
+                            value = AccountDetailsType.Value(
+                                accountHolderName = expectedTextAccountHolderName,
+                                accountNumber = expectedTextAccountNumber,
+                                sortCode = expectedTextSortCode,
+                                iban = expectedTextIBAN,
+                                bic = expectedTextBIC,
+                            )
                         )
                     }
                 }
