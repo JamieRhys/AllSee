@@ -3,6 +3,9 @@ package com.sycosoft.allsee.presentation.components.screens.accountdetailspage
 object AccountDetailsPageScreenTestTags {
     const val SCREEN = "screen_account_details_page"
 
+    const val ACCOUNT_UK_DETAILS_CARD = "account_uk_details_card"
+    const val ACCOUNT_INTERNATIONAL_DETAILS_CARD = "account_international_details_card"
+
     const val BUTTON_BACK = "button_back"
 
     const val TEXT_ACCOUNT_NUMBER = "account_number"
