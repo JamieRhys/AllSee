@@ -8,6 +8,7 @@ import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.domain.usecases.SaveTokenUseCase
 import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
 import com.sycosoft.allsee.presentation.utils.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,9 +43,9 @@ class AccountAccessPageViewModel @Inject constructor(
 
     fun saveToken() {
         viewModelScope.launch {
-            nameAndAccountTypeUiState.update { UiState.Loading }
+            nameAndAccountTypeUiState.value = UiState.Loading
             saveTokenUseCase(token = accessToken.value)
-            nameAndAccountTypeUiState.update { getPersonState() }
+            nameAndAccountTypeUiState.value = getPersonState()
         }
     }
 
@@ -60,7 +61,6 @@ class AccountAccessPageViewModel @Inject constructor(
         UiState.Success(NameAndAccountTypeMapper.map(getPersonUseCase()))
     } catch (e: RepositoryException) {
         UiState.Error(e.error.error, e.error.errorDescription)
-
     }
 
     data class ViewState(
