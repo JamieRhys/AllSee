@@ -1,15 +1,21 @@
 package com.sycosoft.allsee.presentation.viewmodels
 
+import app.cash.turbine.test
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.models.ErrorResponse
+import com.sycosoft.allsee.domain.models.Person
+import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.domain.usecases.SaveTokenUseCase
+import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
 import com.sycosoft.allsee.presentation.utils.UiState
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -18,13 +24,15 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.time.LocalDate
+import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AccountAccessPageViewModelTest {
     private val saveTokenUseCase = mockk<SaveTokenUseCase>(relaxed = true)
     private val getPersonUseCase = mockk<GetPersonUseCase>(relaxed = true)
 
-    private val testScope = TestScope()
+    private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var underTest: AccountAccessPageViewModel
 
@@ -32,7 +40,7 @@ class AccountAccessPageViewModelTest {
     @Before
     fun setUp() {
         underTest = AccountAccessPageViewModel(saveTokenUseCase, getPersonUseCase)
-        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
+        Dispatchers.setMain(testDispatcher)
     }
 
     @After
@@ -47,7 +55,6 @@ class AccountAccessPageViewModelTest {
         assertEquals("new_token", underTest.viewState.value.accessToken)
     }
 
-    /** List comes out blank and might be due to it being initialised lazily. Need to ask if changing to eager will be an issue.
     @Test
     fun `When saveToken is called, Then viewState transitions through Initial, Loading, and Success`() = runTest {
         // Arrange
@@ -61,30 +68,19 @@ class AccountAccessPageViewModelTest {
             email = "john.doe@example.com",
             phone = "0123456789"
         )
+        val expected = UiState.Success(NameAndAccountTypeMapper.map(person))
         coEvery { getPersonUseCase() } returns person
-        val collectedStates = mutableListOf<UiState<NameAndAccountType>>()
 
-        // Act
-        underTest.updateAccessToken("test_token")
-        val job = launch {
-            underTest.viewState
-                .map { it.nameAndAccountState }
-                .toList(collectedStates)
+        underTest.viewState.test {
+            assertEquals(UiState.Initial, awaitItem().nameAndAccountState)
+
+            underTest.saveToken()
+
+            assertEquals(expected, awaitItem().nameAndAccountState)
+
+            cancelAndIgnoreRemainingEvents()
         }
-        underTest.saveToken()
-        job.cancelAndJoin() // Ensure collection stops
-
-        // Assert
-        assertEquals(
-            listOf(
-                UiState.Initial,
-                UiState.Loading,
-                UiState.Success(NameAndAccountTypeMapper.map(person))
-            ),
-            collectedStates
-        )
     }
-    */
 
     @Test
     fun `When saveToken called, Given getPersonUseCase throws exception, Then loadingState is updated `() = runTest {
@@ -95,11 +91,15 @@ class AccountAccessPageViewModelTest {
         // Given
         coEvery { getPersonUseCase() } throws exception
 
-        underTest.updateAccessToken("test_token")
-        underTest.saveToken()
-        val actual = underTest.viewState.value.nameAndAccountState
+        underTest.viewState.test {
+            underTest.updateAccessToken("test_token")
 
-        // Verify
-        assertEquals(expected, actual)
+            assertEquals(UiState.Initial, awaitItem().nameAndAccountState)
+
+            underTest.saveToken()
+
+            // Verify
+            assertEquals(expected, awaitItem().nameAndAccountState)
+        }
     }
 }

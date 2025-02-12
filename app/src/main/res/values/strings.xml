@@ -22,6 +22,9 @@
     <string name="country_name_international">International</string>
     <string name="country_name_uk">UK</string>
 
+    <string name="flag_uk">🇬🇧</string>
+    <string name="flag_international">🇪🇺</string>"
+
     <string name="share_bank_details_text">Hey, here\'s my bank details.\n%s,\n%s,\n%s</string>
 
     <string name="user_confirmation_dialog_title">Hold on a second!</string>
