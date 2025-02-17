@@ -6,15 +6,16 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import kotlin.math.max
 
-fun Modifier.shimmerBackground(colors: List<Color>): Modifier = composed {
+@Composable
+fun Modifier.shimmerBackground(colors: List<Color>): Modifier {
     val transition = rememberInfiniteTransition()
     val start = 0f
     val gradientWidth = 400
@@ -29,5 +30,5 @@ fun Modifier.shimmerBackground(colors: List<Color>): Modifier = composed {
         start = Offset(x = startXYOffset, y = startXYOffset),
         end = Offset(x = translateAnimation, y = translateAnimation)
     )
-    Modifier.background(brush = brush)
+    return this then Modifier.background(brush = brush)
 }
