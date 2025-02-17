@@ -1,13 +1,14 @@
 package com.sycosoft.allsee.presentation.components.homepage
 
 import androidx.compose.material3.Surface
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
 import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreen
 import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreenTestTags
+import com.sycosoft.allsee.presentation.components.text.DynamicTextType
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
@@ -16,84 +17,57 @@ import org.junit.Test
 class HomePageScreenTest {
     @get:Rule val composeTestRule = createComposeRule()
 
+// region Default State
+
     @Test
-    fun whenScreenInDefaultState_thenEnsureCorrectComponentsAreDisplayed() {
+    fun whenScreenInNormalMode_thenEnsureCorrectComponentsAreDisplayed() {
         // When
         with (composeTestRule) {
             setContent {
                 AllSeeTheme {
                     Surface {
                         HomePageScreen(
-                            accountName = "Individual",
-                            onPersonButtonClick = { /*TODO*/ },
-                            clearedBalance = "£0.00",
-                            onBalanceCardClick = { /* TODO */ },
+                            accountName = DynamicTextType.Value("Individual"),
+                            onPersonButtonClick = {},
+                            clearedBalance = BalanceCardType.Value("£1,000"),
+                            onBalanceCardClick = {},
                         )
                     }
                 }
             }
 
             // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME).isDisplayed()
+            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME, useUnmergedTree = true).isDisplayed()
             onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
-            onNodeWithTag(HomePageScreenTestTags.BALANCE_CARD).isDisplayed()
+            onNodeWithTag(HomePageScreenTestTags.BALANCE_CARD, useUnmergedTree = true).isDisplayed()
         }
 
     }
 
-    // #############################################################################################
-    // ## Account Name Label                                                                      ##
-    // #############################################################################################
-
     @Test
-    fun whenScreenInitiallyShown_thenAccountNameLabelShouldDisplayLoadingText() {
+    fun whenScreenInPlaceholderMode_ThenEnsureCorrectComponentsAreDisplayed() {
         // When
-        val expected = "Loading"
         with (composeTestRule) {
             setContent {
                 AllSeeTheme {
-                    Surface {
-                        HomePageScreen(
-                            accountName = null,
-                            onPersonButtonClick = {},
-                            clearedBalance = "£0.00",
-                            onBalanceCardClick = { /* TODO */ },
-                        )
-                    }
+                    HomePageScreen(
+                        accountName = DynamicTextType.Placeholder,
+                        onPersonButtonClick = {},
+                        clearedBalance = BalanceCardType.Placeholder,
+                        onBalanceCardClick = {},
+                    )
                 }
             }
 
             // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME).assertTextEquals(expected)
+            onNodeWithTag("placeholder_${HomePageScreenTestTags.TEXT_ACCOUNT_NAME}").isDisplayed()
+            onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
+            onNodeWithTag("placeholder_${HomePageScreenTestTags.BALANCE_CARD}").isDisplayed()
         }
     }
 
-    @Test
-    fun whenScreenLoadedWithAccountName_thenAccountNameLabelShouldDisplayValue() {
-        // When
-        val expected = "Individual"
-        with (composeTestRule) {
-            setContent {
-                AllSeeTheme {
-                    Surface {
-                        HomePageScreen(
-                            accountName = expected,
-                            onPersonButtonClick = {},
-                            clearedBalance = "£0.00",
-                            onBalanceCardClick = { /* TODO */ },
-                        )
-                    }
-                }
-            }
-
-            // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME).assertTextEquals(expected)
-        }
-    }
-
-    // #############################################################################################
-    // ## Person Button                                                                           ##
-    // #############################################################################################
+// endregion
+// region Person Button
 
     @Test
     fun whenPersonButtonPressed_thenPersonButtonClickShouldFire() {
@@ -105,10 +79,10 @@ class HomePageScreenTest {
                 AllSeeTheme {
                     Surface {
                         HomePageScreen(
-                            accountName = null,
+                            accountName = DynamicTextType.Placeholder,
                             onPersonButtonClick = { buttonClicked = true },
-                            clearedBalance = "£0.00",
-                            onBalanceCardClick = { /* TODO */ },
+                            clearedBalance = BalanceCardType.Placeholder,
+                            onBalanceCardClick = {},
                         )
                     }
                 }
@@ -119,4 +93,6 @@ class HomePageScreenTest {
             assertTrue(buttonClicked)
         }
     }
+
+// endregion
 }

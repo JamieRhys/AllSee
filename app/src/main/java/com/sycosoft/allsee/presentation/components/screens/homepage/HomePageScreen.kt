@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
+import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
+import com.sycosoft.allsee.presentation.components.text.DynamicText
+import com.sycosoft.allsee.presentation.components.text.DynamicTextType
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,8 +37,8 @@ import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 fun HomePageScreen(
     topSectionColor: Color = MaterialTheme.colorScheme.surface,
     bottomSectionColor: Color = MaterialTheme.colorScheme.inverseSurface,
-    accountName: String?,
-    clearedBalance: String,
+    accountName: DynamicTextType,
+    clearedBalance: BalanceCardType,
     onPersonButtonClick: () -> Unit,
     onBalanceCardClick: () -> Unit,
 ) {
@@ -49,12 +51,13 @@ fun HomePageScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    DynamicText(
                         modifier = Modifier
                             .testTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME)
-                            .padding(start = 5.dp),
-                        text = accountName ?: "Loading",
-                        style = MaterialTheme.typography.bodyLarge
+                            .padding(start = 5.dp)
+                            .fillMaxWidth(fraction = 0.35f),
+                        value = accountName,
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                 },
                 actions = {
@@ -164,8 +167,7 @@ fun HomePageScreen(
                         .fillMaxHeight()
                 ) {
                     BalanceCard(
-                        modifier = Modifier.testTag(HomePageScreenTestTags.BALANCE_CARD),
-                        clearedBalance = clearedBalance,
+                        value = clearedBalance,
                         onClick = { onBalanceCardClick() }
                     )
                 }
@@ -195,8 +197,23 @@ private fun LM_HomePageScreenPreview() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
             HomePageScreen(
-                accountName = "Individual",
-                clearedBalance = "£1,000",
+                accountName = DynamicTextType.Value("Individual"),
+                clearedBalance = BalanceCardType.Value("£1,000"),
+                onPersonButtonClick = {},
+                onBalanceCardClick = {},
+            )
+        }
+    }
+}
+
+@Preview(name = "Light Mode (Placeholder)", showSystemUi = true, showBackground = true)
+@Composable
+private fun LM_HomePageScreenPlaceholderPreview() {
+    AllSeeTheme(dynamicColor = false) {
+        Surface {
+            HomePageScreen(
+                accountName = DynamicTextType.Placeholder,
+                clearedBalance = BalanceCardType.Placeholder,
                 onPersonButtonClick = {},
                 onBalanceCardClick = {},
             )
@@ -212,8 +229,25 @@ private fun DM_HomePageScreenPreview() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
             HomePageScreen(
-                accountName = "Individual",
-                clearedBalance = "£1,000",
+                accountName = DynamicTextType.Value("Individual"),
+                clearedBalance = BalanceCardType.Value("£1,000"),
+                onPersonButtonClick = {},
+                onBalanceCardClick = {},
+            )
+        }
+    }
+}
+
+@Preview(name = "Dark Mode (Placeholder)", showSystemUi = true, showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+private fun DM_HomePageScreenPlaceholderPreview() {
+    AllSeeTheme(dynamicColor = false) {
+        Surface {
+            HomePageScreen(
+                accountName = DynamicTextType.Placeholder,
+                clearedBalance = BalanceCardType.Placeholder,
                 onPersonButtonClick = {},
                 onBalanceCardClick = {},
             )

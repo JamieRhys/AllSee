@@ -2,65 +2,43 @@ package com.sycosoft.allsee.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.BalanceType
 import com.sycosoft.allsee.domain.usecases.GetAccountsUseCase
 import com.sycosoft.allsee.domain.usecases.GetBalanceUseCase
-import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
-import com.sycosoft.allsee.presentation.utils.UiState
+import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
+import com.sycosoft.allsee.presentation.components.text.DynamicTextType
+import com.sycosoft.allsee.presentation.usecases.FormatBalanceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HomePageViewModel @Inject constructor(
-    private val getPersonUseCase: GetPersonUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
     private val getBalanceUseCase: GetBalanceUseCase,
 ) : ViewModel() {
-    private val _personDetails = MutableStateFlow<Person?>(null)
-    val personDetails: StateFlow<Person?> = _personDetails
+    data class ViewState(
+        val clearedBalance: BalanceCardType,
+        val accountName: DynamicTextType,
+    )
 
-    private val uiState: MutableStateFlow<UiState<Nothing>> = MutableStateFlow(UiState.Loading)
-    private val accountName: MutableStateFlow<String> = MutableStateFlow("")
-    private val clearedBalance: MutableStateFlow<Int> = MutableStateFlow(0)
-
-    val viewState: StateFlow<ViewState> by lazy {
-        combine(
-            uiState,
-            accountName,
-            clearedBalance,
-            ::ViewState
-        ).stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = ViewState(
-                uiState = uiState.value,
-                accountName = accountName.value,
-                clearedBalance = clearedBalance.value
-            )
-        )
-    }
+    private val initialViewState = ViewState(
+        clearedBalance = BalanceCardType.Placeholder,
+        accountName = DynamicTextType.Placeholder,
+    )
+    private val _viewState = MutableStateFlow(initialViewState)
+    val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _personDetails.value = getPersonUseCase()
-            getAccountType()
-            getClearedBalance()
-            println()
+            val accountType = getAccountsUseCase().first().name
+            val clearedBalance = getBalanceUseCase(BalanceType.CLEARED_BALANCE).minorUnits
+
+            _viewState.value = viewState.value.copy(
+                clearedBalance = BalanceCardType.Value(clearedBalance = FormatBalanceUseCase().invoke(clearedBalance)),
+                accountName = DynamicTextType.Value(text = accountType),
+            )
         }
     }
-
-    private suspend fun getAccountType() { accountName.value = getAccountsUseCase().first().name }
-
-    private suspend fun getClearedBalance() { clearedBalance.value = getBalanceUseCase(BalanceType.CLEARED_BALANCE).minorUnits }
-
-    data class ViewState(
-        val uiState: UiState<Nothing>,
-        val accountName: String,
-        val clearedBalance: Int
-    )
 }
