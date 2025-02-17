@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.sycosoft.allsee.R
 import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsCard
+import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsType
+import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.CountryType
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,12 +40,8 @@ import com.sycosoft.allsee.presentation.theme.AllSeeTheme
 fun AccountDetailsPageScreen(
     topSectionColor: Color = MaterialTheme.colorScheme.surface,
     bottomSectionColor: Color = MaterialTheme.colorScheme.inverseSurface,
-    name: String,
     type: String,
-    accountNumber: String,
-    sortCode: String,
-    iban: String,
-    bic: String,
+    accountDetailsType: AccountDetailsType,
     onBackButtonClick: () -> Unit,
 ) {
     val topSectionHeight = 0.50f
@@ -172,11 +169,7 @@ fun AccountDetailsPageScreen(
             ) {
                 Content(
                     type = type,
-                    accountHolderName = name,
-                    accountNumber = accountNumber,
-                    sortCode = sortCode,
-                    iban = iban,
-                    bic = bic,
+                    accountDetailsType = accountDetailsType,
                 )
             }
         }
@@ -187,11 +180,7 @@ fun AccountDetailsPageScreen(
 private fun Content(
     modifier: Modifier = Modifier,
     type: String,
-    accountHolderName: String,
-    accountNumber: String,
-    sortCode: String,
-    iban: String,
-    bic: String,
+    accountDetailsType: AccountDetailsType,
 ) {
     Column(
         modifier = modifier
@@ -218,16 +207,14 @@ private fun Content(
                 .padding(top = 16.dp)
         ) {
             AccountDetailsCard(
-                countryName = stringResource(id = R.string.country_name_uk),
-                accountHolderName = accountHolderName,
-                accountNumber = accountNumber,
-                sortCode = sortCode,
+                testTag = AccountDetailsPageScreenTestTags.ACCOUNT_UK_DETAILS_CARD,
+                countryType = CountryType.UK,
+                value = accountDetailsType,
             )
             AccountDetailsCard(
-                countryName = stringResource(id = R.string.country_name_international),
-                accountHolderName = accountHolderName,
-                iban = iban,
-                bic = bic,
+                testTag = AccountDetailsPageScreenTestTags.ACCOUNT_INTERNATIONAL_DETAILS_CARD,
+                countryType = CountryType.INTERNATIONAL,
+                value = accountDetailsType,
             )
         }
     }
@@ -239,12 +226,14 @@ private fun LM_AccountDetailsPageScreen() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
             AccountDetailsPageScreen(
-                name = "Joe Bloggs",
                 type = "Individual",
-                accountNumber = "12345678",
-                sortCode = "123456",
-                iban = "GB12345678123456",
-                bic = "1324567",
+                accountDetailsType = AccountDetailsType.Value(
+                    accountHolderName = "Joe Bloggs",
+                    accountNumber = "12345678",
+                    sortCode = "123456",
+                    iban = "GB12345678123456",
+                    bic = "1324567",
+                ),
                 onBackButtonClick = {},
             )
         }
@@ -259,12 +248,14 @@ private fun DM_AccountDetailsPageScreen() {
     AllSeeTheme(dynamicColor = false) {
         Surface {
             AccountDetailsPageScreen(
-                name = "Joe Bloggs",
                 type = "Individual",
-                accountNumber = "12345678",
-                sortCode = "123456",
-                iban = "GB12345678123456",
-                bic = "1324567",
+                accountDetailsType = AccountDetailsType.Value(
+                    accountHolderName = "Joe Bloggs",
+                    accountNumber = "12345678",
+                    sortCode = "123456",
+                    iban = "GB12345678123456",
+                    bic = "1324567",
+                ),
                 onBackButtonClick = {},
             )
         }

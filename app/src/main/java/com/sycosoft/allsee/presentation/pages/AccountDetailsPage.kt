@@ -15,27 +15,35 @@ fun AccountDetailsPage(
     viewModel: AccountDetailsPageViewModel,
     onNavigateBack: () -> Unit,
 ) {
-    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val viewState = viewModel.viewState.collectAsStateWithLifecycle()
 
-    when (val state = viewState.accountDetailsState) {
-        is UiState.Success<AccountDetails> -> {
-            AccountDetailsPageScreen(
-                name = state.data.name,
-                type = state.data.type,
-                accountNumber = state.data.accountNumber,
-                sortCode = state.data.sortCode,
-                iban = state.data.iban,
-                bic = state.data.bic,
-                onBackButtonClick = remember { onNavigateBack }
-            )
-        }
-        is UiState.Error -> {
-            // TODO: Implement Error Screen.
-        }
-        UiState.Loading -> {
-            // TODO: Implement Loading Screen.
-            Log.d("AccountDetailsPage", "Loading...")
-        }
-        else -> {}
-    }
+    AccountDetailsPageScreen(
+        type = "Individual", // TODO
+        accountDetailsType = viewState.value.accountDetails,
+        onBackButtonClick = remember { onNavigateBack }
+    )
+
+//    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+//
+//    when (val state = viewState.accountDetailsState) {
+//        is UiState.Success<AccountDetails> -> {
+//            AccountDetailsPageScreen(
+//                name = state.data.name,
+//                type = state.data.type,
+//                accountNumber = state.data.accountNumber,
+//                sortCode = state.data.sortCode,
+//                iban = state.data.iban,
+//                bic = state.data.bic,
+//                onBackButtonClick = remember { onNavigateBack }
+//            )
+//        }
+//        is UiState.Error -> {
+//            // TODO: Implement Error Screen.
+//        }
+//        UiState.Loading -> {
+//            // TODO: Implement Loading Screen.
+//            Log.d("AccountDetailsPage", "Loading...")
+//        }
+//        else -> {}
+//    }
 }

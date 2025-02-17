@@ -5,14 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.sycosoft.allsee.domain.exceptions.RepositoryException
 import com.sycosoft.allsee.domain.usecases.GetAccountsUseCase
 import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
-import com.sycosoft.allsee.presentation.models.AccountDetails
+import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsType
 import com.sycosoft.allsee.presentation.usecases.GetAccountDetailsUseCase
 import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,20 +20,12 @@ class AccountDetailsPageViewModel @Inject constructor(
     private val getPersonUseCase: GetPersonUseCase,
 ) : ViewModel() {
     data class ViewState(
-        val accountDetailsState: UiState<AccountDetails>
+        val accountDetails: AccountDetailsType,
     )
-    private val accountDetailsState = MutableStateFlow<UiState<AccountDetails>>(value = UiState.Loading)
 
-    // Using Map instead of combine as this is a single Flow and not multiple.
-    val viewState: StateFlow<ViewState> = accountDetailsState.map {
-        ViewState(it)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = ViewState(
-            accountDetailsState = accountDetailsState.value
-        )
-    )
+    private val _initialViewState = ViewState(accountDetails = AccountDetailsType.Placeholder)
+    private val _viewState = MutableStateFlow(_initialViewState)
+    val viewState = _viewState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -45,14 +34,20 @@ class AccountDetailsPageViewModel @Inject constructor(
     }
 
     private suspend fun getAccountDetails() = try {
-        accountDetailsState.update {
-            UiState.Success(
-                getAccountDetailsUseCase(
-                    account = getAccountsUseCase().first(),
-                    person = getPersonUseCase()
-                )
+        val accountDetails = getAccountDetailsUseCase(
+            account = getAccountsUseCase().first(),
+            person = getPersonUseCase()
+        )
+
+        _viewState.value = _viewState.value.copy(
+            accountDetails = AccountDetailsType.Value(
+                accountHolderName = accountDetails.name,
+                accountNumber = accountDetails.accountNumber,
+                sortCode = accountDetails.sortCode,
+                iban = accountDetails.iban,
+                bic = accountDetails.bic,
             )
-        }
+        )
     } catch (e: RepositoryException) {
         UiState.Error(e.error.error, e.error.errorDescription)
     }

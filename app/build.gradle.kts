@@ -136,4 +136,7 @@ dependencies {
 
     // Icons Extended
     implementation(libs.androidx.material.icons.extended)
+
+    // Turbine Testing Library
+    testImplementation(libs.turbine)
 }
