@@ -8,7 +8,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardTestTags
+import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
 import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -18,11 +20,7 @@ private typealias BCTT = BalanceCardTestTags
 class BalanceCardTests {
     @get:Rule val composeTestRule = createComposeRule()
 
-    /*
-     * =============================================================================================
-     * == Default State                                                                           ==
-     * =============================================================================================
-     */
+// region Default State
 
     @Test
     fun balanceCardRendersCorrectlyWhenProvidedCorrectValues() {
@@ -30,7 +28,7 @@ class BalanceCardTests {
             setContent {
                 AllSeeTheme {
                     BalanceCard(
-                        clearedBalance = "£100.00",
+                        value = BalanceCardType.Value(clearedBalance = "£100.00"),
                         onClick = {}
                     )
                 }
@@ -41,11 +39,22 @@ class BalanceCardTests {
         }
     }
 
-    /*
-     * =============================================================================================
-     * == Balance                                                                                 ==
-     * =============================================================================================
-     */
+    @Test
+    fun balanceCardPlaceholderRendersCorrectly() {
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    BalanceCard(
+                        value = BalanceCardType.Placeholder,
+                        onClick = {}
+                    )
+                }
+            }
+        }
+    }
+
+// endregion
+// region Balance
 
     @Test
     fun whenBalanceCardIsProvidedPositiveBalanceString_ThenEnsureItIsDisplayedCorrectly() {
@@ -54,7 +63,7 @@ class BalanceCardTests {
             setContent {
                 AllSeeTheme {
                     BalanceCard(
-                        clearedBalance = expected,
+                        value = BalanceCardType.Value(clearedBalance = expected),
                         onClick = {},
                     )
                 }
@@ -71,7 +80,7 @@ class BalanceCardTests {
             setContent {
                 AllSeeTheme {
                     BalanceCard(
-                        clearedBalance = expected,
+                        value = BalanceCardType.Value(clearedBalance = expected),
                         onClick = {},
                     )
                 }
@@ -88,7 +97,7 @@ class BalanceCardTests {
             setContent {
                 AllSeeTheme {
                     BalanceCard(
-                        clearedBalance = expected,
+                        value = BalanceCardType.Value(clearedBalance = expected),
                         onClick = {},
                     )
                 }
@@ -98,11 +107,8 @@ class BalanceCardTests {
         }
     }
 
-    /*
-     * =============================================================================================
-     * == OnClick Trigger                                                                         ==
-     * =============================================================================================
-     */
+// endregion
+// region OnClick Trigger
 
     @Test
     fun whenBalanceCardIsClicked_ThenOnClickIsTriggered() {
@@ -113,7 +119,7 @@ class BalanceCardTests {
             setContent {
                 AllSeeTheme {
                     BalanceCard(
-                        clearedBalance = balance,
+                        value = BalanceCardType.Value(clearedBalance = balance),
                         onClick = { clicked = true },
                     )
                 }
@@ -123,4 +129,26 @@ class BalanceCardTests {
             assertTrue(clicked)
         }
     }
+
+    @Test
+    fun whenBalanceCardPlaceholderClicked_ThenOnClickIsNotTriggered() {
+        var clicked = false
+
+        with (composeTestRule) {
+            setContent {
+                AllSeeTheme {
+                    BalanceCard(
+                        value = BalanceCardType.Placeholder,
+                        onClick = { clicked = true },
+                    )
+                }
+
+            }
+
+            onNodeWithTag(BCTT.PLACEHOLDER).performClick()
+            assertFalse(clicked)
+        }
+    }
+
+// endregion
 }
