@@ -93,30 +93,30 @@ class MainActivityTest {
 class MainActivityLoginRobot(
     private val rule: ComposeTestRule,
     private val resources: Resources
-) {
+) : ComposeTestRule by rule {
 
     fun seesLoginTitle() {
-        rule.onNodeWithTag(testTag = AccessTokenRequestScreenTestTags.TITLE)
+        onNodeWithTag(testTag = AccessTokenRequestScreenTestTags.TITLE)
             .assertTextEquals(resources.getString(R.string.aap_title))
     }
 
     fun insertsTokenText() {
-        rule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT)
+        onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT)
             .performTextInput("12345")
     }
 
     fun clicksButton() {
-        rule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED)
+        onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED)
             .performClick()
     }
 
     @OptIn(ExperimentalTestApi::class)
     fun waitsForDialog() {
-        rule.waitUntilExactlyOneExists(hasTestTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON))
+        waitUntilExactlyOneExists(hasTestTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON))
     }
 
     fun clicksDialogConfirm() {
-        rule.onNodeWithTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON)
+        onNodeWithTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON)
             .performClick()
     }
 }
