@@ -10,7 +10,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.Lifecycle
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -71,10 +70,8 @@ class MainActivityTest {
             phone = "(929) 435-2759"
 
         )
-
-        val s = ActivityScenario.launch(MainActivity::class.java)
-        s.moveToState(Lifecycle.State.RESUMED)
         val robot = MainActivityLoginRobot(rule = composeTestRule, resources = app.resources)
+        activityScenarioRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
         // Assertions
         robot.seesLoginTitle()
@@ -85,9 +82,7 @@ class MainActivityTest {
         robot.waitsForDialog()
         robot.clicksDialogConfirm()
 
-        // Test next "screen"
-
-        s.close()
+        // Test next "screen" etc ...
     }
 }
 
