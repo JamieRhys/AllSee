@@ -85,7 +85,7 @@ class MainActivityTest {
         robot.waitsForDialog()
         robot.clicksDialogConfirm()
 
-        // Next next "screen"
+        // Test next "screen"
 
         s.close()
     }
