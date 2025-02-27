@@ -4,7 +4,7 @@ import com.sycosoft.allsee.di.components.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
-class AllSeeApplication : DaggerApplication() {
+open class AllSeeApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
         DaggerApplicationComponent
