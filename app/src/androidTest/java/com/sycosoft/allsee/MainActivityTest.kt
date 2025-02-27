@@ -96,29 +96,23 @@ class MainActivityLoginRobot(
 ) {
 
     fun seesLoginTitle() {
-        with(rule) {
-            onNodeWithTag(testTag = AccessTokenRequestScreenTestTags.TITLE)
-                .assertTextEquals(resources.getString(R.string.aap_title))
-        }
+        rule.onNodeWithTag(testTag = AccessTokenRequestScreenTestTags.TITLE)
+            .assertTextEquals(resources.getString(R.string.aap_title))
     }
 
     fun insertsTokenText() {
-        with(rule) {
-            onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT)
-                .performTextInput("12345")
-        }
+        rule.onNodeWithTag(AccessTokenRequestScreenTestTags.ACCESS_TOKEN_INPUT)
+            .performTextInput("12345")
     }
 
     fun clicksButton() {
-        rule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED)  // find node by text / tag
+        rule.onNodeWithTag(AccessTokenRequestScreenTestTags.BUTTON_GET_STARTED)
             .performClick()
     }
 
     @OptIn(ExperimentalTestApi::class)
     fun waitsForDialog() {
-        with(rule) {
-            waitUntilExactlyOneExists(hasTestTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON))
-        }
+        rule.waitUntilExactlyOneExists(hasTestTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON))
     }
 
     fun clicksDialogConfirm() {
