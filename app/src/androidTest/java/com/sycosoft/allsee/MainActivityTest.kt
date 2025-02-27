@@ -36,6 +36,7 @@ class MainActivityTest {
 
     @get:Rule
     val composeTestRule = createEmptyComposeRule()
+
     @get:Rule
     var activityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
@@ -55,7 +56,7 @@ class MainActivityTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun someTest() {
+    fun happyPathTest() {
 
         // Setup
         coEvery { appRepository.saveToken(any()) } returns Unit
@@ -75,16 +76,17 @@ class MainActivityTest {
         s.moveToState(Lifecycle.State.RESUMED)
         val robot = MainActivityLoginRobot(rule = composeTestRule, resources = app.resources)
 
-        with(composeTestRule) {
-            // Assertions
-            robot.seesLoginTitle()
+        // Assertions
+        robot.seesLoginTitle()
 
-            // Actions
-            robot.insertsTokenText()
-            robot.clicksButton()
-            robot.waitsForDialog()
-            robot.clicksDialogConfirm()
-        }
+        // Actions
+        robot.insertsTokenText()
+        robot.clicksButton()
+        robot.waitsForDialog()
+        robot.clicksDialogConfirm()
+
+        // Next next "screen"
+
         s.close()
     }
 }
@@ -98,7 +100,7 @@ class MainActivityTest {
  *
  */
 class MainActivityLoginRobot(
-    private val rule : ComposeTestRule,
+    private val rule: ComposeTestRule,
     private val resources: Resources
 ) {
 
@@ -127,7 +129,7 @@ class MainActivityLoginRobot(
             waitUntilExactlyOneExists(hasTestTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON))
         }
     }
-    
+
     fun clicksDialogConfirm() {
         rule.onNodeWithTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON)
             .performClick()
