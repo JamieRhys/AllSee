@@ -83,12 +83,20 @@ class MainActivityTest {
             robot.insertsTokenText()
             robot.clicksButton()
             robot.waitsForDialog()
-            robot.clickDialogConfirm()
+            robot.clicksDialogConfirm()
         }
         s.close()
     }
 }
 
+/**
+ * Testing robot to abstract boilerplate rule interactions.
+ *
+ * seesXxx
+ * clicksXxx
+ * waitsXxx
+ *
+ */
 class MainActivityLoginRobot(
     private val rule : ComposeTestRule,
     private val resources: Resources
@@ -120,7 +128,7 @@ class MainActivityLoginRobot(
         }
     }
     
-    fun clickDialogConfirm() {
+    fun clicksDialogConfirm() {
         rule.onNodeWithTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON)
             .performClick()
     }
