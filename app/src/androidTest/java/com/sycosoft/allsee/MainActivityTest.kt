@@ -72,7 +72,7 @@ class MainActivityTest {
         // Assertions
         robot.seesLoginTitle() // Assertions probably not required by now - we just want to test user journeys
 
-        // Actions
+        // Actions - user journey
         robot.insertsTokenText()
         robot.clicksButton()
         robot.waitsForDialog()
