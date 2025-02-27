@@ -16,7 +16,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sycosoft.allsee.domain.models.Person
 import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import com.sycosoft.allsee.domain.repository.AppRepository
-import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.presentation.MainActivity
 import com.sycosoft.allsee.presentation.MockAllSeeApplication
 import com.sycosoft.allsee.presentation.components.dialogs.UserConfirmationDialogTestTags
@@ -41,9 +40,6 @@ class MainActivityTest {
 
     @Inject
     internal lateinit var appRepository: AppRepository
-
-    @Inject
-    internal lateinit var getPersonUseCase: GetPersonUseCase
 
     private lateinit var app: MockAllSeeApplication
 
@@ -74,7 +70,7 @@ class MainActivityTest {
         activityScenarioRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
         // Assertions
-        robot.seesLoginTitle()
+        robot.seesLoginTitle() // Assertions probably not required by now - we just want to test user journeys
 
         // Actions
         robot.insertsTokenText()
