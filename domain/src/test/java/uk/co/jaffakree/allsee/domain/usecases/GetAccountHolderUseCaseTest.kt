@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.domain.usecases
+package uk.co.jaffakree.allsee.domain.usecases
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,7 +13,6 @@ import uk.co.jaffakree.allsee.domain.models.AccountHolder
 import uk.co.jaffakree.allsee.domain.models.ErrorResponse
 import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
 import uk.co.jaffakree.allsee.domain.repository.AppRepository
-import uk.co.jaffakree.allsee.domain.usecases.GetAccountHolderUseCase
 
 class GetAccountHolderUseCaseTest {
     private val repository: AppRepository = mockk(relaxed = true)

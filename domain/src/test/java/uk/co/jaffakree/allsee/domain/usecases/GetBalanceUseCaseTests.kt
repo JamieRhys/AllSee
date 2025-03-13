@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.domain.usecases
+package uk.co.jaffakree.allsee.domain.usecases
 
 import uk.co.jaffakree.allsee.domain.repository.AppRepository
 import io.mockk.coEvery
@@ -13,7 +13,6 @@ import uk.co.jaffakree.allsee.domain.models.Balance
 import uk.co.jaffakree.allsee.domain.models.ErrorResponse
 import uk.co.jaffakree.allsee.domain.models.types.BalanceType
 import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
-import uk.co.jaffakree.allsee.domain.usecases.GetBalanceUseCase
 
 class GetBalanceUseCaseTests {
     private val repository: AppRepository = mockk(relaxed = true)

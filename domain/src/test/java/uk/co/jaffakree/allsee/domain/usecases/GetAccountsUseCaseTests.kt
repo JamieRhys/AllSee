@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.domain.usecases
+package uk.co.jaffakree.allsee.domain.usecases
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,7 +13,6 @@ import uk.co.jaffakree.allsee.domain.models.ErrorResponse
 import uk.co.jaffakree.allsee.domain.models.types.AccountType
 import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
 import uk.co.jaffakree.allsee.domain.repository.AppRepository
-import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
 import java.time.OffsetDateTime
 import java.util.UUID
 

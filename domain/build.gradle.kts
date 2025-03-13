@@ -49,9 +49,16 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
+
     // Dagger 2
     implementation(libs.dagger)
     implementation(libs.dagger.android)
     ksp(libs.dagger.compiler)
     ksp(libs.dagger.compiler.android)
+
+    // MockK
+    androidTestImplementation(libs.mockk.android)
+    testImplementation(libs.mockk)
 }

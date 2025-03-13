@@ -1,12 +1,6 @@
 package com.sycosoft.allsee.presentation.viewmodels
 
 import app.cash.turbine.test
-import com.sycosoft.allsee.domain.exceptions.RepositoryException
-import com.sycosoft.allsee.domain.models.ErrorResponse
-import com.sycosoft.allsee.domain.models.Person
-import com.sycosoft.allsee.domain.models.types.AccountHolderType
-import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
-import uk.co.jaffakree.allsee.domain.usecases.SaveTokenUseCase
 import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
 import com.sycosoft.allsee.presentation.utils.UiState
 import io.mockk.coEvery
@@ -25,6 +19,8 @@ import uk.co.jaffakree.allsee.domain.exceptions.RepositoryException
 import uk.co.jaffakree.allsee.domain.models.ErrorResponse
 import uk.co.jaffakree.allsee.domain.models.Person
 import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
+import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
+import uk.co.jaffakree.allsee.domain.usecases.SaveTokenUseCase
 import java.time.LocalDate
 import java.util.UUID
 

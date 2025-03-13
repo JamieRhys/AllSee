@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.domain.usecases
+package uk.co.jaffakree.allsee.domain.usecases
 
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -11,7 +11,6 @@ import uk.co.jaffakree.allsee.domain.models.ErrorResponse
 import uk.co.jaffakree.allsee.domain.models.Person
 import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
 import uk.co.jaffakree.allsee.domain.repository.AppRepository
-import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
 import java.time.LocalDate
 import java.util.UUID
 
