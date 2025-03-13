@@ -1,7 +1,6 @@
 package com.sycosoft.allsee.data.remote.exceptions
 
 import com.sycosoft.allsee.data.remote.models.ErrorResponseDto
-import com.sycosoft.allsee.domain.models.ErrorResponse
 import java.io.IOException
 
 /** Exception thrown when API call fails

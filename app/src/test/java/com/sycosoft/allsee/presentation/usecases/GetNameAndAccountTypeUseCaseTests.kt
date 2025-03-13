@@ -1,12 +1,12 @@
 package com.sycosoft.allsee.presentation.usecases
 
 import com.sycosoft.allsee.presentation.models.NameAndAccountType
-import com.sycosoft.allsee.domain.models.Person
-import com.sycosoft.allsee.domain.models.types.AccountHolderType
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import uk.co.jaffakree.allsee.domain.models.Person
+import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
 import java.time.LocalDate
 import java.util.UUID
 

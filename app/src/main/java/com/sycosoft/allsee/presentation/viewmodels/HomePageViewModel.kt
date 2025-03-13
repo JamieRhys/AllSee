@@ -2,16 +2,16 @@ package com.sycosoft.allsee.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sycosoft.allsee.domain.models.types.BalanceType
-import com.sycosoft.allsee.domain.usecases.GetAccountsUseCase
-import com.sycosoft.allsee.domain.usecases.GetBalanceUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetBalanceUseCase
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
 import com.sycosoft.allsee.presentation.components.text.DynamicTextType
-import com.sycosoft.allsee.presentation.usecases.FormatBalanceUseCase
+import uk.co.jaffakree.allsee.domain.usecases.FormatBalanceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import uk.co.jaffakree.allsee.domain.models.types.BalanceType
 import javax.inject.Inject
 
 class HomePageViewModel @Inject constructor(

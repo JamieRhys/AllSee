@@ -1,11 +1,5 @@
 package com.sycosoft.allsee.domain.usecases
 
-import com.sycosoft.allsee.domain.exceptions.RepositoryException
-import com.sycosoft.allsee.domain.models.Account
-import com.sycosoft.allsee.domain.models.ErrorResponse
-import com.sycosoft.allsee.domain.models.types.AccountType
-import com.sycosoft.allsee.domain.models.types.CurrencyType
-import com.sycosoft.allsee.domain.repository.AppRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -13,6 +7,13 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import uk.co.jaffakree.allsee.domain.exceptions.RepositoryException
+import uk.co.jaffakree.allsee.domain.models.Account
+import uk.co.jaffakree.allsee.domain.models.ErrorResponse
+import uk.co.jaffakree.allsee.domain.models.types.AccountType
+import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
+import uk.co.jaffakree.allsee.domain.repository.AppRepository
+import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
 import java.time.OffsetDateTime
 import java.util.UUID
 

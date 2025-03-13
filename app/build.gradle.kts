@@ -66,6 +66,13 @@ android {
 
 dependencies {
 
+    implementation(project(":core"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":feature-accountdetails"))
+    implementation(project(":feature-login"))
+    implementation(project(":feature-home"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel)
@@ -89,7 +96,7 @@ dependencies {
     // Constraint Layout
     implementation(libs.androidx.constraintlayout.compose)
 
-    // Dagger
+    // Dagger 2
     implementation(libs.dagger)
     implementation(libs.dagger.android)
     ksp(libs.dagger.compiler)

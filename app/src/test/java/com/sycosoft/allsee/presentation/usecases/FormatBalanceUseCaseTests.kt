@@ -3,6 +3,7 @@ package com.sycosoft.allsee.presentation.usecases
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
+import uk.co.jaffakree.allsee.domain.usecases.FormatBalanceUseCase
 
 class FormatBalanceUseCaseTests {
     private lateinit var underTest: FormatBalanceUseCase

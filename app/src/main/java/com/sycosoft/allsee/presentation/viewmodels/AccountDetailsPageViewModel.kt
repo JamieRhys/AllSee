@@ -2,16 +2,15 @@ package com.sycosoft.allsee.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sycosoft.allsee.domain.exceptions.RepositoryException
-import com.sycosoft.allsee.domain.usecases.GetAccountsUseCase
-import com.sycosoft.allsee.domain.usecases.GetPersonUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsType
 import com.sycosoft.allsee.presentation.usecases.GetAccountDetailsUseCase
 import com.sycosoft.allsee.presentation.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import uk.co.jaffakree.allsee.domain.exceptions.RepositoryException
 import javax.inject.Inject
 
 class AccountDetailsPageViewModel @Inject constructor(

@@ -1,18 +1,19 @@
 package com.sycosoft.allsee.domain.usecases
 
-import com.sycosoft.allsee.domain.exceptions.RepositoryException
-import com.sycosoft.allsee.domain.models.AccountHolder
-import com.sycosoft.allsee.domain.models.ErrorResponse
-import com.sycosoft.allsee.domain.models.types.AccountHolderType
-import com.sycosoft.allsee.domain.repository.AppRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
+import uk.co.jaffakree.allsee.domain.exceptions.RepositoryException
+import uk.co.jaffakree.allsee.domain.models.AccountHolder
+import uk.co.jaffakree.allsee.domain.models.ErrorResponse
+import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
+import uk.co.jaffakree.allsee.domain.repository.AppRepository
+import uk.co.jaffakree.allsee.domain.usecases.GetAccountHolderUseCase
 
 class GetAccountHolderUseCaseTest {
     private val repository: AppRepository = mockk(relaxed = true)

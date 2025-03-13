@@ -1,15 +1,15 @@
 package com.sycosoft.allsee.presentation.usecases
 
-import com.sycosoft.allsee.domain.models.Account
-import com.sycosoft.allsee.domain.models.Person
-import com.sycosoft.allsee.domain.models.types.AccountHolderType
-import com.sycosoft.allsee.domain.models.types.AccountType
-import com.sycosoft.allsee.domain.models.types.CurrencyType
 import com.sycosoft.allsee.presentation.models.AccountDetails
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import uk.co.jaffakree.allsee.domain.models.Account
+import uk.co.jaffakree.allsee.domain.models.Person
+import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
+import uk.co.jaffakree.allsee.domain.models.types.AccountType
+import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.UUID

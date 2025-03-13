@@ -1,6 +1,6 @@
 package com.sycosoft.allsee.data.local
 
-import com.sycosoft.allsee.domain.models.ErrorResponse
+import uk.co.jaffakree.allsee.domain.models.ErrorResponse
 import java.io.IOException
 
 /** Exception thrown when database call fails

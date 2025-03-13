@@ -1,13 +1,6 @@
 package com.sycosoft.allsee.presentation.viewmodels
 
 import app.cash.turbine.test
-import com.sycosoft.allsee.domain.models.Account
-import com.sycosoft.allsee.domain.models.Balance
-import com.sycosoft.allsee.domain.models.types.AccountType
-import com.sycosoft.allsee.domain.models.types.BalanceType
-import com.sycosoft.allsee.domain.models.types.CurrencyType
-import com.sycosoft.allsee.domain.usecases.GetAccountsUseCase
-import com.sycosoft.allsee.domain.usecases.GetBalanceUseCase
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
 import com.sycosoft.allsee.presentation.components.text.DynamicTextType
 import io.mockk.coEvery
@@ -22,6 +15,13 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import uk.co.jaffakree.allsee.domain.models.Account
+import uk.co.jaffakree.allsee.domain.models.Balance
+import uk.co.jaffakree.allsee.domain.models.types.AccountType
+import uk.co.jaffakree.allsee.domain.models.types.BalanceType
+import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
+import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetBalanceUseCase
 import java.time.OffsetDateTime
 import java.util.UUID
 

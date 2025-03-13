@@ -3,7 +3,6 @@ package com.sycosoft.allsee.data.local.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.sycosoft.allsee.domain.models.types.AccountHolderType
 
 /** This class represents a Person in the database.
  *
