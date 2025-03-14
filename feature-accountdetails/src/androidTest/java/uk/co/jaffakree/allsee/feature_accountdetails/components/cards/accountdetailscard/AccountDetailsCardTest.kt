@@ -1,5 +1,6 @@
-package com.sycosoft.allsee.presentation.components.cards.accountdetailscard
+package uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard
 
+import android.content.Context
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -11,44 +12,52 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.AnnotatedString
-import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+import androidx.test.core.app.ApplicationProvider
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase
 import org.junit.Rule
 import org.junit.Test
-import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.AccountDetailsCard
-import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.AccountDetailsType
-import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.CountryType
-
-private typealias ADCTT = AccountDetailsCardTestTags
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.feature_accountdetails.R
 
 class AccountDetailsCardTest {
-    @get:Rule val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
     private val clipboardManager = mockk<ClipboardManager>(relaxed = true)
     private val slot = slot<AnnotatedString>()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
 
 // region Expected Variables
 
-    private val expectedCountryNameUK = "UK"
-    private val expectedCountryNameInt = "International"
+
     private val expectedTextAccountHolderName = "Joe Bloggs"
     private val expectedTextAccountNumber = "12345678"
     private val expectedTextIBAN = "GB2LC12345612345678"
     private val expectedTextBIC = "1234567890"
     private val expectedTextSortCode = "123456"
-    private val expectedTextShare = "Share"
-    private val expectedTitleAccountHolderName = "Account Holder Name"
-    private val expectedTitleAccountNumber = "Account Number"
-    private val expectedTitleIBAN = "IBAN"
-    private val expectedTitleBIC = "BIC"
-    private val expectedTitleSortCode = "Sort Code"
-    private val expectedFullInternationalAccountDetailsCopyText = "Hey, here's my bank details.\n$expectedTitleAccountHolderName: $expectedTextAccountHolderName,\n$expectedTitleIBAN: $expectedTextIBAN,\n$expectedTitleBIC: $expectedTextBIC"
-    private val expectedUKFullAccountDetailsCopyText = "Hey, here's my bank details.\n$expectedTitleAccountHolderName: $expectedTextAccountHolderName,\n$expectedTitleAccountNumber: $expectedTextAccountNumber,\n$expectedTitleSortCode: $expectedTextSortCode"
+    private val expectedTextShare = context.getString(R.string.button_share)
+    private val expectedTitleAccountHolderName = context.getString(R.string.account_holder_name)
+    private val expectedTitleAccountNumber = context.getString(R.string.account_number)
+    private val expectedTitleIBAN = context.getString(R.string.iban)
+    private val expectedTitleBIC = context.getString(R.string.bic)
+    private val expectedTitleSortCode = context.getString(R.string.sort_code)
+    private val expectedFullInternationalAccountDetailsCopyText = context.getString(
+        R.string.share_bank_details_text,
+        "$expectedTitleAccountHolderName: $expectedTextAccountHolderName",
+        "$expectedTitleIBAN: $expectedTextIBAN",
+        "$expectedTitleBIC: $expectedTextBIC",
+    )
+    private val expectedUKFullAccountDetailsCopyText = context.getString(
+        R.string.share_bank_details_text,
+        "$expectedTitleAccountHolderName: $expectedTextAccountHolderName",
+        "$expectedTitleAccountNumber: $expectedTextAccountNumber",
+        "$expectedTitleSortCode: $expectedTextSortCode",
+    )
     private val expectedAccountHolderDetailsFullCopyText = "$expectedTitleAccountHolderName: $expectedTextAccountHolderName"
     private val expectedSortCodeDetailsFullCopyText = "$expectedTitleSortCode: $expectedTextSortCode"
     private val expectedIBANDetailsFullCopyText = "$expectedTitleIBAN: $expectedTextIBAN"
@@ -71,7 +80,9 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.PLACEHOLDER + "testTag").assertIsDisplayed()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(PLACEHOLDER + "testTag").assertIsDisplayed()
+            }
         }
     }
 
@@ -96,25 +107,27 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.PLACEHOLDER + "testTag").assertDoesNotExist()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(PLACEHOLDER + "testTag").assertDoesNotExist()
 
-            onNodeWithTag(ADCTT.FLAG_UK).assertIsDisplayed()
-            onNodeWithTag(ADCTT.FLAG_INTERNATIONAL).assertIsNotDisplayed()
+                onNodeWithTag(FLAG_UK).assertIsDisplayed()
+                onNodeWithTag(FLAG_INTERNATIONAL).assertIsNotDisplayed()
 
-            onNodeWithTag(ADCTT.TITLE_COUNTRY_NAME).assertIsDisplayed().assertTextEquals(expectedCountryNameUK)
-            onNodeWithTag(ADCTT.BUTTON_SHARE).assertIsDisplayed().assertTextEquals(expectedTextShare)
+                onNodeWithTag(TITLE_COUNTRY_NAME).assertIsDisplayed().assertTextEquals(context.getString(R.string.country_name_uk))
+                onNodeWithTag(BUTTON_SHARE).assertIsDisplayed().assertTextEquals(expectedTextShare)
 
-            onNodeWithTag(ADCTT.TITLE_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleAccountHolderName)
-            onNodeWithTag(ADCTT.TEXT_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextAccountHolderName)
-            onNodeWithTag(ADCTT.BUTTON_COPY_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+                onNodeWithTag(TITLE_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleAccountHolderName)
+                onNodeWithTag(TEXT_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextAccountHolderName)
+                onNodeWithTag(BUTTON_COPY_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
 
-            onNodeWithTag(ADCTT.TITLE_ACCOUNT_NUMBER, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleAccountNumber)
-            onNodeWithTag(ADCTT.TEXT_ACCOUNT_NUMBER, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextAccountNumber)
-            onNodeWithTag(ADCTT.BUTTON_COPY_ACCOUNT_NUMBER, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+                onNodeWithTag(TITLE_ACCOUNT_NUMBER, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleAccountNumber)
+                onNodeWithTag(TEXT_ACCOUNT_NUMBER, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextAccountNumber)
+                onNodeWithTag(BUTTON_COPY_ACCOUNT_NUMBER, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
 
-            onNodeWithTag(ADCTT.TITLE_SORT_CODE, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleSortCode)
-            onNodeWithTag(ADCTT.TEXT_SORT_CODE, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextSortCode)
-            onNodeWithTag(ADCTT.BUTTON_COPY_SORT_CODE, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+                onNodeWithTag(TITLE_SORT_CODE, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleSortCode)
+                onNodeWithTag(TEXT_SORT_CODE, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextSortCode)
+                onNodeWithTag(BUTTON_COPY_SORT_CODE, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+            }
         }
     }
 
@@ -137,19 +150,21 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.TITLE_COUNTRY_NAME).assertIsDisplayed().assertTextEquals(expectedCountryNameInt)
-            onNodeWithTag(ADCTT.BUTTON_SHARE).assertIsDisplayed().assertTextEquals(expectedTextShare)
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(TITLE_COUNTRY_NAME).assertIsDisplayed().assertTextEquals(context.getString(R.string.country_name_international))
+                onNodeWithTag(BUTTON_SHARE).assertIsDisplayed().assertTextEquals(expectedTextShare)
 
-            onNodeWithTag(ADCTT.TITLE_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleAccountHolderName)
-            onNodeWithTag(ADCTT.TEXT_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextAccountHolderName)
+                onNodeWithTag(TITLE_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleAccountHolderName)
+                onNodeWithTag(TEXT_ACCOUNT_HOLDER_NAME, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextAccountHolderName)
 
-            onNodeWithTag(ADCTT.TITLE_IBAN, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleIBAN)
-            onNodeWithTag(ADCTT.TEXT_IBAN, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextIBAN)
-            onNodeWithTag(ADCTT.BUTTON_COPY_IBAN, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+                onNodeWithTag(TITLE_IBAN, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleIBAN)
+                onNodeWithTag(TEXT_IBAN, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextIBAN)
+                onNodeWithTag(BUTTON_COPY_IBAN, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
 
-            onNodeWithTag(ADCTT.TITLE_BIC, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleBIC)
-            onNodeWithTag(ADCTT.TEXT_BIC, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextBIC)
-            onNodeWithTag(ADCTT.BUTTON_COPY_BIC, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+                onNodeWithTag(TITLE_BIC, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTitleBIC)
+                onNodeWithTag(TEXT_BIC, useUnmergedTree = true).assertIsDisplayed().assertTextEquals(expectedTextBIC)
+                onNodeWithTag(BUTTON_COPY_BIC, useUnmergedTree = true).assertIsDisplayed().assertIsEnabled()
+            }
         }
     }
 
@@ -180,11 +195,16 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_SHARE).performClick()
+            }
 
             verify(timeout = 1000) { clipboardManager.setText(any()) }
 
-            assertEquals(AnnotatedString(expectedUKFullAccountDetailsCopyText), slot.captured)
+            TestCase.assertEquals(
+                AnnotatedString(expectedUKFullAccountDetailsCopyText),
+                slot.captured
+            )
         }
     }
 
@@ -213,7 +233,9 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_SHARE).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
@@ -246,7 +268,9 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_SHARE).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
@@ -281,11 +305,16 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_SHARE).performClick()
+            }
 
             verify(timeout = 1000) { clipboardManager.setText(any()) }
 
-            assertEquals(AnnotatedString(expectedFullInternationalAccountDetailsCopyText), slot.captured)
+            TestCase.assertEquals(
+                AnnotatedString(expectedFullInternationalAccountDetailsCopyText),
+                slot.captured
+            )
         }
     }
 
@@ -314,7 +343,9 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_SHARE).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
@@ -347,7 +378,9 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_SHARE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_SHARE).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
@@ -383,14 +416,19 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_COPY_ACCOUNT_HOLDER_NAME).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_COPY_ACCOUNT_HOLDER_NAME).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
             verify(exactly = 1) { clipboardManager.setText(any()) }
 
             // Make sure that the clipboard equals that of the expected text.
-            assertEquals(AnnotatedString(expectedAccountHolderDetailsFullCopyText), slot.captured)
+            TestCase.assertEquals(
+                AnnotatedString(expectedAccountHolderDetailsFullCopyText),
+                slot.captured
+            )
         }
     }
 
@@ -419,14 +457,19 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_COPY_SORT_CODE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_COPY_SORT_CODE).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
             verify(exactly = 1) { clipboardManager.setText(any()) }
 
             // Make sure that the clipboard equals that of the expected text.
-            assertEquals(AnnotatedString(expectedSortCodeDetailsFullCopyText), slot.captured)
+            TestCase.assertEquals(
+                AnnotatedString(expectedSortCodeDetailsFullCopyText),
+                slot.captured
+            )
         }
     }
 
@@ -455,14 +498,19 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_COPY_SORT_CODE).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_COPY_SORT_CODE).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
             verify(exactly = 1) { clipboardManager.setText(any()) }
 
             // Make sure that the clipboard equals that of the expected text.
-            assertEquals(AnnotatedString(expectedSortCodeDetailsFullCopyText), slot.captured)
+            TestCase.assertEquals(
+                AnnotatedString(expectedSortCodeDetailsFullCopyText),
+                slot.captured
+            )
         }
     }
 
@@ -491,14 +539,16 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_COPY_IBAN).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_COPY_IBAN).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
             verify(exactly = 1) { clipboardManager.setText(any()) }
 
             // Make sure that the clipboard equals that of the expected text.
-            assertEquals(AnnotatedString(expectedIBANDetailsFullCopyText), slot.captured)
+            TestCase.assertEquals(AnnotatedString(expectedIBANDetailsFullCopyText), slot.captured)
         }
     }
 
@@ -527,14 +577,16 @@ class AccountDetailsCardTest {
                 }
             }
 
-            onNodeWithTag(ADCTT.BUTTON_COPY_BIC).performClick()
+            with (AccountDetailsCardTestTags) {
+                onNodeWithTag(BUTTON_COPY_BIC).performClick()
+            }
 
             // Verify the setText method was not called. If so, there's no need to check if the
             // clipboard content has changed because it shouldn't have by this.
             verify(exactly = 1) { clipboardManager.setText(any()) }
 
             // Make sure that the clipboard equals that of the expected text.
-            assertEquals(AnnotatedString(expectedBICDetailsFullCopyText), slot.captured)
+            TestCase.assertEquals(AnnotatedString(expectedBICDetailsFullCopyText), slot.captured)
         }
     }
 

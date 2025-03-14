@@ -1,16 +1,15 @@
-package com.sycosoft.allsee.presentation.usecases
+package uk.co.jaffakree.allsee.feature_accountdetails.usecases
 
-import uk.co.jaffakree.allsee.domain.models.AccountDetails
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import uk.co.jaffakree.allsee.domain.models.Account
+import uk.co.jaffakree.allsee.domain.models.AccountDetails
 import uk.co.jaffakree.allsee.domain.models.Person
 import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
 import uk.co.jaffakree.allsee.domain.models.types.AccountType
 import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
-import uk.co.jaffakree.allsee.feature_accountdetails.usecases.GetAccountDetailsUseCase
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -59,6 +58,6 @@ class GetAccountDetailsUseCaseTests {
 
         val actual = underTest(account, person)
 
-        assertEquals(expected, actual)
+        TestCase.assertEquals(expected, actual)
     }
 }

@@ -227,7 +227,7 @@ fun AccountDetailsCard(
                                     clipboardManager.setText(AnnotatedString(copyString))
                                 }
                             },
-                            content = { Text("Share") }
+                            content = { Text(stringResource(R.string.button_share)) }
                         )
                     }
                 }

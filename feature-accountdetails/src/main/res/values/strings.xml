@@ -9,6 +9,8 @@
     <string name="account_details_page_title">Account Details</string>
     <string name="account_details_page_description">Use your account details to receive money from other bank accounts.</string>
 
+    <string name = "button_share">Share</string>
+
     <string name="country_name_international">International</string>
     <string name="country_name_uk">UK</string>
 
