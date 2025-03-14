@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.theme
+package uk.co.jaffakree.allsee.core.ui.theme
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat

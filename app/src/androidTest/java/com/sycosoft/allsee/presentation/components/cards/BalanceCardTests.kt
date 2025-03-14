@@ -9,7 +9,7 @@ import androidx.compose.ui.test.performClick
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardTestTags
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule

@@ -2,7 +2,7 @@ package com.sycosoft.allsee.presentation.viewmodels
 
 import app.cash.turbine.test
 import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
-import com.sycosoft.allsee.presentation.utils.UiState
+import uk.co.jaffakree.allsee.core.ui.utils.UiState
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals

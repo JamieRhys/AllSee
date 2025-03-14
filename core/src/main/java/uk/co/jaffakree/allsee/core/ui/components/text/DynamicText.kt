@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.text
+package uk.co.jaffakree.allsee.core.ui.components.text
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.sycosoft.allsee.presentation.theme.shimmerBackground
+import uk.co.jaffakree.allsee.core.ui.theme.shimmerBackground
 
 sealed interface DynamicTextType {
     data object Placeholder : DynamicTextType

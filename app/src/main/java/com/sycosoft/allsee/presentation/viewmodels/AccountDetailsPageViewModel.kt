@@ -6,7 +6,7 @@ import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
 import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
 import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsType
 import com.sycosoft.allsee.presentation.usecases.GetAccountDetailsUseCase
-import com.sycosoft.allsee.presentation.utils.UiState
+import uk.co.jaffakree.allsee.core.ui.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

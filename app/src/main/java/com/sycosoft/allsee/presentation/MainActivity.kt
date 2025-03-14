@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.lifecycle.ViewModelProvider
 import com.sycosoft.allsee.presentation.navigation.AppNavigation
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 

@@ -2,7 +2,7 @@ package com.sycosoft.allsee.presentation.viewmodels
 
 import app.cash.turbine.test
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
-import com.sycosoft.allsee.presentation.components.text.DynamicTextType
+import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals

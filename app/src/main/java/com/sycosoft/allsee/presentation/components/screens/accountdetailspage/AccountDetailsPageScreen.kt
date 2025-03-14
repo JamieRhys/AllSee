@@ -33,7 +33,7 @@ import com.sycosoft.allsee.R
 import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsCard
 import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsType
 import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.CountryType
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

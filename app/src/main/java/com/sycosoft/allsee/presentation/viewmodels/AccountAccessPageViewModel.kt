@@ -6,7 +6,7 @@ import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
 import uk.co.jaffakree.allsee.domain.usecases.SaveTokenUseCase
 import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
 import com.sycosoft.allsee.presentation.models.NameAndAccountType
-import com.sycosoft.allsee.presentation.utils.UiState
+import uk.co.jaffakree.allsee.core.ui.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

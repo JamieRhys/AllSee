@@ -3,7 +3,6 @@ package com.sycosoft.allsee.presentation.components.accountaccesspage
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDisplayed
@@ -14,7 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
 import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreenTestTags
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

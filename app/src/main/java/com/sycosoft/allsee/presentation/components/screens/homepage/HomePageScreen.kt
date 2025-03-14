@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
-import com.sycosoft.allsee.presentation.components.text.DynamicText
-import com.sycosoft.allsee.presentation.components.text.DynamicTextType
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.components.text.DynamicText
+import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

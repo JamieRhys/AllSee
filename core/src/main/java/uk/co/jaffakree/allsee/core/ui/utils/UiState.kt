@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.utils
+package uk.co.jaffakree.allsee.core.ui.utils
 
 sealed class UiState<out T> {
     data object Initial : UiState<Nothing>()

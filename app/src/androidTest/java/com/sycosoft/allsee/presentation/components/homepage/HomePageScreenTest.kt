@@ -8,8 +8,8 @@ import androidx.compose.ui.test.performClick
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
 import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreen
 import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreenTestTags
-import com.sycosoft.allsee.presentation.components.text.DynamicTextType
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test

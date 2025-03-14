@@ -14,7 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sycosoft.allsee.presentation.models.NameAndAccountType
 import com.sycosoft.allsee.presentation.components.dialogs.UserConfirmationDialog
 import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
-import com.sycosoft.allsee.presentation.utils.UiState
+import uk.co.jaffakree.allsee.core.ui.utils.UiState
 import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

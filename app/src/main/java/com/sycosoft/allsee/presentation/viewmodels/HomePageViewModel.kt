@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
 import uk.co.jaffakree.allsee.domain.usecases.GetBalanceUseCase
 import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
-import com.sycosoft.allsee.presentation.components.text.DynamicTextType
+import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
 import uk.co.jaffakree.allsee.domain.usecases.FormatBalanceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

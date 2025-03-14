@@ -1,13 +1,9 @@
 package com.sycosoft.allsee.presentation.pages
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sycosoft.allsee.presentation.components.screens.accountdetailspage.AccountDetailsPageScreen
-import com.sycosoft.allsee.presentation.models.AccountDetails
-import com.sycosoft.allsee.presentation.utils.UiState
 import com.sycosoft.allsee.presentation.viewmodels.AccountDetailsPageViewModel
 
 @Composable

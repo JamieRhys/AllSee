@@ -39,10 +39,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sycosoft.allsee.R
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
-import com.sycosoft.allsee.presentation.theme.DarkAqua
-import com.sycosoft.allsee.presentation.theme.PastelAqua
-import com.sycosoft.allsee.presentation.theme.shimmerBackground
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.theme.DarkAqua
+import uk.co.jaffakree.allsee.core.ui.theme.PastelAqua
+import uk.co.jaffakree.allsee.core.ui.theme.shimmerBackground
 
 sealed interface AccountDetailsType {
     data object Placeholder : AccountDetailsType

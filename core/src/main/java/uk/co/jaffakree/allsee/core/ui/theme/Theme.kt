@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.theme
+package uk.co.jaffakree.allsee.core.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

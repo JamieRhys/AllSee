@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sycosoft.allsee.R
-import com.sycosoft.allsee.presentation.theme.AllSeeTheme
-import com.sycosoft.allsee.presentation.theme.Typography
-import com.sycosoft.allsee.presentation.theme.shimmerBackground
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.core.ui.theme.Typography
+import uk.co.jaffakree.allsee.core.ui.theme.shimmerBackground
 
 sealed interface BalanceCardType {
     data object Placeholder : BalanceCardType
