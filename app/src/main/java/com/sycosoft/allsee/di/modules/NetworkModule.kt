@@ -1,12 +1,12 @@
 package com.sycosoft.allsee.di.modules
 
-import com.sycosoft.allsee.data.local.TokenProvider
-import com.sycosoft.allsee.data.remote.client.RetrofitClient
-import com.sycosoft.allsee.data.remote.interceptors.ApiHandlerInterceptor
-import com.sycosoft.allsee.data.remote.interceptors.TokenInterceptor
-import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
 import dagger.Module
 import dagger.Provides
+import uk.co.jaffakree.allsee.data.local.TokenProvider
+import uk.co.jaffakree.allsee.remote.client.RetrofitClient
+import uk.co.jaffakree.allsee.remote.interceptors.ApiHandlerInterceptor
+import uk.co.jaffakree.allsee.remote.interceptors.TokenInterceptor
+import uk.co.jaffakree.allsee.remote.services.StarlingBankApiService
 import javax.inject.Singleton
 
 @Module

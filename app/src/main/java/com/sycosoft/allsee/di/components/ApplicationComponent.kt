@@ -3,7 +3,6 @@ package com.sycosoft.allsee.di.components
 import android.app.Application
 import com.sycosoft.allsee.di.modules.AppUseCaseModule
 import com.sycosoft.allsee.di.modules.ContextModule
-import com.sycosoft.allsee.di.modules.LocalModule
 import com.sycosoft.allsee.di.modules.MainActivityModule
 import com.sycosoft.allsee.di.modules.NetworkModule
 import com.sycosoft.allsee.di.modules.RepositoryModule
@@ -13,6 +12,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
+import uk.co.jaffakree.allsee.data.local.di.DataModule
 import uk.co.jaffakree.allsee.domain.di.DomainUseCaseModule
 import javax.inject.Singleton
 
@@ -22,14 +22,14 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
+        DomainUseCaseModule::class,
         ContextModule::class,
-        LocalModule::class,
+        DataModule::class,
         NetworkModule::class,
         RepositoryModule::class,
         ViewModelModule::class,
         MainActivityModule::class,
         AppUseCaseModule::class,
-        DomainUseCaseModule::class
     ]
 )
 @Singleton

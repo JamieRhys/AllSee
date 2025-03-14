@@ -1,18 +1,18 @@
 package com.sycosoft.allsee.di.modules
 
-import com.sycosoft.allsee.data.local.TokenProvider
-import com.sycosoft.allsee.data.local.database.dao.AccountsDao
-import com.sycosoft.allsee.data.local.database.dao.BalanceDao
-import com.sycosoft.allsee.data.local.database.dao.PersonDao
-import com.sycosoft.allsee.data.mappers.BalanceMapper
-import com.sycosoft.allsee.data.mappers.FullBalanceMapper
-import com.sycosoft.allsee.data.mappers.IdentityMapper
-import com.sycosoft.allsee.data.mappers.PersonMapper
-import com.sycosoft.allsee.data.remote.services.StarlingBankApiService
-import com.sycosoft.allsee.data.repository.AppRepositoryImpl
-import uk.co.jaffakree.allsee.domain.repository.AppRepository
+import uk.co.jaffakree.allsee.repository.AppRepositoryImpl
 import dagger.Module
 import dagger.Provides
+import uk.co.jaffakree.allsee.data.local.TokenProvider
+import uk.co.jaffakree.allsee.data.local.database.dao.AccountsDao
+import uk.co.jaffakree.allsee.data.local.database.dao.BalanceDao
+import uk.co.jaffakree.allsee.data.local.database.dao.PersonDao
+import uk.co.jaffakree.allsee.domain.repository.AppRepository
+import uk.co.jaffakree.allsee.mappers.BalanceMapper
+import uk.co.jaffakree.allsee.mappers.FullBalanceMapper
+import uk.co.jaffakree.allsee.mappers.IdentityMapper
+import uk.co.jaffakree.allsee.mappers.PersonMapper
+import uk.co.jaffakree.allsee.remote.services.StarlingBankApiService
 import javax.inject.Singleton
 
 @Module

@@ -82,7 +82,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
@@ -96,14 +95,20 @@ dependencies {
     // Constraint Layout
     implementation(libs.androidx.constraintlayout.compose)
 
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
+
     // Dagger 2
     implementation(libs.dagger)
     implementation(libs.dagger.android)
     ksp(libs.dagger.compiler)
     ksp(libs.dagger.compiler.android)
 
-    // Data Store
-    implementation(libs.androidx.datastore.preferences)
+    // Gson
+    implementation(libs.gson)
+
+    // Icons Extended
+    implementation(libs.androidx.material.icons.extended)
 
     // Mockito
     androidTestImplementation(libs.mockito.android)
@@ -119,30 +124,18 @@ dependencies {
     androidTestImplementation(libs.mockk.android)
     testImplementation(libs.mockk)
 
-    // Retrofit and okHttp
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logginginterceptor)
-
     // Moshi
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
 
-    // Gson
-    implementation(libs.gson)
+    // Retrofit and okHttp
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logginginterceptor)
 
-    // Coroutines Test
-    testImplementation(libs.kotlinx.coroutines.test)
-
-    // Room Database
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-    testImplementation(libs.androidx.room.testing)
-
-    // Icons Extended
-    implementation(libs.androidx.material.icons.extended)
+    // Security
+    implementation(libs.androidx.security.crypto)
 
     // Turbine Testing Library
     testImplementation(libs.turbine)
