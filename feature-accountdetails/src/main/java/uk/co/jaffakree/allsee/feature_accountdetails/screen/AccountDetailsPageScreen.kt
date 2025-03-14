@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.screens.accountdetailspage
+package uk.co.jaffakree.allsee.feature_accountdetails.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -29,11 +29,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.sycosoft.allsee.R
-import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsCard
-import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.AccountDetailsType
-import com.sycosoft.allsee.presentation.components.cards.accountdetailscard.CountryType
+import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.AccountDetailsCard
+import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.AccountDetailsType
+import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.CountryType
 import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.feature_accountdetails.R
+
+internal object AccountDetailsPageScreenTestTags {
+    const val SCREEN = "screen_account_details_page"
+
+    const val ACCOUNT_UK_DETAILS_CARD = "account_uk_details_card"
+    const val ACCOUNT_INTERNATIONAL_DETAILS_CARD = "account_international_details_card"
+
+    const val BUTTON_BACK = "button_back"
+
+    const val TEXT_ACCOUNT_NUMBER = "account_number"
+    const val TEXT_ACCOUNT_TYPE = "account_type"
+    const val TEXT_BIC = "bic"
+    const val TEXT_IBAN = "iban"
+    const val TEXT_PERSON_NAME = "person_name"
+    const val TEXT_SORT_CODE = "sort_code"
+    const val TEXT_SCREEN_DESCRIPTION = "screen_description"
+    const val TEXT_SCREEN_TITLE = "screen_title"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +76,7 @@ fun AccountDetailsPageScreen(
                     Text(
                         modifier = Modifier
                             .testTag(AccountDetailsPageScreenTestTags.TEXT_SCREEN_TITLE),
-                        text = stringResource(id = R.string.account_details_page_title),
+                        text = stringResource(id = R.string.account_details_page_title), // TODO: remove
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 },
@@ -189,7 +207,7 @@ private fun Content(
     ) {
         Text(
             modifier = Modifier.testTag(AccountDetailsPageScreenTestTags.TEXT_SCREEN_DESCRIPTION),
-            text = stringResource(id = R.string.account_details_page_description),
+            text = stringResource(id = R.string.account_details_page_description), // TODO: remove
         )
 
         Text(

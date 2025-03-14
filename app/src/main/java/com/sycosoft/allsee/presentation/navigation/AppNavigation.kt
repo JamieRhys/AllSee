@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sycosoft.allsee.presentation.pages.AccountAccessPage
-import com.sycosoft.allsee.presentation.pages.AccountDetailsPage
+import uk.co.jaffakree.allsee.feature_accountdetails.page.AccountDetailsPage
 import com.sycosoft.allsee.presentation.pages.HomePage
 
 @Composable

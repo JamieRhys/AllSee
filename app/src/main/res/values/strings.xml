@@ -5,23 +5,6 @@
     <string name="aap_get_started">To get started, paste your access token below.</string>
     <string name="aap_title">Oh, hey!</string>
 
-    <string name="account_holder_name">Account Holder Name</string>
-    <string name="account_number">Account Number</string>
-    <string name="bic">BIC</string>
-    <string name="iban">IBAN</string>
-    <string name="sort_code">Sort Code</string>
-
-    <string name="account_details_page_title">Account Details</string>
-    <string name="account_details_page_description">Use your account details to receive money from other bank accounts.</string>
-
-    <string name="country_name_international">International</string>
-    <string name="country_name_uk">UK</string>
-
-    <string name="flag_uk">🇬🇧</string>
-    <string name="flag_international">🇪🇺</string>"
-
-    <string name="share_bank_details_text">Hey, here\'s my bank details.\n%s,\n%s,\n%s</string>
-
     <string name="user_confirmation_dialog_title">Hold on a second!</string>
     <string name="user_confirmation_dialog_text">Just to confirm, is your name %s and you hold a %s account?</string>
 </resources>

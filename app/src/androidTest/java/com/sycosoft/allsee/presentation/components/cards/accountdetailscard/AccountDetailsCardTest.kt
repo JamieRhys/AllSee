@@ -21,6 +21,9 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
 import org.junit.Test
+import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.AccountDetailsCard
+import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.AccountDetailsType
+import uk.co.jaffakree.allsee.feature_accountdetails.components.cards.accountdetailscard.CountryType
 
 private typealias ADCTT = AccountDetailsCardTestTags
 

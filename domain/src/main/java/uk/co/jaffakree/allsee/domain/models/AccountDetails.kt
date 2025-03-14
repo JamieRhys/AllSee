@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.models
+package uk.co.jaffakree.allsee.domain.models
 
 data class AccountDetails(
     val name: String,

@@ -1,10 +1,10 @@
-package com.sycosoft.allsee.presentation.pages
+package uk.co.jaffakree.allsee.feature_accountdetails.page
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sycosoft.allsee.presentation.components.screens.accountdetailspage.AccountDetailsPageScreen
-import com.sycosoft.allsee.presentation.viewmodels.AccountDetailsPageViewModel
+import uk.co.jaffakree.allsee.feature_accountdetails.screen.AccountDetailsPageScreen
+import uk.co.jaffakree.allsee.feature_accountdetails.viewmodel.AccountDetailsPageViewModel
 
 @Composable
 fun AccountDetailsPage(

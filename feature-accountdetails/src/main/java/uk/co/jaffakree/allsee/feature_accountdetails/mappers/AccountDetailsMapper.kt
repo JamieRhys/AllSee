@@ -1,7 +1,7 @@
-package com.sycosoft.allsee.presentation.mappers
+package uk.co.jaffakree.allsee.feature_accountdetails.mappers
 
-import com.sycosoft.allsee.presentation.models.AccountDetails
 import uk.co.jaffakree.allsee.domain.models.Account
+import uk.co.jaffakree.allsee.domain.models.AccountDetails
 import uk.co.jaffakree.allsee.domain.models.Person
 
 object AccountDetailsMapper {
