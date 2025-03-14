@@ -14,11 +14,6 @@
     <string name="account_details_page_title">Account Details</string>
     <string name="account_details_page_description">Use your account details to receive money from other bank accounts.</string>
 
-    <string name="button_add_funds">Add Funds</string>
-    <string name="button_get_started">Get Started</string>
-    <string name="button_no">No</string>
-    <string name="button_yes">Yes</string>
-
     <string name="country_name_international">International</string>
     <string name="country_name_uk">UK</string>
 
@@ -29,6 +24,4 @@
 
     <string name="user_confirmation_dialog_title">Hold on a second!</string>
     <string name="user_confirmation_dialog_text">Just to confirm, is your name %s and you hold a %s account?</string>
-
-    <string name = "error_internet_lost">Oh dear, it seems the internet is gone! Please reconnect to use this app.</string>
 </resources>

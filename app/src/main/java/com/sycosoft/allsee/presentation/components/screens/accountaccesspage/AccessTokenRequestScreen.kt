@@ -135,7 +135,7 @@ fun AccessTokenRequestScreen(
             onClick = { onButtonClick() },
             enabled = accessToken.isNotBlank(),
         ) {
-            Text(text = stringResource(id = R.string.button_get_started))
+            Text(text = stringResource(id = uk.co.jaffakree.allsee.core.R.string.button_get_started))
         }
 
         // Foreground/ContentTop

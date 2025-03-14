@@ -30,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sycosoft.allsee.R
 import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 import uk.co.jaffakree.allsee.core.ui.theme.Typography
 import uk.co.jaffakree.allsee.core.ui.theme.shimmerBackground
@@ -55,7 +54,7 @@ fun BalanceCard(
             )
             .padding(10.dp)
             .clickable(
-                onClickLabel = stringResource(R.string.button_add_funds),
+                onClickLabel = stringResource(uk.co.jaffakree.allsee.core.R.string.button_add_funds),
                 onClick = {
                     when (value) {
                         is BalanceCardType.Placeholder -> {}
@@ -112,7 +111,7 @@ fun BalanceCard(
                         Icon(
                             modifier = Modifier.testTag(BalanceCardTestTags.ADD_FUNDS_ICON),
                             imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(id = R.string.button_add_funds),
+                            contentDescription = stringResource(id = uk.co.jaffakree.allsee.core.R.string.button_add_funds),
                         )
                     }
                 }

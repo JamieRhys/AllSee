@@ -38,7 +38,7 @@ fun UserConfirmationDialog(
                 modifier = Modifier.testTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON),
                 onClick = onConfirmButtonClick,
             ) {
-                Text(text = stringResource(R.string.button_yes))
+                Text(text = stringResource(uk.co.jaffakree.allsee.core.R.string.button_yes))
             }
         },
         dismissButton = {
@@ -46,7 +46,7 @@ fun UserConfirmationDialog(
                 modifier = Modifier.testTag(UserConfirmationDialogTestTags.DISMISS_BUTTON),
                 onClick = onDismissButtonClick,
             ) {
-                Text(text = stringResource(R.string.button_no))
+                Text(text = stringResource(uk.co.jaffakree.allsee.core.R.string.button_no))
             }
         }
     )
