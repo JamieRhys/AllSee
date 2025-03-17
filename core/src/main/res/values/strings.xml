@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button_add_funds">Add Funds</string>
+    <string name="button_get_started">Get Started</string>
+    <string name="button_no">No</string>
+    <string name="button_yes">Yes</string>
+
+    <string name = "error_internet_lost">Oh dear, it seems the internet is gone! Please reconnect to use this app.</string>
+</resources>

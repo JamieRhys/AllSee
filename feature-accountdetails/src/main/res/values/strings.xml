@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_holder_name">Account Holder Name</string>
+    <string name="account_number">Account Number</string>
+    <string name="bic">BIC</string>
+    <string name="iban">IBAN</string>
+    <string name="sort_code">Sort Code</string>
+
+    <string name="account_details_page_title">Account Details</string>
+    <string name="account_details_page_description">Use your account details to receive money from other bank accounts.</string>
+
+    <string name = "button_share">Share</string>
+
+    <string name="country_name_international">International</string>
+    <string name="country_name_uk">UK</string>
+
+    <string name="flag_uk">🇬🇧</string>
+    <string name="flag_international">🇪🇺</string>"
+
+    <string name="share_bank_details_text">Hey, here\'s my bank details.\n%s,\n%s,\n%s</string>
+</resources>

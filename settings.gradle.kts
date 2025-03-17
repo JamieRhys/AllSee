@@ -21,4 +21,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "AllSee"
 include(":app")
- 
+include(":core")
+include(":data")
+include(":domain")
+include(":feature-login")
+include(":feature-home")
+include(":feature-accountdetails")
