@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sycosoft.allsee.presentation.pages.AccountAccessPage
 import uk.co.jaffakree.allsee.feature_accountdetails.page.AccountDetailsPage
-import com.sycosoft.allsee.presentation.pages.HomePage
+import uk.co.jaffakree.allsee.feature_home.page.HomePage
 
 @Composable
 fun AppNavigation(

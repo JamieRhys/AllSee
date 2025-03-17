@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.cards
+package uk.co.jaffakree.allsee.feature_home.components.cards
 
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDisplayed
@@ -6,16 +6,14 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardTestTags
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
+import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCard
+import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCardType
 import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
-
-private typealias BCTT = BalanceCardTestTags
+import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCardTestTags
 
 class BalanceCardTests {
     @get:Rule val composeTestRule = createComposeRule()
@@ -34,8 +32,10 @@ class BalanceCardTests {
                 }
             }
 
-            onNodeWithTag(BCTT.BALANCE).isDisplayed()
-            onNodeWithTag(BCTT.ADD_FUNDS_ICON).isDisplayed()
+            with (BalanceCardTestTags) {
+                onNodeWithTag(BALANCE).isDisplayed()
+                onNodeWithTag(ADD_FUNDS_ICON).isDisplayed()
+            }
         }
     }
 
@@ -69,7 +69,9 @@ class BalanceCardTests {
                 }
             }
 
-            onNodeWithTag(BCTT.BALANCE, useUnmergedTree = true).assertTextEquals(expected)
+            with (BalanceCardTestTags) {
+                onNodeWithTag(BALANCE, useUnmergedTree = true).assertTextEquals(expected)
+            }
         }
     }
 
@@ -86,7 +88,9 @@ class BalanceCardTests {
                 }
             }
 
-            onNodeWithTag(BCTT.BALANCE, useUnmergedTree = true).assertTextEquals(expected)
+            with (BalanceCardTestTags) {
+                onNodeWithTag(BALANCE, useUnmergedTree = true).assertTextEquals(expected)
+            }
         }
     }
 
@@ -103,7 +107,9 @@ class BalanceCardTests {
                 }
             }
 
-            onNodeWithTag(BCTT.BALANCE, useUnmergedTree = true).assertTextEquals(expected)
+            with (BalanceCardTestTags) {
+                onNodeWithTag(BALANCE, useUnmergedTree = true).assertTextEquals(expected)
+            }
         }
     }
 
@@ -145,8 +151,10 @@ class BalanceCardTests {
 
             }
 
-            onNodeWithTag(BCTT.PLACEHOLDER).performClick()
-            assertFalse(clicked)
+            with (BalanceCardTestTags) {
+                onNodeWithTag(PLACEHOLDER).performClick()
+                assertFalse(clicked)
+            }
         }
     }
 

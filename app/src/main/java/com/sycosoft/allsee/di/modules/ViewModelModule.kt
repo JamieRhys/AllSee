@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
 import uk.co.jaffakree.allsee.feature_accountdetails.viewmodel.AccountDetailsPageViewModel
-import com.sycosoft.allsee.presentation.viewmodels.HomePageViewModel
+import uk.co.jaffakree.allsee.feature_home.viewmodel.HomePageViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module

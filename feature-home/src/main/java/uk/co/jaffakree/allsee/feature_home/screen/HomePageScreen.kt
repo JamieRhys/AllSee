@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.screens.homepage
+package uk.co.jaffakree.allsee.feature_home.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -26,11 +26,21 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCard
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
+import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCard
+import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCardType
 import uk.co.jaffakree.allsee.core.ui.components.text.DynamicText
 import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
 import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+
+internal object HomePageScreenTestTags {
+    const val SCREEN = "screen_home_page"
+
+    const val BALANCE_CARD = "balance_card"
+
+    const val BUTTON_PERSON = "button_person"
+
+    const val TEXT_ACCOUNT_NAME = "account_name"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

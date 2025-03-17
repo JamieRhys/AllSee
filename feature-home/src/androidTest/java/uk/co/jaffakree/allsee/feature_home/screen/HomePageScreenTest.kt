@@ -1,21 +1,20 @@
-package com.sycosoft.allsee.presentation.components.homepage
+package uk.co.jaffakree.allsee.feature_home.screen
 
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.sycosoft.allsee.presentation.components.cards.balancecard.BalanceCardType
-import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreen
-import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreenTestTags
-import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
-import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
-import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase
 import org.junit.Rule
 import org.junit.Test
+import uk.co.jaffakree.allsee.core.ui.components.text.DynamicTextType
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
+import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCardType
 
 class HomePageScreenTest {
-    @get:Rule val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
 
 // region Default State
 
@@ -36,10 +35,12 @@ class HomePageScreenTest {
                 }
             }
 
-            // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.TEXT_ACCOUNT_NAME, useUnmergedTree = true).isDisplayed()
-            onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
-            onNodeWithTag(HomePageScreenTestTags.BALANCE_CARD, useUnmergedTree = true).isDisplayed()
+            with (HomePageScreenTestTags) {
+                // Then and Verify
+                onNodeWithTag(TEXT_ACCOUNT_NAME, useUnmergedTree = true).isDisplayed()
+                onNodeWithTag(BUTTON_PERSON).isDisplayed()
+                onNodeWithTag(BALANCE_CARD, useUnmergedTree = true).isDisplayed()
+            }
         }
 
     }
@@ -59,10 +60,12 @@ class HomePageScreenTest {
                 }
             }
 
-            // Then and Verify
-            onNodeWithTag("placeholder_${HomePageScreenTestTags.TEXT_ACCOUNT_NAME}").isDisplayed()
-            onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).isDisplayed()
-            onNodeWithTag("placeholder_${HomePageScreenTestTags.BALANCE_CARD}").isDisplayed()
+            with (HomePageScreenTestTags) {
+                // Then and Verify
+                onNodeWithTag("placeholder_${TEXT_ACCOUNT_NAME}").isDisplayed()
+                onNodeWithTag(BUTTON_PERSON).isDisplayed()
+                onNodeWithTag("placeholder_${BALANCE_CARD}").isDisplayed()
+            }
         }
     }
 
@@ -88,9 +91,11 @@ class HomePageScreenTest {
                 }
             }
 
-            // Then and Verify
-            onNodeWithTag(HomePageScreenTestTags.BUTTON_PERSON).performClick()
-            assertTrue(buttonClicked)
+            with (HomePageScreenTestTags) {
+                // Then and Verify
+                onNodeWithTag(BUTTON_PERSON).performClick()
+                TestCase.assertTrue(buttonClicked)
+            }
         }
     }
 

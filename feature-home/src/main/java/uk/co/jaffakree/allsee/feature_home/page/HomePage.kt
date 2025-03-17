@@ -1,11 +1,11 @@
-package com.sycosoft.allsee.presentation.pages
+package uk.co.jaffakree.allsee.feature_home.page
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sycosoft.allsee.presentation.components.screens.homepage.HomePageScreen
-import com.sycosoft.allsee.presentation.viewmodels.HomePageViewModel
+import uk.co.jaffakree.allsee.feature_home.screen.HomePageScreen
+import uk.co.jaffakree.allsee.feature_home.viewmodel.HomePageViewModel
 
 @Composable
 fun HomePage(
