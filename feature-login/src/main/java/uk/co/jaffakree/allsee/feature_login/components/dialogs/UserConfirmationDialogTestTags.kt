@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.dialogs
+package uk.co.jaffakree.allsee.feature_login.components.dialogs
 
 object UserConfirmationDialogTestTags {
     const val TITLE = "user_confirmation_dialog_title"

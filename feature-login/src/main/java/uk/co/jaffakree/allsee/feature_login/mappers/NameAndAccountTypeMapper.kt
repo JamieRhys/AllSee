@@ -1,7 +1,7 @@
-package com.sycosoft.allsee.presentation.mappers
+package uk.co.jaffakree.allsee.feature_login.mappers
 
-import com.sycosoft.allsee.presentation.models.NameAndAccountType
 import uk.co.jaffakree.allsee.domain.models.Person
+import uk.co.jaffakree.allsee.feature_login.models.NameAndAccountType
 
 object NameAndAccountTypeMapper {
     fun map(person : Person) : NameAndAccountType =

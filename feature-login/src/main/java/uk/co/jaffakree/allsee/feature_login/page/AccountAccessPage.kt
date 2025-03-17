@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.pages
+package uk.co.jaffakree.allsee.feature_login.page
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.MaterialTheme
@@ -11,11 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sycosoft.allsee.presentation.models.NameAndAccountType
-import com.sycosoft.allsee.presentation.components.dialogs.UserConfirmationDialog
-import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
+import uk.co.jaffakree.allsee.feature_login.models.NameAndAccountType
+import uk.co.jaffakree.allsee.feature_login.components.dialogs.UserConfirmationDialog
+import uk.co.jaffakree.allsee.feature_login.screen.AccessTokenRequestScreen
 import uk.co.jaffakree.allsee.core.ui.utils.UiState
-import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
+import uk.co.jaffakree.allsee.feature_login.viewmodel.AccountAccessPageViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

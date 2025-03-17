@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.dialogs
+package uk.co.jaffakree.allsee.feature_login.components.dialogs
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import com.sycosoft.allsee.R
+import uk.co.jaffakree.allsee.feature_login.R
 
 @Composable
 fun UserConfirmationDialog(

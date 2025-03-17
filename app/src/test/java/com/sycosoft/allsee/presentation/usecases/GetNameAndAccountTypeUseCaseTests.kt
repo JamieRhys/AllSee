@@ -1,6 +1,6 @@
 package com.sycosoft.allsee.presentation.usecases
 
-import com.sycosoft.allsee.presentation.models.NameAndAccountType
+import uk.co.jaffakree.allsee.feature_login.models.NameAndAccountType
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Before

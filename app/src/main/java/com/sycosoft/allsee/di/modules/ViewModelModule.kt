@@ -2,7 +2,7 @@ package com.sycosoft.allsee.di.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sycosoft.allsee.presentation.viewmodels.AccountAccessPageViewModel
+import uk.co.jaffakree.allsee.feature_login.viewmodel.AccountAccessPageViewModel
 import uk.co.jaffakree.allsee.feature_accountdetails.viewmodel.AccountDetailsPageViewModel
 import uk.co.jaffakree.allsee.feature_home.viewmodel.HomePageViewModel
 import dagger.Binds

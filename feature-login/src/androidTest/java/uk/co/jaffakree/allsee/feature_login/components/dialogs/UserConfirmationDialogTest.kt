@@ -1,16 +1,17 @@
-package com.sycosoft.allsee.presentation.components.dialogs
+package uk.co.jaffakree.allsee.feature_login.components.dialogs
 
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
-import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase
 import org.junit.Rule
 import org.junit.Test
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 
 class UserConfirmationDialogTest {
-    @get:Rule val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
 
     private val expectedTitle = "Hold on a second!"
     private val expectedName = "Joe Bloggs"
@@ -34,11 +35,13 @@ class UserConfirmationDialogTest {
             }
         }
 
-        // Verify
-        composeTestRule.onNodeWithTag(UserConfirmationDialogTestTags.TITLE).assertTextEquals(expectedTitle)
-        composeTestRule.onNodeWithTag(UserConfirmationDialogTestTags.TEXT).assertTextEquals(expectedText)
-        composeTestRule.onNodeWithTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON).assertTextEquals(expectedConfirmButtonText)
-        composeTestRule.onNodeWithTag(UserConfirmationDialogTestTags.DISMISS_BUTTON).assertTextEquals(expectedDismissButtonText)
+        with (UserConfirmationDialogTestTags) {
+            // Verify
+            composeTestRule.onNodeWithTag(TITLE).assertTextEquals(expectedTitle)
+            composeTestRule.onNodeWithTag(TEXT).assertTextEquals(expectedText)
+            composeTestRule.onNodeWithTag(CONFIRM_BUTTON).assertTextEquals(expectedConfirmButtonText)
+            composeTestRule.onNodeWithTag(DISMISS_BUTTON).assertTextEquals(expectedDismissButtonText)
+        }
     }
 
     @Test
@@ -57,9 +60,11 @@ class UserConfirmationDialogTest {
             }
         }
 
-        // Verify
-        composeTestRule.onNodeWithTag(UserConfirmationDialogTestTags.CONFIRM_BUTTON).performClick()
-        assertTrue(buttonClicked)
+        with (UserConfirmationDialogTestTags) {
+            // Verify
+            composeTestRule.onNodeWithTag(CONFIRM_BUTTON).performClick()
+            TestCase.assertTrue(buttonClicked)
+        }
     }
 
     @Test
@@ -78,8 +83,10 @@ class UserConfirmationDialogTest {
             }
         }
 
-        // Verify
-        composeTestRule.onNodeWithTag(UserConfirmationDialogTestTags.DISMISS_BUTTON).performClick()
-        assertTrue(buttonClicked)
+        with (UserConfirmationDialogTestTags) {
+            // Verify
+            composeTestRule.onNodeWithTag(DISMISS_BUTTON).performClick()
+            TestCase.assertTrue(buttonClicked)
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.sycosoft.allsee.presentation.components.accountaccesspage
+package uk.co.jaffakree.allsee.feature_login.screen
 
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.assertIsDisplayed
@@ -11,17 +11,14 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreen
-import com.sycosoft.allsee.presentation.components.screens.accountaccesspage.AccessTokenRequestScreenTestTags
-import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
-
-private typealias ATRSTT = AccessTokenRequestScreenTestTags
+import uk.co.jaffakree.allsee.core.ui.theme.AllSeeTheme
 
 class AccessTokenRequestScreenTest {
-    @get:Rule val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
 
     /*
      * =============================================================================================
@@ -46,11 +43,13 @@ class AccessTokenRequestScreenTest {
                 }
             }
 
-            onNodeWithTag(ATRSTT.TITLE).assertIsDisplayed()
-            onNodeWithTag(ATRSTT.TEXT).assertIsDisplayed()
-            onNodeWithTag(ATRSTT.ACCESS_TOKEN_INPUT).assertIsDisplayed()
-            onNodeWithTag(ATRSTT.BUTTON_GET_STARTED).assertIsDisplayed().assertIsNotEnabled()
-            onNodeWithTag(ATRSTT.PROGRESS_BAR).isNotDisplayed()
+            with (AccessTokenRequestScreenTestTags) {
+                onNodeWithTag(TITLE).assertIsDisplayed()
+                onNodeWithTag(TEXT).assertIsDisplayed()
+                onNodeWithTag(ACCESS_TOKEN_INPUT).assertIsDisplayed()
+                onNodeWithTag(BUTTON_GET_STARTED).assertIsDisplayed().assertIsNotEnabled()
+                onNodeWithTag(PROGRESS_BAR).isNotDisplayed()
+            }
         }
     }
 
@@ -79,8 +78,10 @@ class AccessTokenRequestScreenTest {
                 }
             }
 
-            // Then and Verify
-            onNodeWithTag(ATRSTT.ACCESS_TOKEN_INPUT).assertTextEquals(expected)
+            with (AccessTokenRequestScreenTestTags) {
+                // Then and Verify
+                onNodeWithTag(ACCESS_TOKEN_INPUT).assertTextEquals(expected)
+            }
         }
     }
 
@@ -103,9 +104,11 @@ class AccessTokenRequestScreenTest {
                 }
             }
 
-            onNodeWithTag(ATRSTT.ACCESS_TOKEN_INPUT).performTextInput(expected)
+            with (AccessTokenRequestScreenTestTags) {
+                onNodeWithTag(ACCESS_TOKEN_INPUT).performTextInput(expected)
 
-            assertEquals(expected, accessToken)
+                Assert.assertEquals(expected, accessToken)
+            }
         }
     }
 
@@ -134,9 +137,11 @@ class AccessTokenRequestScreenTest {
                 }
             }
 
-            // Then and Verify
-            onNodeWithTag(ATRSTT.BUTTON_GET_STARTED).assertIsEnabled().performClick()
-            onNodeWithTag(ATRSTT.PROGRESS_BAR).isDisplayed()
+            with (AccessTokenRequestScreenTestTags) {
+                // Then and Verify
+                onNodeWithTag(BUTTON_GET_STARTED).assertIsEnabled().performClick()
+                onNodeWithTag(PROGRESS_BAR).isDisplayed()
+            }
         }
     }
 }

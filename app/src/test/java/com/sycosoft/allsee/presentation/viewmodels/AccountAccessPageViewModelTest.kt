@@ -1,7 +1,7 @@
 package com.sycosoft.allsee.presentation.viewmodels
 
 import app.cash.turbine.test
-import com.sycosoft.allsee.presentation.mappers.NameAndAccountTypeMapper
+import uk.co.jaffakree.allsee.feature_login.mappers.NameAndAccountTypeMapper
 import uk.co.jaffakree.allsee.core.ui.utils.UiState
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -21,6 +21,7 @@ import uk.co.jaffakree.allsee.domain.models.Person
 import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
 import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
 import uk.co.jaffakree.allsee.domain.usecases.SaveTokenUseCase
+import uk.co.jaffakree.allsee.feature_login.viewmodel.AccountAccessPageViewModel
 import java.time.LocalDate
 import java.util.UUID
 
