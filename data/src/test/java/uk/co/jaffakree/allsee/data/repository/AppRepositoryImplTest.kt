@@ -18,18 +18,30 @@ import uk.co.jaffakree.allsee.data.local.TokenProvider
 import uk.co.jaffakree.allsee.data.local.database.dao.AccountsDao
 import uk.co.jaffakree.allsee.data.local.database.dao.BalanceDao
 import uk.co.jaffakree.allsee.data.local.database.dao.PersonDao
+import uk.co.jaffakree.allsee.data.local.models.AccountEntity
+import uk.co.jaffakree.allsee.data.local.models.BalanceEntity
 import uk.co.jaffakree.allsee.data.local.models.PersonEntity
 import uk.co.jaffakree.allsee.domain.exceptions.RepositoryException
 import uk.co.jaffakree.allsee.domain.models.Account
+import uk.co.jaffakree.allsee.domain.models.Balance
 import uk.co.jaffakree.allsee.domain.models.ErrorResponse
+import uk.co.jaffakree.allsee.domain.models.FullBalance
 import uk.co.jaffakree.allsee.domain.models.Person
 import uk.co.jaffakree.allsee.domain.models.types.AccountHolderType
 import uk.co.jaffakree.allsee.domain.models.types.AccountType
+import uk.co.jaffakree.allsee.domain.models.types.BalanceType
+import uk.co.jaffakree.allsee.domain.models.types.CountryType
 import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
+import uk.co.jaffakree.allsee.domain.models.types.FeedCounterPartyType
+import uk.co.jaffakree.allsee.domain.models.types.FeedSourceSubType
+import uk.co.jaffakree.allsee.domain.models.types.FeedSourceType
+import uk.co.jaffakree.allsee.domain.models.types.FeedSpendingCategory
+import uk.co.jaffakree.allsee.domain.models.types.FeedStatusType
 import uk.co.jaffakree.allsee.mappers.AccountHolderMapper
 import uk.co.jaffakree.allsee.mappers.AccountsMapper
 import uk.co.jaffakree.allsee.mappers.BalanceMapper
 import uk.co.jaffakree.allsee.mappers.ErrorResponseMapper
+import uk.co.jaffakree.allsee.mappers.FeedItemMapper
 import uk.co.jaffakree.allsee.mappers.FullBalanceMapper
 import uk.co.jaffakree.allsee.mappers.IdentityMapper
 import uk.co.jaffakree.allsee.mappers.PersonMapper
@@ -38,7 +50,11 @@ import uk.co.jaffakree.allsee.remote.models.AccountDto
 import uk.co.jaffakree.allsee.remote.models.AccountHolderDto
 import uk.co.jaffakree.allsee.remote.models.AccountIdentifierDto
 import uk.co.jaffakree.allsee.remote.models.AccountListDto
+import uk.co.jaffakree.allsee.remote.models.BalanceDto
 import uk.co.jaffakree.allsee.remote.models.ErrorResponseDto
+import uk.co.jaffakree.allsee.remote.models.FeedItemDto
+import uk.co.jaffakree.allsee.remote.models.FeedItemsDto
+import uk.co.jaffakree.allsee.remote.models.FullBalanceDto
 import uk.co.jaffakree.allsee.remote.models.IdentityDto
 import uk.co.jaffakree.allsee.remote.services.StarlingBankApiService
 import uk.co.jaffakree.allsee.repository.AppRepositoryImpl
@@ -47,6 +63,7 @@ import java.time.OffsetDateTime
 import java.util.UUID
 
 class AppRepositoryImplTest {
+// region Setup and Teardown
     private val apiService: StarlingBankApiService = mockk(relaxed = true)
     private val tokenProvider: TokenProvider = mockk(relaxed = true)
     private val personDao: PersonDao = mockk(relaxed = true)
@@ -82,6 +99,43 @@ class AppRepositoryImplTest {
         iban = "GB12345612345678",
         bic = "SIC1234221",
     )
+    private val validFullBalance = FullBalance(
+        acceptedOverdraft = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.ACCEPTED_OVERDRAFT,
+        ),
+        amount = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.AMOUNT,
+        ),
+        clearedBalance = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.CLEARED_BALANCE,
+        ),
+        effectiveBalance = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.EFFECTIVE_BALANCE,
+        ),
+        pendingTransactions = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.PENDING_TRANSACTIONS,
+        ),
+        totalClearedBalance = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.TOTAL_CLEARED_BALANCE,
+        ),
+        totalEffectiveBalance = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.TOTAL_EFFECTIVE_BALANCE,
+        )
+    )
 
     @Before
     fun setUp() {
@@ -99,11 +153,11 @@ class AppRepositoryImplTest {
 
         mockkStatic(Log::class)
         every { Log.e(any(), any()) } returns 0
+        every { Log.d(any(), any()) } returns 0
     }
 
-    // =============================================================================================
-    // == Save Accounts                                                                           ==
-    // =============================================================================================
+// endregion
+// region Save Accounts
 
     @Test
     fun `When saving accounts, Then objects should be saved and row returned`() = runBlocking {
@@ -136,9 +190,26 @@ class AppRepositoryImplTest {
         underTest.saveAccounts(accounts)
     }
 
-    // =============================================================================================
-    // == Save Person                                                                             ==
-    // =============================================================================================
+// endregion
+// region Save Full Balance
+
+    @Test
+    fun `When saving full balance, Then objects should be saved and row returned`() = runTest {
+        val fullBalance = validFullBalance.copy()
+        val accountUid = UUID.randomUUID()
+
+        val expected = listOf(1L, 2L, 3L, 4L, 5L, 6L, 7L)
+
+        coEvery { balanceDao.insertBalance(any()) } returns expected
+
+        val actual = underTest.saveFullBalance(fullBalance, accountUid)
+
+        coVerify(exactly = 1) { balanceDao.insertBalance(any()) }
+        assertEquals(expected, actual)
+    }
+
+// endregion
+// region Save Person
 
     @Test
     fun `When saving valid person object, Then object should be saved and row returned`() = runBlocking {
@@ -161,9 +232,8 @@ class AppRepositoryImplTest {
         underTest.savePerson(person)
     }
 
-    // =============================================================================================
-    // == Save Token                                                                              ==
-    // =============================================================================================
+// endregion
+// region Save Token
 
     @Test
     fun `When saveToken is called, Then it should delegate saving token to TokenProvider`() = runBlocking {
@@ -175,9 +245,8 @@ class AppRepositoryImplTest {
         coVerify { tokenProvider.saveToken(token) }
     }
 
-    // =============================================================================================
-    // == Get Accounts                                                                            ==
-    // =============================================================================================
+// endregion
+// region Get Accounts
 
     @Test
     fun `When API succeeds, Then accounts are returned`() = runTest {
@@ -213,6 +282,29 @@ class AppRepositoryImplTest {
     }
 
     @Test
+    fun `When database returns valid objects, Then database objects should be returned`() = runTest {
+        val accountEntity = AccountEntity(
+            uid = UUID.randomUUID().toString(),
+            accountType = AccountType.PRIMARY.ordinal,
+            defaultCategory = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            createdAt = OffsetDateTime.now().toString(),
+            name = "Personal",
+            accountIdentifier = "12345678",
+            bankIdentifier = "123456",
+            iban = "GB2L12345678123456",
+            bic = "132456"
+        )
+        val expected = AccountsMapper.toDomain(listOf(accountEntity))
+
+        coEvery { accountsDao.getAccounts() } returns listOf(accountEntity)
+
+        val actual = underTest.getAccounts()
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun `When ApiException thrown, RepositoryException should be thrown and no accounts returned`() = runTest {
         coEvery { accountsDao.getAccounts() } returns emptyList()
         coEvery { apiService.getAccounts() } throws apiException
@@ -232,9 +324,8 @@ class AppRepositoryImplTest {
         underTest.getAccounts()
     }
 
-    // =============================================================================================
-    // == Get Account Holder                                                                      ==
-    // =============================================================================================
+// endregion
+// region Get Account Holder
 
     @Test
     fun `When API succeeds, Then account holder is returned`() = runBlocking {
@@ -258,9 +349,210 @@ class AppRepositoryImplTest {
         }
     }
 
-    // =============================================================================================
-    // == Get Identity                                                                            ==
-    // =============================================================================================
+// endregion
+// region Get Balance
+
+    @Test
+    fun `When getting balance type accepted overdraft, Then accepted overdraft balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.ACCEPTED_OVERDRAFT,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.ACCEPTED_OVERDRAFT.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.ACCEPTED_OVERDRAFT)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When getting balance type amount, Then amount balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.AMOUNT,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.AMOUNT.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.AMOUNT)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When getting balance type cleared balance, Then cleared balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.CLEARED_BALANCE,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.CLEARED_BALANCE.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.CLEARED_BALANCE)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When getting balance type effective balance, Then effective balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.EFFECTIVE_BALANCE,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.EFFECTIVE_BALANCE.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.EFFECTIVE_BALANCE)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When getting balance type total cleared balance, Then total cleared balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.TOTAL_CLEARED_BALANCE,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.TOTAL_CLEARED_BALANCE.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.TOTAL_CLEARED_BALANCE)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When getting balance type total effective balance, Then total effective balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.TOTAL_EFFECTIVE_BALANCE,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.TOTAL_EFFECTIVE_BALANCE.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.TOTAL_EFFECTIVE_BALANCE)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When getting balance type pending transactions balance, Then pending transactions balance should be returned`() = runTest {
+        val expected = Balance(
+            currency = CurrencyType.GBP,
+            minorUnits = 100,
+            type = BalanceType.PENDING_TRANSACTIONS,
+        )
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns BalanceEntity(
+            id = 0,
+            type = BalanceType.PENDING_TRANSACTIONS.ordinal,
+            accountUid = UUID.randomUUID().toString(),
+            currency = CurrencyType.GBP.ordinal,
+            minorUnits = 100,
+        )
+
+        val actual = underTest.getBalance(BalanceType.PENDING_TRANSACTIONS)
+
+        assertEquals(expected, actual)
+    }
+
+// endregion
+// region Get Full Balance
+
+    @Test
+    fun `When database is empty, Then full balance should be returned from API`() = runTest {
+        val apiModel = FullBalanceDto(
+            acceptedOverdraft = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+            amount = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+            clearedBalance = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+            effectiveBalance = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+            pendingTransactions = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+            totalClearedBalance = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+            totalEffectiveBalance = BalanceDto(
+                currency = CurrencyType.GBP.name,
+                minorUnits = 100
+            ),
+        )
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { balanceDao.getBalanceFromType(any(), any()) } returns null
+        coEvery { apiService.getFullBalance(any()) } returns apiModel
+
+        val expected = FullBalanceMapper().toDomain(apiModel)
+        val actual = underTest.getFullBalance()
+
+        assertEquals(expected, actual)
+    }
+
+// endregion
+// region Get Identity
     @Test
     fun `When API succeeds, Then person identity is returned`() = runBlocking {
         val identityDto = IdentityDto(
@@ -292,9 +584,9 @@ class AppRepositoryImplTest {
         }
     }
 
-    // =============================================================================================
-    // == Get Person                                                                              ==
-    // =============================================================================================
+// endregion
+// region Get Person
+
     @Test
     fun `When Database returns valid object, Then database person is returned`() = runBlocking {
         val accountHolderDto = AccountHolderDto(UUID.randomUUID().toString(), "INDIVIDUAL")
@@ -331,6 +623,21 @@ class AppRepositoryImplTest {
             fail("Expected RepositoryException to be thrown")
         } catch(e: RepositoryException) {
             assertEquals(expected.errorResponse, e.error)
+        }
+    }
+
+    @Test
+    fun `When ApiException thrown during saving of person, Then RepositoryException should be returned and no person object returned`() = runTest {
+        val expected = RepositoryException(ErrorResponse("error", "Error Response"))
+        coEvery { personDao.getPerson() } returns null
+        coEvery { apiService.getAccountHolder() } throws ApiException(ErrorResponseDto("error", "Error Response"))
+        coEvery { apiService.getIdentity() } throws ApiException(ErrorResponseDto("error", "Error Response"))
+
+        try {
+            underTest.getPerson()
+            fail("Expected RepositoryException to be thrown")
+        } catch(e: RepositoryException) {
+            assertEquals(expected.error, e.error)
         }
     }
 
@@ -385,4 +692,59 @@ class AppRepositoryImplTest {
             assertEquals(ErrorResponseMapper.toDomain(apiException.errorResponse), e.error)
         }
     }
+
+// endregion
+// region Get Recent Feed
+
+    @Test
+    fun `When getting recent feed, Then feed should be returned from API`() = runTest {
+        val account = validAccount.copy()
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(account))
+
+        val apiFeed = FeedItemsDto(listOf(
+            FeedItemDto(
+                feedItemUid = UUID.randomUUID().toString(),
+                categoryUid = UUID.randomUUID().toString(),
+                amount = BalanceDto("GBP", 100),
+                sourceAmount = null,
+                direction = "OUT",
+                updatedAt = null,
+                transactionTime = OffsetDateTime.now().toString(),
+                settlementTime = OffsetDateTime.now().toString(),
+                retryAllocationUntilTime = null,
+                source = FeedSourceType.MASTER_CARD.name,
+                sourceSubType = FeedSourceSubType.CHIP_AND_PIN.name,
+                status = FeedStatusType.PENDING.name,
+                transactingApplicationUserUid = UUID.randomUUID().toString(),
+                counterPartyType = FeedCounterPartyType.MERCHANT.name,
+                counterPartyUid = UUID.randomUUID().toString(),
+                counterPartyName = "Test Merchant",
+                counterPartySubEntityUid = UUID.randomUUID().toString(),
+                counterPartySubEntityName = "Test Sub Entity",
+                counterPartySubEntityIdentifier = "Test Identifier",
+                counterPartySubEntitySubIdentifier = "Test Sub Identifier",
+                exchangeRate = null,
+                totalFees = null,
+                totalFeeAmount = null,
+                reference = "Test Reference",
+                country = CountryType.GB.name,
+                spendingCategory = FeedSpendingCategory.OTHER.name,
+                userNote = null,
+                roundUp = null,
+                hasAttachment = false,
+                hasReceipt = false,
+                batchPaymentDetails = null
+            )
+        ))
+
+        coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
+        coEvery { apiService.getTransactionFeed(any(), any(), any()) } returns apiFeed
+
+        val expected = FeedItemMapper.toDomain(apiFeed)
+        val actual = underTest.getRecentFeed()
+
+        assertEquals(expected, actual)
+    }
+
+// endregion
 }

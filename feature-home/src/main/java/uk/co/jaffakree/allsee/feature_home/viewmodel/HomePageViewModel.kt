@@ -11,12 +11,14 @@ import uk.co.jaffakree.allsee.domain.models.types.BalanceType
 import uk.co.jaffakree.allsee.domain.usecases.FormatBalanceUseCase
 import uk.co.jaffakree.allsee.domain.usecases.GetAccountsUseCase
 import uk.co.jaffakree.allsee.domain.usecases.GetBalanceUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetRecentFeedUseCase
 import uk.co.jaffakree.allsee.feature_home.components.balancecard.BalanceCardType
 import javax.inject.Inject
 
 class HomePageViewModel @Inject constructor(
     private val getAccountsUseCase: GetAccountsUseCase,
     private val getBalanceUseCase: GetBalanceUseCase,
+    private val getRecentFeedUseCase: GetRecentFeedUseCase,
 ) : ViewModel() {
     data class ViewState(
         val clearedBalance: BalanceCardType,
@@ -39,6 +41,8 @@ class HomePageViewModel @Inject constructor(
                 clearedBalance = BalanceCardType.Value(clearedBalance = FormatBalanceUseCase().invoke(clearedBalance)),
                 accountName = DynamicTextType.Value(text = accountType),
             )
+
+            getRecentFeedUseCase()
         }
     }
 }
