@@ -2,10 +2,12 @@ package uk.co.jaffakree.allsee.remote.services
 
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import uk.co.jaffakree.allsee.remote.models.AccountHolderDto
 import uk.co.jaffakree.allsee.remote.models.AccountHolderNameDto
 import uk.co.jaffakree.allsee.remote.models.AccountIdentifierDto
 import uk.co.jaffakree.allsee.remote.models.AccountListDto
+import uk.co.jaffakree.allsee.remote.models.FeedItemsDto
 import uk.co.jaffakree.allsee.remote.models.FullBalanceDto
 import uk.co.jaffakree.allsee.remote.models.IdentityDto
 
@@ -36,4 +38,11 @@ interface StarlingBankApiService {
      */
     @GET("accounts/{accountUid}/identifiers")
     suspend fun getAccountIdentifiers(@Path("accountUid") accountUid: String): AccountIdentifierDto
+
+    @GET("feed/account/{accountUid}/category/{categoryUid}")
+    suspend fun getTransactionFeed(
+        @Path("accountUid") accountUid: String,
+        @Path("categoryUid") categoryUid: String,
+        @Query("changesSince") changesSince: String,
+    ): FeedItemsDto
 }
