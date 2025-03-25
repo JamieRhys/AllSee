@@ -1,6 +1,7 @@
 package uk.co.jaffakree.allsee.feature_home.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -17,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +45,7 @@ internal object HomePageScreenTestTags {
     const val TEXT_ACCOUNT_NAME = "account_name"
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomePageScreen(
     topSectionColor: Color = MaterialTheme.colorScheme.surface,
@@ -180,6 +183,26 @@ fun HomePageScreen(
                         value = clearedBalance,
                         onClick = { onBalanceCardClick() }
                     )
+
+                    val exampleList = buildList {
+                        repeat(10) {
+                            add("Item $it")
+                        }
+                    }
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        exampleList.forEachIndexed { index, item ->
+                            stickyHeader {
+                                Text(index.toString())
+                            }
+                            item {
+                                Text(text = item)
+                            }
+                        }
+                    }
                 }
             }
 
@@ -201,7 +224,7 @@ fun HomePageScreen(
     }
 }
 
-@Preview(name = "Light Mode", showSystemUi = true, showBackground = true)
+@Preview(name = "Light Mode", showBackground = true)
 @Composable
 private fun LM_HomePageScreenPreview() {
     AllSeeTheme(dynamicColor = false) {
@@ -216,7 +239,7 @@ private fun LM_HomePageScreenPreview() {
     }
 }
 
-@Preview(name = "Light Mode (Placeholder)", showSystemUi = true, showBackground = true)
+@Preview(name = "Light Mode (Placeholder)", showBackground = true)
 @Composable
 private fun LM_HomePageScreenPlaceholderPreview() {
     AllSeeTheme(dynamicColor = false) {
@@ -231,7 +254,7 @@ private fun LM_HomePageScreenPlaceholderPreview() {
     }
 }
 
-@Preview(name = "Dark Mode", showSystemUi = true, showBackground = true,
+@Preview(name = "Dark Mode", showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
@@ -248,7 +271,7 @@ private fun DM_HomePageScreenPreview() {
     }
 }
 
-@Preview(name = "Dark Mode (Placeholder)", showSystemUi = true, showBackground = true,
+@Preview(name = "Dark Mode (Placeholder)", showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable

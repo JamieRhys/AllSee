@@ -12,11 +12,14 @@ import uk.co.jaffakree.allsee.remote.models.FeedItemDto
 import uk.co.jaffakree.allsee.remote.models.FeedItemsDto
 import java.time.OffsetDateTime
 import java.util.UUID
+import javax.inject.Inject
 
-internal object FeedItemMapper {
+class FeedItemMapper @Inject constructor(
+    private val balanceMapper: BalanceMapper,
+) {
     fun toDomain(item: FeedItemDto): FeedItem = FeedItem(
         feedItemUid = UUID.fromString(item.feedItemUid),
-        amount = BalanceMapper().toDomain(item.amount, BalanceType.AMOUNT),
+        amount = balanceMapper.toDomain(item.amount, BalanceType.AMOUNT),
         transactionTime = OffsetDateTime.parse(item.transactionTime),
         settlementTime = OffsetDateTime.parse(item.settlementTime),
         direction = FeedDirectionType.valueOf(item.direction),
@@ -32,7 +35,7 @@ internal object FeedItemMapper {
         exchangeRate = item.exchangeRate,
         totalFees = item.totalFees,
         totalFeeAmount = if (item.totalFeeAmount != null)
-            BalanceMapper().toDomain(item.totalFeeAmount, BalanceType.AMOUNT)
+            balanceMapper.toDomain(item.totalFeeAmount, BalanceType.AMOUNT)
         else null,
         reference = item.reference,
         country = CountryType.valueOf(item.country),

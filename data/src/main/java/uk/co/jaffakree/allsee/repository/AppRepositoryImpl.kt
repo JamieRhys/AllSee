@@ -50,6 +50,7 @@ class AppRepositoryImpl @Inject constructor(
     private val fullBalanceMapper: FullBalanceMapper,
     private val identityMapper: IdentityMapper,
     private val personMapper: PersonMapper,
+    private val feedItemMapper: FeedItemMapper,
 ) : AppRepository {
     private val logTag = AppRepositoryImpl::class.java.simpleName
 
@@ -70,25 +71,17 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveFullBalance(fullBalance: FullBalance, accountUid: UUID): List<Long> = try {
-        val list: List<Balance> = listOf(
+        val balances = listOf(
             fullBalance.acceptedOverdraft,
             fullBalance.amount,
             fullBalance.clearedBalance,
             fullBalance.effectiveBalance,
             fullBalance.pendingTransactions,
             fullBalance.totalClearedBalance,
-            fullBalance.totalEffectiveBalance
-        )
+            fullBalance.totalEffectiveBalance,
+        ).map { balance -> balanceMapper.toEntity(balance, accountUid) } // map each value into a new collection
 
-        var entityList: List<BalanceEntity> = emptyList()
-
-        list.forEach {
-            entityList = entityList.plus(balanceMapper.toEntity(it, accountUid))
-        }
-
-        val idList = databaseCall { balanceDao.insertBalance(entityList) }
-
-        idList
+        databaseCall { balanceDao.insertBalance(balances = balances) }
     } catch(e: DatabaseException) {
         throw RepositoryException(e.errorResponse)
     }
@@ -142,10 +135,10 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     @Throws(RepositoryException::class)
-    override suspend fun getBalance(type: BalanceType): Balance = try {
+    override suspend fun getBalance(type: BalanceType): Balance {
         val fullBalance = getFullBalance()
 
-        when (type) {
+        return when (type) {
             BalanceType.ACCEPTED_OVERDRAFT -> fullBalance.acceptedOverdraft
             BalanceType.AMOUNT -> fullBalance.amount
             BalanceType.CLEARED_BALANCE -> fullBalance.clearedBalance
@@ -154,15 +147,12 @@ class AppRepositoryImpl @Inject constructor(
             BalanceType.TOTAL_CLEARED_BALANCE -> fullBalance.totalClearedBalance
             BalanceType.TOTAL_EFFECTIVE_BALANCE -> fullBalance.totalEffectiveBalance
         }
-    } catch(e: RepositoryException) {
-        throw e
     }
 
     @Throws(RepositoryException::class)
     override suspend fun getFullBalance(): FullBalance = try {
         // TODO: Add index of the account the full balance is needed for.
-        coroutineScope {
-            val accounts = async { getAccounts() }.await()
+            val accounts = getAccounts()
             var fullBalance: FullBalance? = null
 
             val acceptedOverdraft: BalanceEntity? = balanceDao.getBalanceFromType(
@@ -221,7 +211,6 @@ class AppRepositoryImpl @Inject constructor(
 
             }
             fullBalance
-        }
     } catch(e: RepositoryException) {
         throw e
     } catch(e: DatabaseException) {
@@ -261,16 +250,14 @@ class AppRepositoryImpl @Inject constructor(
 
     @Throws(RepositoryException::class)
     override suspend fun getRecentFeed(): List<FeedItem> = try {
-        coroutineScope {
-            Log.d(logTag, "Attempting to get recent feed")
-            val account = async { getAccounts()[0] }.await()
+        Log.d(logTag, "Attempting to get recent feed")
+        val account = getAccounts()[0]
 
-            FeedItemMapper.toDomain(apiService.getTransactionFeed(
-                accountUid = account.accountUid.toString(),
-                categoryUid = account.defaultCategory.toString(),
-                changesSince = OffsetDateTime.now().minusDays(31).toString(),
-            ))
-        }
+        feedItemMapper.toDomain(apiService.getTransactionFeed(
+            accountUid = account.accountUid.toString(),
+            categoryUid = account.defaultCategory.toString(),
+            changesSince = OffsetDateTime.now().minusDays(31).toString(),
+        ))
     } catch(e: RepositoryException) {
         Log.e(logTag, "Failed to get recent feed. Reason: ${e.error.errorDescription}")
         throw e

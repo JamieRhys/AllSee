@@ -9,6 +9,7 @@ import uk.co.jaffakree.allsee.data.local.database.dao.BalanceDao
 import uk.co.jaffakree.allsee.data.local.database.dao.PersonDao
 import uk.co.jaffakree.allsee.domain.repository.AppRepository
 import uk.co.jaffakree.allsee.mappers.BalanceMapper
+import uk.co.jaffakree.allsee.mappers.FeedItemMapper
 import uk.co.jaffakree.allsee.mappers.FullBalanceMapper
 import uk.co.jaffakree.allsee.mappers.IdentityMapper
 import uk.co.jaffakree.allsee.mappers.PersonMapper
@@ -27,6 +28,7 @@ class RepositoryModule {
         fullBalanceMapper: FullBalanceMapper,
         balanceMapper: BalanceMapper,
         personMapper: PersonMapper,
+        feedItemMapper: FeedItemMapper,
         accountsDao: AccountsDao,
         balanceDao: BalanceDao,
     ): AppRepository = AppRepositoryImpl(
@@ -39,5 +41,6 @@ class RepositoryModule {
         fullBalanceMapper = fullBalanceMapper,
         identityMapper = identityMapper,
         personMapper = personMapper,
+        feedItemMapper = feedItemMapper,
     )
 }
