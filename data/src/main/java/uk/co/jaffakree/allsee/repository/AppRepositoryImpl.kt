@@ -19,6 +19,7 @@ import uk.co.jaffakree.allsee.domain.models.Account
 import uk.co.jaffakree.allsee.domain.models.AccountHolder
 import uk.co.jaffakree.allsee.domain.models.Balance
 import uk.co.jaffakree.allsee.domain.models.ErrorResponse
+import uk.co.jaffakree.allsee.domain.models.FeedItem
 import uk.co.jaffakree.allsee.domain.models.FullBalance
 import uk.co.jaffakree.allsee.domain.models.Identity
 import uk.co.jaffakree.allsee.domain.models.Person
@@ -28,15 +29,17 @@ import uk.co.jaffakree.allsee.mappers.AccountHolderMapper
 import uk.co.jaffakree.allsee.mappers.AccountsMapper
 import uk.co.jaffakree.allsee.mappers.BalanceMapper
 import uk.co.jaffakree.allsee.mappers.ErrorResponseMapper
+import uk.co.jaffakree.allsee.mappers.FeedItemMapper
 import uk.co.jaffakree.allsee.mappers.FullBalanceMapper
 import uk.co.jaffakree.allsee.mappers.IdentityMapper
 import uk.co.jaffakree.allsee.mappers.PersonMapper
 import uk.co.jaffakree.allsee.remote.exceptions.ApiException
 import uk.co.jaffakree.allsee.remote.services.StarlingBankApiService
+import java.time.OffsetDateTime
 import java.util.UUID
 import javax.inject.Inject
 
-/** This is the implementation of the [uk.co.jaffakree.allsee.domain.repository.AppRepository] interface. */
+/** This is the implementation of the [AppRepository] interface. */
 class AppRepositoryImpl @Inject constructor(
     private val apiService: StarlingBankApiService,
     private val personDao: PersonDao,
@@ -47,6 +50,7 @@ class AppRepositoryImpl @Inject constructor(
     private val fullBalanceMapper: FullBalanceMapper,
     private val identityMapper: IdentityMapper,
     private val personMapper: PersonMapper,
+    private val feedItemMapper: FeedItemMapper,
 ) : AppRepository {
     private val logTag = AppRepositoryImpl::class.java.simpleName
 
@@ -67,23 +71,17 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveFullBalance(fullBalance: FullBalance, accountUid: UUID): List<Long> = try {
-        val list: List<Balance> = listOf(
+        val balances = listOf(
             fullBalance.acceptedOverdraft,
             fullBalance.amount,
             fullBalance.clearedBalance,
             fullBalance.effectiveBalance,
             fullBalance.pendingTransactions,
             fullBalance.totalClearedBalance,
-            fullBalance.totalEffectiveBalance
-        )
+            fullBalance.totalEffectiveBalance,
+        ).map { balance -> balanceMapper.toEntity(balance, accountUid) } // map each value into a new collection
 
-        val savedList: List<Long> = emptyList()
-
-        list.forEach {
-            savedList.plus(databaseCall{balanceDao.insertBalance(listOf(balanceMapper.toEntity(it, accountUid)))})
-        }
-
-        savedList
+        databaseCall { balanceDao.insertBalance(balances = balances) }
     } catch(e: DatabaseException) {
         throw RepositoryException(e.errorResponse)
     }
@@ -137,9 +135,23 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     @Throws(RepositoryException::class)
+    override suspend fun getBalance(type: BalanceType): Balance {
+        val fullBalance = getFullBalance()
+
+        return when (type) {
+            BalanceType.ACCEPTED_OVERDRAFT -> fullBalance.acceptedOverdraft
+            BalanceType.AMOUNT -> fullBalance.amount
+            BalanceType.CLEARED_BALANCE -> fullBalance.clearedBalance
+            BalanceType.EFFECTIVE_BALANCE -> fullBalance.effectiveBalance
+            BalanceType.PENDING_TRANSACTIONS -> fullBalance.pendingTransactions
+            BalanceType.TOTAL_CLEARED_BALANCE -> fullBalance.totalClearedBalance
+            BalanceType.TOTAL_EFFECTIVE_BALANCE -> fullBalance.totalEffectiveBalance
+        }
+    }
+
+    @Throws(RepositoryException::class)
     override suspend fun getFullBalance(): FullBalance = try {
         // TODO: Add index of the account the full balance is needed for.
-        coroutineScope {
             val accounts = getAccounts()
             var fullBalance: FullBalance? = null
 
@@ -199,28 +211,10 @@ class AppRepositoryImpl @Inject constructor(
 
             }
             fullBalance
-        }
-    } catch(e: ApiException) {
-        throw throwRepositoryException(e)
-    } catch(e: DatabaseException) {
-        throw throwRepositoryException(e)
-    }
-
-    @Throws(RepositoryException::class)
-    override suspend fun getBalance(type: BalanceType): Balance = try {
-        val fullBalance = getFullBalance()
-
-        when (type) {
-            BalanceType.ACCEPTED_OVERDRAFT -> fullBalance.acceptedOverdraft
-            BalanceType.AMOUNT -> fullBalance.amount
-            BalanceType.CLEARED_BALANCE -> fullBalance.clearedBalance
-            BalanceType.EFFECTIVE_BALANCE -> fullBalance.effectiveBalance
-            BalanceType.PENDING_TRANSACTIONS -> fullBalance.pendingTransactions
-            BalanceType.TOTAL_CLEARED_BALANCE -> fullBalance.totalClearedBalance
-            BalanceType.TOTAL_EFFECTIVE_BALANCE -> fullBalance.totalEffectiveBalance
-        }
     } catch(e: RepositoryException) {
         throw e
+    } catch(e: DatabaseException) {
+        throw throwRepositoryException(e)
     }
 
     @Throws(RepositoryException::class)
@@ -248,11 +242,28 @@ class AppRepositoryImpl @Inject constructor(
 
             personMapper.toDomain(person)
         }
-    } catch(e: ApiException) {
-        throw throwRepositoryException(e)
+    } catch(e: RepositoryException) {
+        throw e
     } catch(e: DatabaseException) {
         throw throwRepositoryException(e)
     }
+
+    @Throws(RepositoryException::class)
+    override suspend fun getRecentFeed(): List<FeedItem> = try {
+        Log.d(logTag, "Attempting to get recent feed")
+        val account = getAccounts()[0]
+
+        feedItemMapper.toDomain(apiService.getTransactionFeed(
+            accountUid = account.accountUid.toString(),
+            categoryUid = account.defaultCategory.toString(),
+            changesSince = OffsetDateTime.now().minusDays(31).toString(),
+        ))
+    } catch(e: RepositoryException) {
+        Log.e(logTag, "Failed to get recent feed. Reason: ${e.error.errorDescription}")
+        throw e
+    }
+
+// region Helpers
 
     private fun throwRepositoryException(e: ApiException): RepositoryException {
         Log.e(logTag, "error = ${e.errorResponse.error}, errorDescription = ${e.errorResponse.errorDescription}")
@@ -308,4 +319,6 @@ class AppRepositoryImpl @Inject constructor(
             }
         }
     }
+
+// endregion
 }

@@ -92,4 +92,7 @@ dependencies {
     // MockK
     androidTestImplementation(libs.mockk.android)
     testImplementation(libs.mockk)
+
+    // Turbine Testing Library
+    testImplementation(libs.turbine)
 }

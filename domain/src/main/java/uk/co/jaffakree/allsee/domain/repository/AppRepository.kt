@@ -4,6 +4,7 @@ import uk.co.jaffakree.allsee.domain.exceptions.RepositoryException
 import uk.co.jaffakree.allsee.domain.models.Account
 import uk.co.jaffakree.allsee.domain.models.AccountHolder
 import uk.co.jaffakree.allsee.domain.models.Balance
+import uk.co.jaffakree.allsee.domain.models.FeedItem
 import uk.co.jaffakree.allsee.domain.models.FullBalance
 import uk.co.jaffakree.allsee.domain.models.Identity
 import uk.co.jaffakree.allsee.domain.models.Person
@@ -41,4 +42,7 @@ interface AppRepository {
 
     @Throws(RepositoryException::class)
     suspend fun getPerson(): Person
+
+    @Throws(RepositoryException::class)
+    suspend fun getRecentFeed(): List<FeedItem>
 }

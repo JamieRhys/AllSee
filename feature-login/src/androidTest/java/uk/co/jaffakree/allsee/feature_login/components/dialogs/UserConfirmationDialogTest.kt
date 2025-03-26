@@ -85,7 +85,7 @@ class UserConfirmationDialogTest {
 
         with (UserConfirmationDialogTestTags) {
             // Verify
-            composeTestRule.onNodeWithTag(DISMISS_BUTTON).performClick()
+            composeTestRule.onNodeWithTag(  DISMISS_BUTTON).performClick()
             TestCase.assertTrue(buttonClicked)
         }
     }

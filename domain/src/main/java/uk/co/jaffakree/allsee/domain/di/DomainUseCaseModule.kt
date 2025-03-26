@@ -6,6 +6,7 @@ import uk.co.jaffakree.allsee.domain.repository.AppRepository
 import uk.co.jaffakree.allsee.domain.usecases.GetAccountHolderUseCase
 import uk.co.jaffakree.allsee.domain.usecases.GetBalanceUseCase
 import uk.co.jaffakree.allsee.domain.usecases.GetPersonUseCase
+import uk.co.jaffakree.allsee.domain.usecases.GetRecentFeedUseCase
 import uk.co.jaffakree.allsee.domain.usecases.SaveTokenUseCase
 
 @Module
@@ -22,6 +23,10 @@ class DomainUseCaseModule {
     @Provides
     fun provideGetPersonUseCase(repository: AppRepository): GetPersonUseCase =
         GetPersonUseCase(repository)
+
+    @Provides
+    fun provideGetRecentFeedUseCase(repository: AppRepository): GetRecentFeedUseCase =
+        GetRecentFeedUseCase(repository)
 
     @Provides
     fun provideSaveTokenUseCase(repository: AppRepository): SaveTokenUseCase =
