@@ -1,12 +1,14 @@
 package uk.co.jaffakree.allsee.remote.models
 
+import java.util.UUID
+
 data class FeedItemsDto(
     val feedItems: List<FeedItemDto>,
 )
 
 data class FeedItemDto(
-    val feedItemUid: String?,
-    val categoryUid: String?,
+    val feedItemUid: UUID,
+    val categoryUid: UUID?,
     val amount: BalanceDto,
     val sourceAmount: BalanceDto?,
     val direction: String,
@@ -17,11 +19,11 @@ data class FeedItemDto(
     val source: String,
     val sourceSubType: String?,
     val status: String?,
-    val transactingApplicationUserUid: String?,
+    val transactingApplicationUserUid: UUID?,
     val counterPartyType: String,
-    val counterPartyUid: String?,
+    val counterPartyUid: UUID?,
     val counterPartyName: String,
-    val counterPartySubEntityUid: String?,
+    val counterPartySubEntityUid: UUID?,
     val counterPartySubEntityName: String?,
     val counterPartySubEntityIdentifier: String?,
     val counterPartySubEntitySubIdentifier: String?,

@@ -10,6 +10,8 @@ import uk.co.jaffakree.allsee.remote.models.AccountListDto
 import uk.co.jaffakree.allsee.remote.models.FeedItemsDto
 import uk.co.jaffakree.allsee.remote.models.FullBalanceDto
 import uk.co.jaffakree.allsee.remote.models.IdentityDto
+import java.time.OffsetDateTime
+import java.util.UUID
 
 
 interface StarlingBankApiService {
@@ -26,7 +28,7 @@ interface StarlingBankApiService {
     suspend fun getAccountHolderName(): AccountHolderNameDto
 
     @GET("accounts/{accountUid}/balance")
-    suspend fun getFullBalance(@Path("accountUid") accountUid: String): FullBalanceDto
+    suspend fun getFullBalance(@Path("accountUid") accountUid: UUID): FullBalanceDto
 
     /** Requests the identity of the account holder. This is more in depth than just requesting the name. */
     @GET("identity/individual")
@@ -37,12 +39,12 @@ interface StarlingBankApiService {
      * This includes the account number (account identifier), sort code (bank identifier), IBAN and BIC.
      */
     @GET("accounts/{accountUid}/identifiers")
-    suspend fun getAccountIdentifiers(@Path("accountUid") accountUid: String): AccountIdentifierDto
+    suspend fun getAccountIdentifiers(@Path("accountUid") accountUid: UUID): AccountIdentifierDto
 
     @GET("feed/account/{accountUid}/category/{categoryUid}")
     suspend fun getTransactionFeed(
-        @Path("accountUid") accountUid: String,
-        @Path("categoryUid") categoryUid: String,
-        @Query("changesSince") changesSince: String,
+        @Path("accountUid") accountUid: UUID,
+        @Path("categoryUid") categoryUid: UUID,
+        @Query("changesSince") changesSince: OffsetDateTime,
     ): FeedItemsDto
 }
