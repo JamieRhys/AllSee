@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class BalanceMapper @Inject constructor() {
     fun toDomain(dto: BalanceDto, type: BalanceType): Balance = Balance(
-        currency = CurrencyType.valueOf(dto.currency),
+        currency = dto.currency,
         type = type,
         minorUnits = dto.minorUnits,
     )

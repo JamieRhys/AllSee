@@ -72,6 +72,7 @@ class AppRepositoryImplTest {
     private val identityMapper: IdentityMapper = IdentityMapper()
     private val balanceMapper: BalanceMapper = BalanceMapper()
     private val fullBalanceMapper: FullBalanceMapper = FullBalanceMapper()
+    private val feedItemMapper: FeedItemMapper = FeedItemMapper(balanceMapper)
     private val personMapper: PersonMapper = PersonMapper()
     private lateinit var underTest: AppRepositoryImpl
 
@@ -148,7 +149,8 @@ class AppRepositoryImplTest {
             identityMapper = identityMapper,
             personMapper = personMapper,
             balanceMapper = balanceMapper,
-            fullBalanceMapper = fullBalanceMapper
+            fullBalanceMapper = fullBalanceMapper,
+            feedItemMapper = feedItemMapper,
         )
 
         mockkStatic(Log::class)
@@ -251,11 +253,11 @@ class AppRepositoryImplTest {
     @Test
     fun `When API succeeds, Then accounts are returned`() = runTest {
         val apiAccountModel = AccountDto(
-            accountUid = UUID.randomUUID().toString(),
-            accountType = AccountType.PRIMARY.name,
-            defaultCategory = UUID.randomUUID().toString(),
-            currency = CurrencyType.GBP.name,
-            createdAt = OffsetDateTime.now().toString(),
+            accountUid = UUID.randomUUID(),
+            accountType = AccountType.PRIMARY,
+            defaultCategory = UUID.randomUUID(),
+            currency = CurrencyType.GBP,
+            createdAt = OffsetDateTime.now(),
             name = "Personal"
         )
         val apiAccountListDto = AccountListDto(
@@ -329,7 +331,7 @@ class AppRepositoryImplTest {
 
     @Test
     fun `When API succeeds, Then account holder is returned`() = runBlocking {
-        val apiModel = AccountHolderDto("012456789", "INDIVIDUAL")
+        val apiModel = AccountHolderDto(UUID.randomUUID(), "INDIVIDUAL")
         coEvery { apiService.getAccountHolder() } returns apiModel
 
         val result = underTest.getAccountHolder()
@@ -513,31 +515,31 @@ class AppRepositoryImplTest {
     fun `When database is empty, Then full balance should be returned from API`() = runTest {
         val apiModel = FullBalanceDto(
             acceptedOverdraft = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
             amount = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
             clearedBalance = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
             effectiveBalance = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
             pendingTransactions = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
             totalClearedBalance = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
             totalEffectiveBalance = BalanceDto(
-                currency = CurrencyType.GBP.name,
+                currency = CurrencyType.GBP,
                 minorUnits = 100
             ),
         )
@@ -589,11 +591,11 @@ class AppRepositoryImplTest {
 
     @Test
     fun `When Database returns valid object, Then database person is returned`() = runBlocking {
-        val accountHolderDto = AccountHolderDto(UUID.randomUUID().toString(), "INDIVIDUAL")
+        val accountHolderDto = AccountHolderDto(UUID.randomUUID(), "INDIVIDUAL")
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
         val expected = personMapper.toDomain(
             PersonEntity(
-                uid = accountHolderDto.accountHolderUid,
+                uid = accountHolderDto.accountHolderUid.toString(),
                 type = AccountHolderMapper.toDomain(accountHolderDto).type.toString(),
                 title = identityDto.title,
                 firstName = identityDto.firstName,
@@ -643,7 +645,7 @@ class AppRepositoryImplTest {
 
     @Test
     fun `When API succeeds, Then person object is returned`() = runBlocking {
-        val accountHolderDto = AccountHolderDto(UUID.randomUUID().toString(), "INDIVIDUAL")
+        val accountHolderDto = AccountHolderDto(UUID.randomUUID(), "INDIVIDUAL")
         val identityDto = IdentityDto("Mr", "John", "Doe", "1975-01-01", "joe.bloggs@example.com", "0123456789")
         val identity = identityMapper.toDomain(identityDto)
         val accountHolder = AccountHolderMapper.toDomain(accountHolderDto)
@@ -654,7 +656,7 @@ class AppRepositoryImplTest {
 
         val actual = underTest.getPerson()
         val expected = Person(
-            uid = UUID.fromString(accountHolder.uid),
+            uid = accountHolder.uid,
             type = accountHolder.type,
             title = identity.title,
             firstName = identity.firstName,
@@ -682,7 +684,7 @@ class AppRepositoryImplTest {
     @Test
     fun `When ApiException thrown in getIdentity from getPerson, Then RepositoryException should be thrown and no object returned`() = runBlocking {
         coEvery { personDao.getPerson() } returns null
-        coEvery { apiService.getAccountHolder() } returns AccountHolderDto("0123456789", "INDIVIDUAL")
+        coEvery { apiService.getAccountHolder() } returns AccountHolderDto(UUID.randomUUID(), "INDIVIDUAL")
         coEvery { apiService.getAccountHolder() } throws ApiException(errorResponseDto)
 
         try {
@@ -703,9 +705,9 @@ class AppRepositoryImplTest {
 
         val apiFeed = FeedItemsDto(listOf(
             FeedItemDto(
-                feedItemUid = UUID.randomUUID().toString(),
-                categoryUid = UUID.randomUUID().toString(),
-                amount = BalanceDto("GBP", 100),
+                feedItemUid = UUID.randomUUID(),
+                categoryUid = UUID.randomUUID(),
+                amount = BalanceDto(CurrencyType.GBP, 100),
                 sourceAmount = null,
                 direction = "OUT",
                 updatedAt = null,
@@ -715,11 +717,11 @@ class AppRepositoryImplTest {
                 source = FeedSourceType.MASTER_CARD.name,
                 sourceSubType = FeedSourceSubType.CHIP_AND_PIN.name,
                 status = FeedStatusType.PENDING.name,
-                transactingApplicationUserUid = UUID.randomUUID().toString(),
+                transactingApplicationUserUid = UUID.randomUUID(),
                 counterPartyType = FeedCounterPartyType.MERCHANT.name,
-                counterPartyUid = UUID.randomUUID().toString(),
+                counterPartyUid = UUID.randomUUID(),
                 counterPartyName = "Test Merchant",
-                counterPartySubEntityUid = UUID.randomUUID().toString(),
+                counterPartySubEntityUid = UUID.randomUUID(),
                 counterPartySubEntityName = "Test Sub Entity",
                 counterPartySubEntityIdentifier = "Test Identifier",
                 counterPartySubEntitySubIdentifier = "Test Sub Identifier",
@@ -740,7 +742,7 @@ class AppRepositoryImplTest {
         coEvery { accountsDao.getAccounts() } returns AccountsMapper.toEntity(listOf(validAccount.copy()))
         coEvery { apiService.getTransactionFeed(any(), any(), any()) } returns apiFeed
 
-        val expected = FeedItemMapper.toDomain(apiFeed)
+        val expected = feedItemMapper.toDomain(apiFeed)
         val actual = underTest.getRecentFeed()
 
         assertEquals(expected, actual)

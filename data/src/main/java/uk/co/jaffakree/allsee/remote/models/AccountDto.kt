@@ -1,5 +1,10 @@
 package uk.co.jaffakree.allsee.remote.models
 
+import uk.co.jaffakree.allsee.domain.models.types.AccountType
+import uk.co.jaffakree.allsee.domain.models.types.CurrencyType
+import java.time.OffsetDateTime
+import java.util.UUID
+
 /** Represents an Account provided by the Starling Bank API
  *
  * @property accountUid The unique identifier for the account that's provided by Starling Bank.
@@ -10,10 +15,10 @@ package uk.co.jaffakree.allsee.remote.models
  * @property name The name of the account.
  */
 data class AccountDto(
-    val accountUid: String,
-    val accountType: String,
-    val defaultCategory: String,
-    val currency: String,
-    val createdAt: String,
+    val accountUid: UUID,
+    val accountType: AccountType,
+    val defaultCategory: UUID,
+    val currency: CurrencyType,
+    val createdAt: OffsetDateTime,
     val name: String,
 )

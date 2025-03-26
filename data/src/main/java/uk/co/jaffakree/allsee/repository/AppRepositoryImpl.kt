@@ -205,7 +205,7 @@ class AppRepositoryImpl @Inject constructor(
 
             if (fullBalance == null) {
                 fullBalance =
-                    fullBalanceMapper.toDomain(apiService.getFullBalance(accounts[0].accountUid.toString()))
+                    fullBalanceMapper.toDomain(apiService.getFullBalance(accounts[0].accountUid))
 
                 saveFullBalance(fullBalance, accounts[0].accountUid)
 
@@ -227,7 +227,7 @@ class AppRepositoryImpl @Inject constructor(
                 val identity = async { getIdentity() }.await()
 
                 person = PersonEntity(
-                    uid = accountHolder.uid,
+                    uid = accountHolder.uid.toString(),
                     type = accountHolder.type.toString(),
                     title = identity.title,
                     firstName = identity.firstName,
@@ -254,9 +254,9 @@ class AppRepositoryImpl @Inject constructor(
         val account = getAccounts()[0]
 
         feedItemMapper.toDomain(apiService.getTransactionFeed(
-            accountUid = account.accountUid.toString(),
-            categoryUid = account.defaultCategory.toString(),
-            changesSince = OffsetDateTime.now().minusDays(31).toString(),
+            accountUid = account.accountUid,
+            categoryUid = account.defaultCategory,
+            changesSince = OffsetDateTime.now().minusDays(31),
         ))
     } catch(e: RepositoryException) {
         Log.e(logTag, "Failed to get recent feed. Reason: ${e.error.errorDescription}")

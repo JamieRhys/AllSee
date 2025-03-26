@@ -12,11 +12,11 @@ import java.util.UUID
 object AccountsMapper {
 
     fun toDomain(dto: AccountDto, identifier: AccountIdentifierDto): Account = Account(
-        accountUid = UUID.fromString(dto.accountUid),
-        accountType = AccountType.valueOf(dto.accountType),
-        defaultCategory = UUID.fromString(dto.defaultCategory),
-        currency = CurrencyType.valueOf(dto.currency),
-        createdAt = OffsetDateTime.parse(dto.createdAt),
+        accountUid = dto.accountUid,
+        accountType = dto.accountType,
+        defaultCategory = dto.defaultCategory,
+        currency = dto.currency,
+        createdAt = dto.createdAt,
         name = dto.name,
         accountIdentifier = identifier.accountIdentifier,
         bankIdentifier = identifier.bankIdentifier,
