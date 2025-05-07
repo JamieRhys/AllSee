@@ -11,11 +11,28 @@ composeBom = "2024.09.00"
 appcompat = "1.7.0"
 material = "1.12.0"
 
+# Coroutines Test
+kotlinxCoroutinesTest = "1.9.0"
+
 # Dagger
 daggerCompiler = "2.52"
 
+# Extended Icons
+materialIconsExtended = "1.7.6"
+
 # KSP
 ksp = "2.0.21-1.0.25"
+
+# MockK
+mockk = "1.13.3"
+mockkAndroid = "1.13.2"
+
+# Navigation
+navigationRuntimeKtx = "2.8.9"
+navigationCompose = "2.8.9"
+
+# Turbine
+turbine = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,11 +52,28 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+# Coroutine Test
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+
 # Dagger
 dagger = { module = "com.google.dagger:dagger", version.ref = "daggerCompiler" }
 dagger-android = { module = "com.google.dagger:dagger-android", version.ref = "daggerCompiler" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompiler" }
 dagger-compiler-android = { module = "com.google.dagger:dagger-android-processor", version.ref = "daggerCompiler" }
+
+# Extended Icons
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+
+# MockK
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
+
+# Navigation
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+
+# Turbine
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
