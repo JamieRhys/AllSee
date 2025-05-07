@@ -1,6 +1,5 @@
-package uk.co.jaffakree.allsee.ui.theme
+package uk.co.jaffakree.allsee.core.presentation.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

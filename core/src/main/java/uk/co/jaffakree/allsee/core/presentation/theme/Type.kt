@@ -1,4 +1,4 @@
-package uk.co.jaffakree.allsee.ui.theme
+package uk.co.jaffakree.allsee.core.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
