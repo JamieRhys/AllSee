@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -13,7 +14,7 @@ android {
         minSdk = 35
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +44,12 @@ dependencies {
 
     // Project Modules
     implementation(project(":core"))
+
+    // Dagger 2
+    implementation(libs.dagger)
+    implementation(libs.dagger.android)
+    ksp(libs.dagger.compiler)
+    ksp(libs.dagger.compiler.android)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
