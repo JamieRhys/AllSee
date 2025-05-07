@@ -45,12 +45,6 @@ dependencies {
     // Project Modules
     implementation(project(":core"))
 
-    // Dagger 2
-    implementation(libs.dagger)
-    implementation(libs.dagger.android)
-    ksp(libs.dagger.compiler)
-    ksp(libs.dagger.compiler.android)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,4 +60,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Dagger 2
+    implementation(libs.dagger)
+    implementation(libs.dagger.android)
+    ksp(libs.dagger.compiler)
+    ksp(libs.dagger.compiler.android)
+
+    // Navigation
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
 }
