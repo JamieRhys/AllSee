@@ -105,7 +105,7 @@ private fun UserConfirmationDialogPreview() {
     AllSeeTheme {
         Surface {
             UserConfirmationDialog(
-                name = "Jamie Edwards",
+                name = "Joe Bloggs",
                 accountType = "Individual",
                 onDismissButtonClick = {},
                 onConfirmButtonClick = {},
