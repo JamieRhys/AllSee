@@ -1,7 +1,11 @@
 <resources>
-    <string name="aap_access_token">Access Token</string>
-    <string name="aap_get_started">To get started, paste your access token below.</string>
-    <string name="aap_title">Oh, hey!</string>
+
+    <string name="button_login">Login</string>
+
+    <string name="access_token">Access Token</string>
+    <string name="get_started">To get started, paste your access token below.</string>
+    <string name="logging_in">Logging in…</string>
+    <string name="title">Oh, hey!</string>
 
     <string name="user_confirmation_dialog_title">Hold on a second!</string>
     <string name="user_confirmation_dialog_text">Just to confirm, is your name %s and you hold a %s account?</string>
