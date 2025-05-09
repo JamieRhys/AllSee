@@ -44,6 +44,7 @@ dependencies {
 
     // Project Modules
     implementation(project(":core"))
+    implementation(project(":features:login"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

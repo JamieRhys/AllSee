@@ -7,6 +7,7 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import uk.co.jaffakree.allsee.di.modules.ContextModule
 import uk.co.jaffakree.allsee.di.modules.MainActivityModule
+import uk.co.jaffakree.allsee.di.modules.ViewModelModule
 import uk.co.jaffakree.allsee.presentation.AllSeeApplication
 import javax.inject.Singleton
 
@@ -15,6 +16,7 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ContextModule::class,
         MainActivityModule::class,
+        ViewModelModule::class,
     ]
 )
 @Singleton
